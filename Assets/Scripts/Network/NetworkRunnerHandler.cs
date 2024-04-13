@@ -22,11 +22,13 @@ public class NetworkRunnerHandler : MonoBehaviour
     
     void Start()
     {
+        //Main시작 시 NetworkRunner 생성
         if(networkRunner == null){
             networkRunner = Instantiate(networkRunnerPrefab);
             networkRunner.name = "Network runner";
 
             if(SceneManager.GetActiveScene().name != "MainMenu"){
+                //초기 NetworkRunner 초기화
                 var clientTask = InitializeNetworkRunner(networkRunner,GameMode.AutoHostOrClient, "TestSession", GameManager.instance.GetConnectionToken(), NetAddress.Any(),SceneManager.GetActiveScene().buildIndex, null);
             }
             Debug.Log($"Server NetworkRunner started.");
@@ -108,10 +110,12 @@ public class NetworkRunnerHandler : MonoBehaviour
     }
 
     public void OnJoinLobby(){
+        //로비 입장 버튼
         var clientTask = JoinLobby();
     }
 
     private async Task JoinLobby(){
+        //로비 입장 시 초기화
         Debug.Log("JoinLobby started");
 
         string lobbyID = "OurLobbyID";
@@ -119,11 +123,12 @@ public class NetworkRunnerHandler : MonoBehaviour
         if(!result.Ok){
             Debug.LogError($"Unable to Join lobby {lobbyID}");
         }else{
-            Debug.Log("JoinLobby ok");
+            Debug.Log($"JoinLobby {lobbyID} ok");
         }
     }
 
     public void CreateGame(string sessionName, string sceneName){
+        // 방 생성
         Debug.Log($"Create session {sessionName} scene {sceneName} build Index {SceneUtility.GetBuildIndexByScenePath($"scenes/{sceneName}")}");
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, GameManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"scenes/{sceneName}"),null);
     }

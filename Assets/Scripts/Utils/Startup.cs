@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Startup 
 {
+    //Game 시작 시 GameManager 생성
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void InstantiatePrefabs()
     {

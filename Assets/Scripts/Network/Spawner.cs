@@ -46,6 +46,8 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        // 플레이어가 방 입장 시 초기화
+        // Host에서 player spawn함
         if(runner.IsServer){
             int playerToken = GetPlayerToken(runner,player);
 
@@ -137,6 +139,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        // 방 리스트 초기화
         if(sessionListUIHandler == null)
             return;
         if(sessionList.Count == 0){

@@ -5,6 +5,12 @@ using UnityEngine.SocialPlatforms;
 
 public class CharacterInputHandler : MonoBehaviour
 {
+    // 플레이어의 입력을 처리하고 그 입력을 네트워크를 통해 다른 플레이어와 동기화하기 위한 데이터를 준비
+    // CharacterInputHandler는 플레이어로부터 입력을 받아 LocalCameraHandler와 NetworkInputData로 전달
+    // 사용자로부터 이동, 점프, 카메라 회전 등입력정보 수집
+    // 수집과 동시에 LocalCameraHandler와 다른 게임 구성 요소로 전달하여 게임 내 캐릭터의 움직임과 카메라 조작
+    // GetNetworkInput() 메서드를 통해 네트워크를 통해 동기화할 입력 데이터(NetworkInputData)를 생성하고 초기화
+    
     Vector2 moveInputVector = Vector2.zero;
     Vector2 viewInputVector = Vector2.zero;
     bool isJumpButtonPressed = false;

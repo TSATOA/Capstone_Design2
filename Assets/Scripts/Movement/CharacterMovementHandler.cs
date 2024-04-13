@@ -5,6 +5,10 @@ using Fusion;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
+    // 네트워크를 통해 동기화된 입력을 받아 캐릭터의 실제 움직임을 처리
+    // FixedUpdateNetwork() 메서드에서 네트워크 입력 데이터를 사용하여 캐릭터의 방향 전환, 이동 및 점프를 구현
+    // NetworkCharacterControllerPrototypeCustom에서 정의된 물리적 움직임과 동기화 로직을 사용하여 실제 게임 월드에서 캐릭터의 움직임을 제어
+    
     //Vector2 viewInput;
     //float cameraRotationX = 0;
     NetworkCharacterControllerPrototypeCustom networkCharacterControllerPrototypeCustom;
@@ -30,6 +34,8 @@ public class CharacterMovementHandler : NetworkBehaviour
     */
     public override void FixedUpdateNetwork()
     {
+        //FixedUpdateNetwork를 통해 일관된 동기화 보장
+        //Update는 매 피레임, FixedUpdate는일정 시간마다
         if(GetInput(out NetworkInputData networkInputData)){
             //Rotation the view
             //networkCharacterControllerPrototypeCustom.Rotate(networkInputData.rotationInput);

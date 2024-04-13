@@ -25,6 +25,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     }
     public override void Spawned()
     {
+        // player spawn
         if(Object.HasInputAuthority){
             Local = this;
             //local player layer set
@@ -77,6 +78,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_SentNickName(string nickName, RpcInfo info = default){
+        //RPC를 통해 이름 설정
         Debug.Log($"[RPC] SetNickName {nickName}");
         this.nickName = nickName; //NetworkPlayer 스크립트의 nickName variable 변경
     }
