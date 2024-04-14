@@ -10,7 +10,7 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
   // CharacterController와 NetworkTransform을 확장하여 캐릭터의 물리적 움직임과 네트워크 상태 동기화를 관리
   
   [Header("Character Controller Settings")]
-  public float gravity       = -20.0f;
+  public float gravity       = 1000.0f;
   public float jumpImpulse   = 8.0f;
   public float acceleration  = 10.0f;
   public float braking       = 10.0f;
