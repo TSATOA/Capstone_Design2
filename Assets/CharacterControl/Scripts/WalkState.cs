@@ -5,23 +5,27 @@ using UnityEngine.AI;
 
 public class WalkState : StateMachineBehaviour
 {
-    float timer, timerThreshold;
+    float timer;
+    float timerThreshold = 10;
+    float chaseDistance = 8;
     List<Transform> wayPoints = new List<Transform> ();
     NavMeshAgent agent;
+    Transform player;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent = animator.GetComponent<NavMeshAgent>();
         timer = 0;
-        timerThreshold = 10;
        
         GameObject go = GameObject.FindGameObjectWithTag("Waypoint");
         foreach (Transform t in go.transform)
             wayPoints.Add(t);
 
         agent.SetDestination(wayPoints[Random.Range(0, wayPoints.Count)].position);
-       
+        agent.speed = 1.8f;
+
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -36,6 +40,12 @@ public class WalkState : StateMachineBehaviour
         if (timer > timerThreshold)
         {
             animator.SetBool("isPatrol", false);
+        }
+
+        float distance = Vector3.Distance(player.position, animator.transform.position);
+        if (distance < chaseDistance)
+        {
+            animator.SetBool("isChase", true);
         }
     }
 
