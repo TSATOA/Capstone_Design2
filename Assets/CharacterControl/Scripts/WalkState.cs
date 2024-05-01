@@ -11,6 +11,10 @@ public class WalkState : StateMachineBehaviour
     List<Transform> wayPoints = new List<Transform> ();
     NavMeshAgent agent;
     Transform player;
+    Vector3 playerDirection;
+    Vector3 forwardDirection;
+    float angle;
+    float visionAngle = 120.0f;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -40,10 +44,14 @@ public class WalkState : StateMachineBehaviour
         if (timer > timerThreshold)
         {
             animator.SetBool("isPatrol", false);
+            animator.SetBool("isOverwatch", true);
         }
 
         float distance = Vector3.Distance(player.position, animator.transform.position);
-        if (distance < chaseDistance)
+        playerDirection = player.position - animator.transform.position;
+        forwardDirection = animator.transform.forward;
+        angle = Vector3.Angle(forwardDirection, playerDirection);
+        if (distance < chaseDistance && angle <= (visionAngle / 2.0f))
         {
             animator.SetBool("isChase", true);
         }
