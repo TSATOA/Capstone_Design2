@@ -45,20 +45,36 @@ public class MainMenuUIHandler : MonoBehaviour
         FindObjectOfType<SessionListUIHandler>(true).OnLookingForGameSessions();
     }
 
+    // Session List Panel에서 New Session Button
     public void OnCreateNewGameClicked(){
         HideAllPanel();
         createSessionPanel.SetActive(true);
     }
 
+    // Create Game Panel에서 방 이름 입력 후 방 생성 시
     public void OnStartNewSessionClicked(){
         NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
         networkRunnerHandler.CreateGame(sessionNameInputField.text,"World1");
-        HideAllPanel();
-        statusPanel.SetActive(true);
+        OnJoiningServer();
     }
 
     public void OnJoiningServer(){
         HideAllPanel();
         statusPanel.SetActive(true);
+    }
+
+    // Session List Panel에서 Random Matching Button
+    public void OnStartRandomMatching(){
+        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
+        SessionListUIHandler sessionListUIHandler = FindObjectOfType<SessionListUIHandler>();
+        if(sessionListUIHandler.GetSessionListCount()==0){
+            // Session이 하나도 존재하지 않을 시 방 생성
+            networkRunnerHandler.CreateGame(Utils.GetRandomSessionName(),"World1");
+        }else{
+            // Session이 존재할 경우 Random 입장
+            var randomSession = sessionListUIHandler.GetRandomSession();
+            networkRunnerHandler.JoinGame(randomSession);
+        }
+        OnJoiningServer();
     }
 }

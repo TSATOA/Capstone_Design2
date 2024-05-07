@@ -14,4 +14,8 @@ public static class Utils
             trans.gameObject.layer = layerNumber;
         }
     }
+
+    public static string GetRandomSessionName(){
+        return "Session_" + Random.Range(1,100).ToString();
+    }
 }

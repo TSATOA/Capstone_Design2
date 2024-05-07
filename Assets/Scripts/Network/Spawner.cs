@@ -146,11 +146,15 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("Joined lobby no session found");
             sessionListUIHandler.OnNoSessionFound();
         }else{
+            /*
             sessionListUIHandler.ClearList();
             foreach(SessionInfo sessionInfo in sessionList){
                 sessionListUIHandler.AddToList(sessionInfo);
                 Debug.Log($"Found session {sessionInfo.Name} playerCount {sessionInfo.PlayerCount}");
             }
+            */
+            sessionListUIHandler.UpdateSessionList(sessionList);
+            Debug.Log($"Found {sessionList.Count} sessions");
         }
 
     }
