@@ -11647,7 +11647,7 @@ namespace Fusion.Editor {
         "GetFieldInfoFromProperty",
         BindingFlags.Static | BindingFlags.NonPublic);
 
-      public delegate Type GetDrawerTypeForTypeDelegate(Type type);
+      public delegate Type GetDrawerTypeForTypeDelegate(Type type, bool isPropertyTypeAManagedReference = false);
       public static readonly GetDrawerTypeForTypeDelegate GetDrawerTypeForType =
         CreateEditorMethodDelegate<GetDrawerTypeForTypeDelegate>(
         "UnityEditor.ScriptAttributeUtility",
