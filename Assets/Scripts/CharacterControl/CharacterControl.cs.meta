@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 267924577d65ce24ab89ca6c87f86d96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 677948c55a8d22d4dbd929179fc4bc70, type: 3}
+  - threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 6c5b432df1895044e9af292098ea7555, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
