@@ -25,6 +25,8 @@ public class CharacterInputHandler : MonoBehaviour
     private PoseEstimator poseEstimator;
     private PoseEstimationData poseEstimationData;
 
+    WebCamTexture webcamTexture;
+
     private void Awake(){
         //characterMovementHandler = GetComponent<CharacterMovementHandler>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
@@ -33,6 +35,11 @@ public class CharacterInputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        WebCamDevice[] devices = WebCamTexture.devices;
+        
+        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
+
+        webcamTexture.Play();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         characterControl = GetComponentInChildren<CharacterControl>();
@@ -61,9 +68,13 @@ public class CharacterInputHandler : MonoBehaviour
 
         //Set View
         localCameraHandler.SetViewInputVector(viewInputVector);
-        if(characterControl.goodEstimate){
-            poseEstimationData = poseEstimator.GetNetworkPoseData();
+        if(poseEstimator!=null){
+            characterControl.goodEstimate = poseEstimator.RunML(webcamTexture);
+            if(characterControl.goodEstimate){
+                poseEstimationData = poseEstimator.GetNetworkPoseData();
+            }
         }
+        
         
     }
 

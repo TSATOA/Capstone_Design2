@@ -6,7 +6,7 @@ using Unity.Sentis;
 public class CharacterControl : MonoBehaviour {
 
     // Pose Estimator
-    WebCamTexture webcamTexture;
+    
     PoseEstimator poseEstimator;
     const int resizedSquareImageDim = 320;
 
@@ -25,7 +25,10 @@ public class CharacterControl : MonoBehaviour {
     // IK Control
     public bool ikActive = false;
     public bool lowerBody = false;
+
+    [SerializeField]
     private Transform leftHandObj = null;
+    [SerializeField]
     private Transform rightHandObj = null;
     private Transform lookObj = null;
     private Transform leftFootObj = null;
@@ -38,11 +41,7 @@ public class CharacterControl : MonoBehaviour {
 
     void Start() {
 
-        WebCamDevice[] devices = WebCamTexture.devices;
         
-        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
-
-        webcamTexture.Play();
 
         // Sentis model initialization
         poseEstimator = new PoseEstimator(resizedSquareImageDim, ref twoDPoseModelAsset, ref threeDPoseModelAsset, BackendType.GPUCompute);
@@ -55,29 +54,15 @@ public class CharacterControl : MonoBehaviour {
 
         hipHeadEndDistance = Vector3.Distance(characterHip.position, characterHeadEnd.position);
 
-        lookObj = GameObject.Find("joint9").transform;
-        rightHandObj = GameObject.Find("joint16").transform;
-        leftHandObj = GameObject.Find("joint13").transform;
-        rightFootObj = GameObject.Find("joint3").transform;
-        leftFootObj = GameObject.Find("joint6").transform;
+        lookObj = transform.Find("joint9");
+        rightHandObj = transform.Find("joint16");
+        leftHandObj = transform.Find("joint13");
+        rightFootObj = transform.Find("joint3");
+        leftFootObj = transform.Find("joint6");
 
     }
 
     void Update() {
-
-
-        goodEstimate = poseEstimator.RunML(webcamTexture);
-
-        if(goodEstimate) {
-
-            Vector3[] threeDJoints = poseEstimator.getThreeDPose();
-
-            scaleTranslateJoints(threeDJoints);
-
-            //Draw3DPoints(threeDJoints);
-
-        }
-
     }
 
     void OnAnimatorIK() {
@@ -160,7 +145,7 @@ public class CharacterControl : MonoBehaviour {
 
     }
 
-    private void scaleTranslateJoints(Vector3[] joints) {
+    public void scaleTranslateJoints(Vector3[] joints) {
 
         const int rootIndex = 0;
         const int headIndex = 10;
