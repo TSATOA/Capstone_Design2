@@ -31,6 +31,11 @@ public class CharacterControl : MonoBehaviour {
     private Transform leftFootObj = null;
     private Transform rightFootObj = null;
 
+    public CharacterInputHandler inputHandler;
+
+    
+    public bool goodEstimate;
+
     void Start() {
 
         WebCamDevice[] devices = WebCamTexture.devices;
@@ -41,7 +46,7 @@ public class CharacterControl : MonoBehaviour {
 
         // Sentis model initialization
         poseEstimator = new PoseEstimator(resizedSquareImageDim, ref twoDPoseModelAsset, ref threeDPoseModelAsset, BackendType.GPUCompute);
-
+        inputHandler.SetPoseEstimator(poseEstimator);
         // IK setup
 
         init3DKeypoints();
@@ -60,7 +65,6 @@ public class CharacterControl : MonoBehaviour {
 
     void Update() {
 
-        bool goodEstimate;
 
         goodEstimate = poseEstimator.RunML(webcamTexture);
 
@@ -70,7 +74,7 @@ public class CharacterControl : MonoBehaviour {
 
             scaleTranslateJoints(threeDJoints);
 
-            Draw3DPoints(threeDJoints);
+            //Draw3DPoints(threeDJoints);
 
         }
 
@@ -186,7 +190,7 @@ public class CharacterControl : MonoBehaviour {
 
     }
 
-    void Draw3DPoints(Vector3[] joints) {
+    public void Draw3DPoints(Vector3[] joints) {
 
         for (int idx = 0; idx < joints.Length; idx++) {
 

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.Windows.WebCam;
 
 public class CharacterInputHandler : MonoBehaviour
 {
@@ -19,6 +21,10 @@ public class CharacterInputHandler : MonoBehaviour
     //CharacterMovementHandler characterMovementHandler;
     LocalCameraHandler localCameraHandler;
 
+    CharacterControl characterControl;
+    private PoseEstimator poseEstimator;
+    private PoseEstimationData poseEstimationData;
+
     private void Awake(){
         //characterMovementHandler = GetComponent<CharacterMovementHandler>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
@@ -29,6 +35,7 @@ public class CharacterInputHandler : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        characterControl = GetComponentInChildren<CharacterControl>();
     }
 
     // Update is called once per frame
@@ -54,6 +61,10 @@ public class CharacterInputHandler : MonoBehaviour
 
         //Set View
         localCameraHandler.SetViewInputVector(viewInputVector);
+        if(characterControl.goodEstimate){
+            poseEstimationData = poseEstimator.GetNetworkPoseData();
+        }
+        
     }
 
     public NetworkInputData GetNetworkInput(){
@@ -67,8 +78,15 @@ public class CharacterInputHandler : MonoBehaviour
         networkInputData.movementInput = moveInputVector;
 
         networkInputData.isJumpPressed = isJumpButtonPressed;
+        networkInputData.poseData = poseEstimationData;
         isJumpButtonPressed = false;
 
         return networkInputData;
     }
+
+
+    public void SetPoseEstimator(PoseEstimator estimator) {
+        poseEstimator = estimator;
+    }
+
 }

@@ -12,10 +12,13 @@ public class CharacterMovementHandler : NetworkBehaviour
     //Vector2 viewInput;
     //float cameraRotationX = 0;
     NetworkCharacterControllerPrototypeCustom networkCharacterControllerPrototypeCustom;
+    CharacterControl characterControl;
     Camera localCamera;
+    Vector3[] threeDJoints;
 
     private void Awake(){
         networkCharacterControllerPrototypeCustom = GetComponent<NetworkCharacterControllerPrototypeCustom>();
+        characterControl = GetComponentInChildren<CharacterControl>();
         localCamera = GetComponentInChildren<Camera>();
     }
     void Start()
@@ -56,7 +59,11 @@ public class CharacterMovementHandler : NetworkBehaviour
             if(networkInputData.isJumpPressed){
                 networkCharacterControllerPrototypeCustom.Jump();
             }
-
+            threeDJoints = GetJointsList(networkInputData);
+            if(characterControl.goodEstimate){
+                characterControl.Draw3DPoints(threeDJoints);
+            }
+    
             //¿Ã∞« ∞¡ ∏ ø°º≠ ∂≥æÓ¡≥¿ª∂ß ¥Î∫Ò
             CheckFallRespawn();
         }
@@ -70,4 +77,28 @@ public class CharacterMovementHandler : NetworkBehaviour
         this.viewInput = viewInput;
     }
     */
+    Vector3[] GetJointsList(NetworkInputData networkInputData) {{
+        Vector3[] result = new Vector3[17];
+        result[0]=networkInputData.poseData.Joint0;
+        result[1]=networkInputData.poseData.Joint1;
+        result[2]=networkInputData.poseData.Joint2;
+        result[3]=networkInputData.poseData.Joint3;
+        result[4]=networkInputData.poseData.Joint4;
+        result[5]=networkInputData.poseData.Joint5;
+        result[6]=networkInputData.poseData.Joint6;
+        result[7]=networkInputData.poseData.Joint7;
+        result[8]=networkInputData.poseData.Joint8;
+        result[9]=networkInputData.poseData.Joint9;
+        result[10]=networkInputData.poseData.Joint10;
+        result[11]=networkInputData.poseData.Joint11;
+        result[12]=networkInputData.poseData.Joint12;
+        result[13]=networkInputData.poseData.Joint13;
+        result[14]=networkInputData.poseData.Joint14;
+        result[15]=networkInputData.poseData.Joint15;
+        result[16]=networkInputData.poseData.Joint16;
+        return result;
+    }
+
+    }
+
 }
