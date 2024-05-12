@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using Unity.Sentis;
+using Fusion;
 
-public class CharacterControl : MonoBehaviour {
+public class CharacterControl : NetworkBehaviour {
 
     // Pose Estimator
     

@@ -60,10 +60,11 @@ public class CharacterMovementHandler : NetworkBehaviour
                 networkCharacterControllerPrototypeCustom.Jump();
             }
             
-            if(characterControl.goodEstimate){
+            if(networkInputData.goodEstimate){
                 threeDJoints = GetJointsList(networkInputData);
-                characterControl.Draw3DPoints(threeDJoints);
-                characterControl.scaleTranslateJoints(threeDJoints);
+                networkCharacterControllerPrototypeCustom.JointApplication(threeDJoints);
+                //characterControl.Draw3DPoints(threeDJoints);
+                //characterControl.scaleTranslateJoints(threeDJoints);
             }
     
             //¿Ã∞« ∞¡ ∏ ø°º≠ ∂≥æÓ¡≥¿ª∂ß ¥Î∫Ò

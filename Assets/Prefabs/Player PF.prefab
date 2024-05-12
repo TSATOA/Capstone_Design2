@@ -267,6 +267,7 @@ MonoBehaviour:
   - {fileID: 5225002718034680019}
   - {fileID: 7401877263711686405}
   - {fileID: 5119814858608770742}
+  - {fileID: 5336661359371375924}
   SimulationBehaviours: []
 --- !u!114 &5225002718034680019
 MonoBehaviour:
@@ -981,12 +982,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267924577d65ce24ab89ca6c87f86d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 677948c55a8d22d4dbd929179fc4bc70, type: 3}
   threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 6c5b432df1895044e9af292098ea7555, type: 3}
   characterHeadEnd: {fileID: 3616228707839588367}
   characterHip: {fileID: 93137176409755382}
   ikActive: 1
   lowerBody: 0
+  leftHandObj: {fileID: 0}
+  rightHandObj: {fileID: 0}
   inputHandler: {fileID: 1365363454340313938}
   goodEstimate: 0
 --- !u!4 &5555947738241642082 stripped

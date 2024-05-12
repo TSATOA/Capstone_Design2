@@ -12,6 +12,7 @@ public struct NetworkInputData : INetworkInput
     public Vector3 aimForwardVector;
     public NetworkBool isJumpPressed;
     public PoseEstimationData poseData;
+    public NetworkBool goodEstimate;
 
 }
 

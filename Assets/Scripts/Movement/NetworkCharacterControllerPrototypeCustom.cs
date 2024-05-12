@@ -39,16 +39,18 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
   protected override Vector3 DefaultTeleportInterpolationAngularVelocity => new Vector3(0f, 0f, rotationSpeed);
 
   public CharacterController Controller { get; private set; }
-
+  private CharacterControl characterControl;
   protected override void Awake() {
     base.Awake();
     CacheController();
+    characterControl = GetComponentInChildren<CharacterControl>();
   }
 
   public override void Spawned() {
     base.Spawned();
     CacheController();
   }
+
 
   private void CacheController() {
     if (Controller == null) {
@@ -120,5 +122,10 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
 
   public void Rotate(float rotationY){
     transform.Rotate(0,rotationY*Runner.DeltaTime*rotationSpeed,0);
+  }
+
+  public void JointApplication(Vector3[] joints){
+    characterControl.scaleTranslateJoints(joints);
+    characterControl.Draw3DPoints(joints);
   }
 }

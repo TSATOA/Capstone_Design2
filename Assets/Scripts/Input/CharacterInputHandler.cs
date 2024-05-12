@@ -24,6 +24,7 @@ public class CharacterInputHandler : MonoBehaviour
     CharacterControl characterControl;
     private PoseEstimator poseEstimator;
     private PoseEstimationData poseEstimationData;
+    private bool goodEs;
 
     WebCamTexture webcamTexture;
 
@@ -69,8 +70,8 @@ public class CharacterInputHandler : MonoBehaviour
         //Set View
         localCameraHandler.SetViewInputVector(viewInputVector);
         if(poseEstimator!=null){
-            characterControl.goodEstimate = poseEstimator.RunML(webcamTexture);
-            if(characterControl.goodEstimate){
+            goodEs = poseEstimator.RunML(webcamTexture);
+            if(goodEs){
                 poseEstimationData = poseEstimator.GetNetworkPoseData();
             }
         }
@@ -90,6 +91,7 @@ public class CharacterInputHandler : MonoBehaviour
 
         networkInputData.isJumpPressed = isJumpButtonPressed;
         networkInputData.poseData = poseEstimationData;
+        networkInputData.goodEstimate = goodEs;
         isJumpButtonPressed = false;
 
         return networkInputData;
