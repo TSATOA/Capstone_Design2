@@ -2,36 +2,49 @@ using UnityEngine;
 using Unity.Sentis;
 using FF = Unity.Sentis.Functional;
 using Unity.VisualScripting;
-using System;
 
-public class PoseEstimator : IDisposable
+public class PoseEstimator : MonoBehaviour
 {
 
+    // WebCamTexture related to Sentis model
+    private WebCamTexture webcamTexture;
     private TextureTransform textureTransform;
+    private const int inputImageDim = 320;
 
+    // Sentis models load and execute
+    public ModelAsset twoDPoseModelAsset;
+    public ModelAsset threeDPoseModelAsset;
+    private BackendType backend = BackendType.GPUCompute;
     private IWorker twoDPoseWorker;
     private IWorker threeDPoseWorker;
     private IBackend processBackend;
-    private BackendType backend;
-    private const int numJoints = 17;
-    private const int numFrames = 27;
 
+    // Pose estimation hyperparameters
+    public const int numJoints = 17;
+    public const int numFrames = 27;
+    [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
+    [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
+
+    // Input Tensors for pose estimation models
     private TensorFloat inputTensor = null;
     private TensorFloat inputTwoDTensor = null;
 
-    private float iouThreshold = 0.5f;
-    private float scoreThreshold = 0.5f;
+    // Estimated 3D joints as vectors available as public
+    public Vector3[] threeDJointsVector;
+    public Texture2D webcamTextureCopy;
 
-    private Vector3[] threeDJointsVector; // Store 3D joints as Vector3 array
-
-    public PoseEstimator(int resizedSquareImageDim, ref ModelAsset twoDPoseModelAsset, ref ModelAsset threeDPoseModelAsset, BackendType backend)
+    void Start()
     {
+        // Start webcam
+        WebCamDevice[] devices = WebCamTexture.devices;
+        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 30);
+        webcamTexture.Play();
 
-        this.backend = backend;
+        // To convert webcam texture to inputImageDim x inputImageDim
+        textureTransform = new TextureTransform().SetDimensions(width: inputImageDim, height: inputImageDim, channels: 3);
 
-        textureTransform = new TextureTransform().SetDimensions(width: resizedSquareImageDim, height: resizedSquareImageDim, channels: 3);
-
-        LoadModel(resizedSquareImageDim, ref twoDPoseModelAsset, ref threeDPoseModelAsset);
+        // Load pose estimation model
+        LoadModel(inputImageDim, ref twoDPoseModelAsset, ref threeDPoseModelAsset);
 
         processBackend = WorkerFactory.CreateBackend(backend);
 
@@ -129,46 +142,38 @@ public class PoseEstimator : IDisposable
 
     }
 
-    public bool RunML(WebCamTexture webcamTexture)
+    void Update()
     {
 
-        bool hasPredicted = false;
-
-        inputTensor?.Dispose();
-
-        inputTensor = TextureConverter.ToTensor(webcamTexture, textureTransform);
-
-        twoDPoseWorker.Execute(inputTensor);
-
-        var twoDJointsTensor = twoDPoseWorker.PeekOutput() as TensorFloat;
-
-        twoDJointsTensor.CompleteAllPendingOperations();
-
-        if (twoDJointsTensor.shape[2] == numJoints && twoDJointsTensor.shape[3] == 3)
+        if (webcamTexture.didUpdateThisFrame)
         {
 
-            concatToPreviousTensor(twoDJointsTensor);
+            inputTensor?.Dispose();
 
-            threeDPoseWorker.Execute(inputTwoDTensor);
+            inputTensor = TextureConverter.ToTensor(webcamTexture, textureTransform);
 
-            var threeDJointsTensor = threeDPoseWorker.PeekOutput() as TensorFloat;
+            twoDPoseWorker.Execute(inputTensor);
+            var twoDJointsTensor = twoDPoseWorker.PeekOutput() as TensorFloat;
+            twoDJointsTensor.CompleteAllPendingOperations();
 
-            threeDJointsTensor.CompleteOperationsAndDownload();
-
-            for (int idx = 0; idx < numJoints; idx++)
+            if (twoDJointsTensor.shape[2] == numJoints && twoDJointsTensor.shape[3] == 3)
             {
 
-                threeDJointsVector[idx].x = threeDJointsTensor[idx, 0];
-                threeDJointsVector[idx].y = threeDJointsTensor[idx, 1];
-                threeDJointsVector[idx].z = threeDJointsTensor[idx, 2];
+                concatToPreviousTensor(twoDJointsTensor);
+
+                threeDPoseWorker.Execute(inputTwoDTensor);
+                var threeDJointsTensor = threeDPoseWorker.PeekOutput() as TensorFloat;
+                threeDJointsTensor.CompleteOperationsAndDownload();
+
+                for (int idx = 0; idx < numJoints; idx++)
+                {
+                    threeDJointsVector[idx].x = threeDJointsTensor[idx, 0];
+                    threeDJointsVector[idx].y = threeDJointsTensor[idx, 1];
+                    threeDJointsVector[idx].z = threeDJointsTensor[idx, 2];
+                }
 
             }
-
-            hasPredicted = true;
-
         }
-
-        return hasPredicted;
 
     }
 
@@ -191,7 +196,7 @@ public class PoseEstimator : IDisposable
                 processBackend.MemCopyStride(
                     inputTwoDTensor, inputTwoDTensor,
                     0, 0,
-                    (numFrames-1) * numJoints * 3, 1,
+                    (numFrames - 1) * numJoints * 3, 1,
                     0, numJoints * 3
                 );
                 inputTwoDTensor.CompleteAllPendingOperations();
@@ -224,13 +229,6 @@ public class PoseEstimator : IDisposable
 
     }
 
-    public Vector3[] getThreeDPose()
-    {
-
-        return threeDJointsVector;
-
-    }
-
     public void Dispose()
     {
 
@@ -242,7 +240,7 @@ public class PoseEstimator : IDisposable
 
     }
 
-    ~PoseEstimator()
+    void OnDestroy()
     {
 
         Dispose();

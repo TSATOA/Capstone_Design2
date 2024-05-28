@@ -1,28 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using Unity.Sentis;
 using UnityEngine.Animations.Rigging;
 
 public class CharacterControl : MonoBehaviour
 {
-
-    // Pose Estimator
-    WebCamTexture webcamTexture;
-    PoseEstimator poseEstimator;
-    const int resizedSquareImageDim = 320;
-
     // Game Objects
     private List<GameObject> targetThreeDPoints;
-
-    // Sentis    
-    public ModelAsset twoDPoseModelAsset;
-    public ModelAsset threeDPoseModelAsset;
 
     // IK Control
     private Rig core;
     private Rig arms;
     private Rig look;
+
     // For joint control
     public Transform characterRoot;
     public Transform spineRoot;
@@ -44,15 +34,6 @@ public class CharacterControl : MonoBehaviour
     void Start()
     {
 
-        WebCamDevice[] devices = WebCamTexture.devices;
-
-        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 30);
-
-        webcamTexture.Play();
-
-        // Sentis model initialization
-        poseEstimator = new PoseEstimator(resizedSquareImageDim, ref twoDPoseModelAsset, ref threeDPoseModelAsset, BackendType.GPUCompute);
-
         // IK setup
 
         init3DKeypoints();
@@ -63,20 +44,12 @@ public class CharacterControl : MonoBehaviour
     void Update()
     {
 
-        bool goodEstimate;
+        Vector3[] threeDJoints = GetComponent<PoseEstimator>().threeDJointsVector;
 
-        goodEstimate = poseEstimator.RunML(webcamTexture);
-
-        if (goodEstimate)
-        {
-
-            Vector3[] threeDJoints = poseEstimator.getThreeDPose();
-
-            Draw3DPoints(threeDJoints);
-
-        }
+        Draw3DPoints(threeDJoints);
 
     }
+
     private void init3DKeypoints()
     {
 
@@ -434,8 +407,6 @@ public class CharacterControl : MonoBehaviour
 
     void OnDestroy()
     {
-
-        poseEstimator.Dispose();
 
     }
 
