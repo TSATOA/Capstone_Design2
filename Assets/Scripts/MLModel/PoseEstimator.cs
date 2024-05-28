@@ -1,7 +1,9 @@
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 using Unity.Sentis;
 using FF = Unity.Sentis.Functional;
 using Unity.VisualScripting;
+using UnityEngine;
 
 public class PoseEstimator : MonoBehaviour
 {
@@ -19,15 +21,28 @@ public class PoseEstimator : MonoBehaviour
     private IWorker threeDPoseWorker;
     private IBackend processBackend;
 
-    // Pose estimation hyperparameters
-    public const int numJoints = 17;
-    public const int numFrames = 27;
-    [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
-    [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
-
     // Input Tensors for pose estimation models
     private TensorFloat inputTensor = null;
     private TensorFloat inputTwoDTensor = null;
+
+    // Keypoint Format
+    enum Keypoint : int
+    {
+        Root,
+        Rhip, Rknee, Rankle,
+        Lhip, Lknee, Lankle,
+        Belly, Neck, Nose, Head,
+        Lshoulder, Lelbow, Lwrist,
+        Rshoulder, Relbow, Rwrist
+    };
+    // Keypoints pairs
+    List<Tuple<int, int>> bones;
+
+// Pose estimation hyperparameters
+    public int numJoints;
+    public const int numFrames = 27;
+    [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
+    [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
 
     // Estimated 3D joints as vectors available as public
     public Vector3[] threeDJointsVector;
@@ -48,6 +63,8 @@ public class PoseEstimator : MonoBehaviour
 
         processBackend = WorkerFactory.CreateBackend(backend);
 
+        // Keypoints related data
+        numJoints = Enum.GetValues(typeof(Keypoint)).Length;
         threeDJointsVector = new Vector3[numJoints];
 
     }

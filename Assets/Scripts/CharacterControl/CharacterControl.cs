@@ -7,6 +7,7 @@ public class CharacterControl : MonoBehaviour
 {
     // Game Objects
     private List<GameObject> targetThreeDPoints;
+    public bool visualizeKeypoints = false;
 
     // IK Control
     private Rig core;
