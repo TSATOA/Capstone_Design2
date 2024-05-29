@@ -45,7 +45,7 @@ public class CharacterControl : MonoBehaviour
     void Update()
     {
 
-        Vector3[] threeDJoints = GetComponent<PoseEstimator>().threeDJointsVector;
+        Vector3[] threeDJoints = GetComponent<PoseEstimator>().getThreeDJoints();
 
         Draw3DPoints(threeDJoints);
 
@@ -63,8 +63,6 @@ public class CharacterControl : MonoBehaviour
         for (int i = 0; i <= 19; i++)
         {
 
-            // GameObject sphere = new GameObject(String.Format("joint{0}", i));
-
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             sphere.name = String.Format("joint{0}", i);
 
@@ -79,7 +77,7 @@ public class CharacterControl : MonoBehaviour
 
     }
 
-    void Draw3DPoints(Vector3[] joints)
+    public void Draw3DPoints(Vector3[] joints)
     {
 
         Vector3 rootToSpineMiddle = fromAtoB(joints[0], joints[7]);

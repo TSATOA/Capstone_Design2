@@ -39,13 +39,13 @@ public class PoseEstimator : MonoBehaviour
     List<Tuple<int, int>> bones;
 
 // Pose estimation hyperparameters
-    public int numJoints;
-    public const int numFrames = 27;
+    private int numJoints;
+    public int numFrames = 27;
     [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
     [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
 
     // Estimated 3D joints as vectors available as public
-    public Vector3[] threeDJointsVector;
+    private Vector3[] threeDJointsVector;
     public Texture2D webcamTextureCopy;
 
     void Start()
@@ -193,7 +193,7 @@ public class PoseEstimator : MonoBehaviour
         }
 
     }
-
+    // 
     private void concatToPreviousTensor(TensorFloat curr)
     {
 
@@ -244,6 +244,35 @@ public class PoseEstimator : MonoBehaviour
 
         inputTwoDTensor.CompleteAllPendingOperations();
 
+    }
+
+    public Vector3[] getThreeDJoints() {
+        return threeDJointsVector;
+    }
+
+    public PoseEstimationData GetNetworkPoseData() {
+
+        PoseEstimationData poseData = new PoseEstimationData {
+        Joint0 = threeDJointsVector[0],
+        Joint1 = threeDJointsVector[1],
+        Joint2 = threeDJointsVector[2],
+        Joint3 = threeDJointsVector[3],
+        Joint4 = threeDJointsVector[4],
+        Joint5 = threeDJointsVector[5],
+        Joint6 = threeDJointsVector[6],
+        Joint7 = threeDJointsVector[7],
+        Joint8 = threeDJointsVector[8],
+        Joint9 = threeDJointsVector[9],
+        Joint10 = threeDJointsVector[10],
+        Joint11 = threeDJointsVector[11],
+        Joint12 = threeDJointsVector[12],
+        Joint13 = threeDJointsVector[13],
+        Joint14 = threeDJointsVector[14],
+        Joint15 = threeDJointsVector[15],
+        Joint16 = threeDJointsVector[16]
+        };
+
+        return poseData;
     }
 
     public void Dispose()

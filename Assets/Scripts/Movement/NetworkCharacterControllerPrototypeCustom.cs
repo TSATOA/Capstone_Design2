@@ -7,7 +7,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 // ReSharper disable once CheckNamespace
 public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
-  // CharacterController¿Í NetworkTransformÀ» È®ÀåÇÏ¿© Ä³¸¯ÅÍÀÇ ¹°¸®Àû ¿òÁ÷ÀÓ°ú ³×Æ®¿öÅ© »óÅÂ µ¿±âÈ­¸¦ °ü¸®
+  // CharacterControllerï¿½ï¿½ NetworkTransformï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¿ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
   
   [Header("Character Controller Settings")]
   public float gravity       = 1000.0f;
@@ -125,7 +125,8 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
   }
 
   public void JointApplication(Vector3[] joints){
-    characterControl.scaleTranslateJoints(joints);
+    // characterControl.scaleTranslateJoints(joints);
+    // characterControl.Draw3DPoints(joints);
     characterControl.Draw3DPoints(joints);
   }
 }

@@ -12,7 +12,7 @@ public class CharacterInputHandler : MonoBehaviour
     // 사용자로부터 이동, 점프, 카메라 회전 등입력정보 수집
     // 수집과 동시에 LocalCameraHandler와 다른 게임 구성 요소로 전달하여 게임 내 캐릭터의 움직임과 카메라 조작
     // GetNetworkInput() 메서드를 통해 네트워크를 통해 동기화할 입력 데이터(NetworkInputData)를 생성하고 초기화
-    
+
     Vector2 moveInputVector = Vector2.zero;
     Vector2 viewInputVector = Vector2.zero;
     bool isJumpButtonPressed = false;
@@ -24,7 +24,7 @@ public class CharacterInputHandler : MonoBehaviour
     CharacterControl characterControl;
     private PoseEstimator poseEstimator;
     private PoseEstimationData poseEstimationData;
-    private bool goodEs;
+    // private bool goodEs;
 
     WebCamTexture webcamTexture;
 
@@ -36,14 +36,22 @@ public class CharacterInputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WebCamDevice[] devices = WebCamTexture.devices;
+        // WebCamDevice[] devices = WebCamTexture.devices;
         
-        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
+        /******************************************************************
+            WebCamTexture는 두 개 이상의 스크립트에서 instantiate 할 수 가 없습니다.
+            PoseEstimator 스크립트를 MonoBehavior를 상속하도록 수정했으니 스크립트가
+            돌아가는 동안 poseEstimator.GetNetworkPoseData()로 최신 정보를 불러오면 됩니다.
+        ******************************************************************/
 
-        webcamTexture.Play();
+        // webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
+
+        // webcamTexture.Play();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         characterControl = GetComponentInChildren<CharacterControl>();
+
     }
 
     // Update is called once per frame
@@ -70,12 +78,8 @@ public class CharacterInputHandler : MonoBehaviour
         //Set View
         localCameraHandler.SetViewInputVector(viewInputVector);
         if(poseEstimator!=null){
-            goodEs = poseEstimator.RunML(webcamTexture);
-            if(goodEs){
-                poseEstimationData = poseEstimator.GetNetworkPoseData();
-            }
+            poseEstimationData = poseEstimator.GetNetworkPoseData(); // good estimation인지 확인할 필요 X
         }
-        
         
     }
 
@@ -91,7 +95,7 @@ public class CharacterInputHandler : MonoBehaviour
 
         networkInputData.isJumpPressed = isJumpButtonPressed;
         networkInputData.poseData = poseEstimationData;
-        networkInputData.goodEstimate = goodEs;
+        // networkInputData.goodEstimate = goodEs; // good estimation인지 확인할 필요 X
         isJumpButtonPressed = false;
 
         return networkInputData;
