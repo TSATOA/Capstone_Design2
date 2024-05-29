@@ -72,6 +72,7 @@ public class HandController : MonoBehaviour
     {
         if (IsArrowReload)
         {
+            // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
 
             if (distance > fireDistance)
