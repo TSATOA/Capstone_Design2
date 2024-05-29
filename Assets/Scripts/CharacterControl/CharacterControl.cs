@@ -2,12 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Animations.Rigging;
+using PoseInformation;
 
 public class CharacterControl : MonoBehaviour
 {
     // Game Objects
-    private List<GameObject> targetThreeDPoints;
+    private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
+    public string nameOfJointsGroup = "pose";
 
     // IK Control
     private Rig core;
@@ -32,37 +34,57 @@ public class CharacterControl : MonoBehaviour
     public Transform rightWrist;
     public Transform rightWristTarget;
 
-    private float[] boneDistances;
-
     void Start()
     {
-
         // IK setup
-
-        init3DKeypoints();
+        init3DKeypoints(nameOfJointsGroup);
         SetupRig();
 
+        PoseFormat.BoneDistances[PoseFormat.Bone.RootToRhip] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.RhipToRknee] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.RkneeToRankle] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.RootToLhip] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.LhipToLknee] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.LkneeToLankle] = 0.0f;
+        PoseFormat.BoneDistances[PoseFormat.Bone.RootToBelly] = distAtoB(characterRoot.position, spineMiddle.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = distAtoB(spineMiddle.position, neck.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose] = distAtoB(neck.position, nose.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.NoseToHead] = 0.8f * PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose];
+        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToLshoulder] = distAtoB(neck.position, leftArm.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.LshoulderToLelbow] = distAtoB(leftArm.position, leftForeArm.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.LelbowToLwrist] = distAtoB(leftForeArm.position, leftWrist.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToRshoulder] = distAtoB(neck.position, rightArm.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.RshoulderToRelbow] = distAtoB(rightArm.position, rightForeArm.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.RelbowToRwrist] = distAtoB(rightForeArm.position, rightWrist.position);
     }
 
     void Update()
     {
+        Vector3[] modelOutput;
 
-        Vector3[] threeDJoints = GetComponent<PoseEstimator>().getThreeDJoints();
+        modelOutput = GetComponent<PoseEstimator>().getThreeDJoints();
 
-        Draw3DPoints(threeDJoints);
+        Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
+        Vector3[] moreTargets = getMoreTargets(scaledOutput);
 
+        Draw3DJoints(scaledOutput, moreTargets, visualizeKeypoints);
     }
 
-    private void init3DKeypoints()
+    public void init3DKeypoints(string name)
     {
-
-        targetThreeDPoints = new List<GameObject>();
-        GameObject root = new GameObject("pose_root");
+        threeDPoints = new List<GameObject>();
+        GameObject root = new GameObject(name);
         root.transform.SetParent(characterRoot);
         root.transform.localPosition = Vector3.zero;
         root.transform.Rotate(0, 0, 0);
 
-        for (int i = 0; i <= 19; i++)
+        int numBodyJoints, numMoreTargets, totalLength;
+        numBodyJoints = Enum.GetValues(typeof(PoseFormat.Keypoint)).Length;
+        numMoreTargets = Enum.GetValues(typeof(PoseFormat.MoreTargetKeypoint)).Length;
+
+        totalLength = numBodyJoints + numMoreTargets;
+
+        for (int i = 0; i < totalLength; i++)
         {
 
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -73,68 +95,116 @@ public class CharacterControl : MonoBehaviour
 
             sphere.transform.SetParent(root.transform, false);
 
-            targetThreeDPoints.Add(sphere);
+            threeDPoints.Add(sphere);
 
         }
-
     }
 
-    public void Draw3DPoints(Vector3[] joints)
+    public Vector3[] scaleOutputJoints(Vector3[] modelOutput)
     {
 
-        Vector3 rootToSpineMiddle = fromAtoB(joints[0], joints[7]);
-        Vector3 spineMiddleToNeck = fromAtoB(joints[7], joints[8]);
-        Vector3 neckToNose = fromAtoB(joints[8], joints[9]);
-        Vector3 noseToHead = fromAtoB(joints[9], joints[10]);
-        Vector3 neckToLeftShoulder = fromAtoB(joints[8], joints[11]);
-        Vector3 leftShoulderToElbow = fromAtoB(joints[11], joints[12]);
-        Vector3 leftElbowToWrist = fromAtoB(joints[12], joints[13]);
-        Vector3 neckToRightShoulder = fromAtoB(joints[8], joints[14]);
-        Vector3 rightShoulderToElbow = fromAtoB(joints[14], joints[15]);
-        Vector3 rightElbowToWrist = fromAtoB(joints[15], joints[16]);
+        var boneArray = Enum.GetValues(typeof(PoseFormat.Bone));
+        int numBodyJoints = Enum.GetValues(typeof(PoseFormat.Keypoint)).Length;
 
-        rootToSpineMiddle.Normalize();
-        spineMiddleToNeck.Normalize();
-        neckToNose.Normalize();
-        noseToHead.Normalize();
-        neckToLeftShoulder.Normalize();
-        leftShoulderToElbow.Normalize();
-        leftElbowToWrist.Normalize();
-        neckToRightShoulder.Normalize();
-        rightShoulderToElbow.Normalize();
-        rightElbowToWrist.Normalize();
+        Vector3[] scaledJoints = new Vector3[numBodyJoints];
 
-        joints[0].x = 0; joints[0].y = 0; joints[0].z = 0;
-        joints[7] = joints[0] + rootToSpineMiddle * boneDistances[0];
-        joints[8] = joints[7] + 1.7f * spineMiddleToNeck * boneDistances[1];
-        joints[9] = joints[8] + 0.95f * neckToNose * boneDistances[2];
-        joints[10] = joints[9] + 0.7f * noseToHead * boneDistances[2];
-        joints[11] = joints[8] + neckToLeftShoulder * boneDistances[6];
-        joints[12] = joints[11] + leftShoulderToElbow * boneDistances[7];
-        joints[13] = joints[12] + leftElbowToWrist * boneDistances[8];
-        var leftHandPoint = joints[12] + 1.2f * leftElbowToWrist * boneDistances[8];
-        joints[14] = joints[8] + neckToRightShoulder * boneDistances[3];
-        joints[15] = joints[14] + rightShoulderToElbow * boneDistances[4];
-        joints[16] = joints[15] + rightElbowToWrist * boneDistances[5];
-        var rightHandPoint = joints[15] + 1.2f * rightElbowToWrist * boneDistances[5];
-        joints[8] = joints[7] + 1.3f * spineMiddleToNeck * boneDistances[1];
+        foreach(PoseFormat.Bone bone in boneArray) {
+            int joint1, joint2;
+            joint1 = (int)PoseFormat.BoneToKeypointPair[bone].Item1;
+            joint2 = (int)PoseFormat.BoneToKeypointPair[bone].Item2;
 
-        var forward_dir = 0.1f * boneDistances[2] * calculateForwardDirection(joints[11], joints[14], joints[0]);
-
-        for (int idx = 0; idx < joints.Length; idx++)
-        {
-
-            GameObject point = targetThreeDPoints[idx];
-            point.transform.localPosition = joints[idx];
-            point.SetActive(visualizeKeypoints);
-
+            // Pose estimation 결과의 root position에서 시작해
+            // 오른쪽 하반신, 왼쪽 하반신, 허리->머리,
+            // 왼쪽 상반신, 오른쪽 상반신 순서로 다음 관절 방향 계산
+            Vector3 aToB = vectorFromAtoB(modelOutput[joint1], modelOutput[joint2]).normalized;
+            // 해당 방향으로 캐릭터의 관절의 길이만큼 연장하여 keypoint 위치 계산
+            scaledJoints[joint2] = scaledJoints[joint1] + aToB * PoseFormat.BoneDistances[bone];
         }
 
+        // Root position은 항상 (0,0,0)
+        scaledJoints[0].x = 0;
+        scaledJoints[0].y = 0;
+        scaledJoints[0].z = 0;
+
+        // Neck joint의 위치 조정
+        int bellyIdx, neckIdx;
+        bellyIdx = (int)PoseFormat.Keypoint.Belly;
+        neckIdx = (int)PoseFormat.Keypoint.Neck;
+
+        Vector3 bellyToNeck = vectorFromAtoB(scaledJoints[bellyIdx], scaledJoints[neckIdx]);
+        scaledJoints[(int)PoseFormat.Keypoint.Neck] = scaledJoints[bellyIdx] + 0.8f * bellyToNeck;
+
+        return scaledJoints;
+    }
+
+    public Vector3[] getMoreTargets(Vector3[] bodyJoints)
+    {
+        var targetKeypointArray = Enum.GetValues(typeof(PoseFormat.MoreTargetKeypoint));
+        int numMoreTargets = targetKeypointArray.Length;
+
+        Vector3[] bodyAndHandTargets = new Vector3[numMoreTargets];
+
+        // 왼쪽 손목이 향할 좌표 계산
+        int leftElbowIdx, leftWristIdx;
+        Vector3 leftElbowToWrist;
+
+        leftElbowIdx = (int)PoseFormat.Keypoint.Lelbow;
+        leftWristIdx = (int)PoseFormat.Keypoint.Lwrist;
+        leftElbowToWrist = vectorFromAtoB(bodyJoints[leftElbowIdx], bodyJoints[leftWristIdx]);
+
+        Vector3 leftHandPoint = bodyJoints[leftElbowIdx] + 1.1f * leftElbowToWrist;
+
+        // 오른쪽 손목이 향할 좌표 계산
+        int rightElbowIdx, rightWristIdx;
+        Vector3 rightElbowToWrist;
+
+        rightElbowIdx = (int)PoseFormat.Keypoint.Relbow;
+        rightWristIdx = (int)PoseFormat.Keypoint.Rwrist;
+        rightElbowToWrist = vectorFromAtoB(bodyJoints[rightElbowIdx], bodyJoints[rightWristIdx]);
+
+        Vector3 rightHandPoint = bodyJoints[rightElbowIdx] + 1.1f * rightElbowToWrist;
+
+        // 몸통이 바라보는 방향의 좌표 계산
+        int leftShoulderIdx, rightShoulderIdx, bellyIdx, neckIdx;
+
+        leftShoulderIdx = (int)PoseFormat.Keypoint.Lshoulder;
+        rightShoulderIdx = (int)PoseFormat.Keypoint.Rshoulder;
+        bellyIdx = (int)PoseFormat.Keypoint.Belly;
+        neckIdx = (int)PoseFormat.Keypoint.Neck;
+
+        var forwardNormal = calculateForwardDirection(
+            bodyJoints[leftShoulderIdx],
+            bodyJoints[rightShoulderIdx],
+            bodyJoints[bellyIdx]
+        ).normalized;
+
+        Vector3 forwardPoint = bodyJoints[neckIdx] + forwardNormal * distAtoB(bodyJoints[leftShoulderIdx], bodyJoints[rightShoulderIdx]);
+
+        bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.LhandPoint] = leftHandPoint;
+        bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.RhandPoint] = rightHandPoint;
+        bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.BodyFacing] = forwardPoint;
+
+        return bodyAndHandTargets;
+    }
+
+    public void Draw3DJoints(Vector3[] bodyJoints, Vector3[] moreTargets, bool visualizeKeypoints)
+    {
+        for (int idx = 0; idx < bodyJoints.Length; idx++)
+        {
+            GameObject bodyJoint = threeDPoints[idx];
+            bodyJoint.transform.localPosition = bodyJoints[idx];
+            bodyJoint.SetActive(visualizeKeypoints);
+        }
+        for (int idx = 0; idx < moreTargets.Length; idx++)
+        {
+            GameObject bodyJoint = threeDPoints[idx + bodyJoints.Length];
+            bodyJoint.transform.localPosition = moreTargets[idx];
+            bodyJoint.SetActive(visualizeKeypoints);
+        }
     }
 
     void SetupRig()
     {
-
         RigBuilder rigBuilder = gameObject.AddComponent<RigBuilder>();
         GameObject rig_core = new GameObject("Core Rig");
         GameObject rig_arms = new GameObject("Arm Rig");
@@ -154,6 +224,9 @@ public class CharacterControl : MonoBehaviour
         rigBuilder.layers.Add(new RigLayer(arms.GetComponent<Rig>(), true));
         rigBuilder.layers.Add(new RigLayer(look.GetComponent<Rig>(), true));
 
+        int numBodyJoints = Enum.GetValues(typeof(PoseFormat.Keypoint)).Length;
+        int numMoreTargets = Enum.GetValues(typeof(PoseFormat.MoreTargetKeypoint)).Length;
+
         // Setup Core Rig
         GameObject spineControl = new GameObject("spineControl");
         GameObject lookAt = new GameObject("lookAt");
@@ -170,18 +243,18 @@ public class CharacterControl : MonoBehaviour
         // Chain IK
         spine_chainIK.data.root = spineRoot;
         spine_chainIK.data.tip = spineTip;
-        spine_chainIK.data.target = targetThreeDPoints[8].transform;
+        spine_chainIK.data.target = threeDPoints[(int)PoseFormat.Keypoint.Neck].transform;
         spine_chainIK.data.maxIterations = 15;
         spine_chainIK.data.tolerance = 0.0001f;
         spine_chainIK.data.chainRotationWeight = 1.0f;
         spine_chainIK.data.tipRotationWeight = 0.0f;
 
         // Multi-Aim
-        spine_multiAim.data.constrainedObject = targetThreeDPoints[8].transform;
+        spine_multiAim.data.constrainedObject = threeDPoints[8].transform;
 
         spine_multiAim.weight = 1.0f;
         var sources1 = spine_multiAim.data.sourceObjects;
-        sources1.Add(new WeightedTransform(targetThreeDPoints[19].transform, 1.0f));
+        sources1.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.BodyFacing].transform, 1.0f));
         spine_multiAim.data.sourceObjects = sources1;
 
         spine_multiAim.data.aimAxis = MultiAimConstraintData.Axis.Y_NEG;
@@ -213,7 +286,7 @@ public class CharacterControl : MonoBehaviour
         lookAt_multiAim.data.upAxis = MultiAimConstraintData.Axis.Y;
 
         var sources2 = lookAt_multiAim.data.sourceObjects;
-        sources2.Add(new WeightedTransform(targetThreeDPoints[9].transform, 1.0f));
+        sources2.Add(new WeightedTransform(threeDPoints[(int)PoseFormat.Keypoint.Nose].transform, 1.0f));
         lookAt_multiAim.data.sourceObjects = sources2;
 
         lookAt_multiAim.data.maintainOffset = false;
@@ -221,7 +294,7 @@ public class CharacterControl : MonoBehaviour
         lookAt_multiAim.data.constrainedYAxis = true;
         lookAt_multiAim.data.constrainedZAxis = true;
         lookAt_multiAim.data.limits = new Vector2(-50, 50);
-        lookAt_multiAim.data.offset = new Vector3(0.0f,0.0f,0.0f);
+        lookAt_multiAim.data.offset = new Vector3(0.0f, 0.0f, 0.0f);
 
         // Neck Contraints
         var neck_twoBone = neckControl.AddComponent<TwoBoneIKConstraint>();
@@ -231,8 +304,8 @@ public class CharacterControl : MonoBehaviour
         neck_twoBone.data.mid = neck;
         neck_twoBone.data.tip = nose;
 
-        neck_twoBone.data.target = targetThreeDPoints[10].transform;
-        neck_twoBone.data.hint = targetThreeDPoints[9].transform;
+        neck_twoBone.data.target = threeDPoints[10].transform;
+        neck_twoBone.data.hint = threeDPoints[9].transform;
 
         neck_twoBone.data.targetPositionWeight = 1.0f;
         neck_twoBone.data.targetRotationWeight = 0.0f;
@@ -262,8 +335,8 @@ public class CharacterControl : MonoBehaviour
         leftShoulder_twoBone.data.mid = leftArm;
         leftShoulder_twoBone.data.tip = leftForeArm;
 
-        leftShoulder_twoBone.data.target = targetThreeDPoints[12].transform;
-        leftShoulder_twoBone.data.hint = targetThreeDPoints[11].transform;
+        leftShoulder_twoBone.data.target = threeDPoints[12].transform;
+        leftShoulder_twoBone.data.hint = threeDPoints[11].transform;
 
         leftShoulder_twoBone.data.targetPositionWeight = 0.2f;
         leftShoulder_twoBone.data.targetRotationWeight = 0.0f;
@@ -276,8 +349,8 @@ public class CharacterControl : MonoBehaviour
         leftArm_twoBone.data.mid = leftForeArm;
         leftArm_twoBone.data.tip = leftWrist;
 
-        leftArm_twoBone.data.target = targetThreeDPoints[13].transform;
-        leftArm_twoBone.data.hint = targetThreeDPoints[12].transform;
+        leftArm_twoBone.data.target = threeDPoints[13].transform;
+        leftArm_twoBone.data.hint = threeDPoints[12].transform;
 
         leftArm_twoBone.data.targetPositionWeight = 1.0f;
         leftArm_twoBone.data.targetRotationWeight = 0.0f;
@@ -292,7 +365,7 @@ public class CharacterControl : MonoBehaviour
         leftHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.X_NEG;
 
         var sources3 = leftHand_multiAim.data.sourceObjects;
-        sources3.Add(new WeightedTransform(targetThreeDPoints[17].transform, 1.0f));
+        sources3.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.LhandPoint].transform, 1.0f));
         leftHand_multiAim.data.sourceObjects = sources3;
 
         leftHand_multiAim.data.maintainOffset = false;
@@ -308,8 +381,8 @@ public class CharacterControl : MonoBehaviour
         rightShoulder_twoBone.data.mid = rightArm;
         rightShoulder_twoBone.data.tip = rightForeArm;
 
-        rightShoulder_twoBone.data.target = targetThreeDPoints[15].transform;
-        rightShoulder_twoBone.data.hint = targetThreeDPoints[14].transform;
+        rightShoulder_twoBone.data.target = threeDPoints[15].transform;
+        rightShoulder_twoBone.data.hint = threeDPoints[14].transform;
 
         rightShoulder_twoBone.data.targetPositionWeight = 0.2f;
         rightShoulder_twoBone.data.targetRotationWeight = 0.0f;
@@ -322,8 +395,8 @@ public class CharacterControl : MonoBehaviour
         rightArm_twoBone.data.mid = rightForeArm;
         rightArm_twoBone.data.tip = rightWrist;
 
-        rightArm_twoBone.data.target = targetThreeDPoints[16].transform;
-        rightArm_twoBone.data.hint = targetThreeDPoints[15].transform;
+        rightArm_twoBone.data.target = threeDPoints[16].transform;
+        rightArm_twoBone.data.hint = threeDPoints[15].transform;
 
         rightArm_twoBone.data.targetPositionWeight = 1.0f;
         rightArm_twoBone.data.targetRotationWeight = 0.0f;
@@ -338,7 +411,7 @@ public class CharacterControl : MonoBehaviour
         rightHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.X_NEG;
 
         var sources4 = rightHand_multiAim.data.sourceObjects;
-        sources4.Add(new WeightedTransform(targetThreeDPoints[18].transform, 1.0f));
+        sources4.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.RhandPoint].transform, 1.0f));
         rightHand_multiAim.data.sourceObjects = sources3;
 
         rightHand_multiAim.data.maintainOffset = false;
@@ -349,57 +422,28 @@ public class CharacterControl : MonoBehaviour
 
         // Build Rig
         rigBuilder.Build();
-
-        boneDistances = saveBoneDistances();
-
-    }
-
-    private float[] saveBoneDistances()
-    {
-
-        float[] bones = new float[16];
-
-        bones[0] = distAtoB(characterRoot.transform.position, spineMiddle.transform.position);
-        bones[1] = distAtoB(spineMiddle.transform.position, spineTip.transform.position);
-        bones[2] = 0.7f * distAtoB(spineTip.transform.position, nose.transform.position);
-        bones[3] = distAtoB(spineTip.transform.position, rightArm.transform.position);
-        bones[4] = distAtoB(rightArm.transform.position, rightForeArm.transform.position);
-        bones[5] = distAtoB(rightForeArm.transform.position, rightWrist.transform.position);
-        bones[6] = distAtoB(spineTip.transform.position, leftArm.transform.position);
-        bones[7] = distAtoB(leftArm.transform.position, leftForeArm.transform.position);
-        bones[8] = distAtoB(leftForeArm.transform.position, leftWrist.transform.position);
-
-        return bones;
-
     }
 
     private float distAtoB(Vector3 a, Vector3 b)
     {
-
         float dist = Vector3.Distance(a, b);
-
         return dist;
-
     }
 
-    private Vector3 fromAtoB(Vector3 a, Vector3 b)
+    private Vector3 vectorFromAtoB(Vector3 a, Vector3 b)
     {
-
         Vector3 a_to_b = b - a;
         return a_to_b;
-
     }
 
     Vector3 calculateForwardDirection(Vector3 leftShoulder, Vector3 rightShoulder, Vector3 hip)
     {
-
         Vector3 hipToLeftShoulder = leftShoulder - hip;
         Vector3 hipToRightShoulder = rightShoulder - hip;
 
         Vector3 perpendicularVector = Vector3.Cross(hipToRightShoulder, hipToLeftShoulder).normalized;
 
         return perpendicularVector.normalized;
-
     }
 
     void OnDestroy()

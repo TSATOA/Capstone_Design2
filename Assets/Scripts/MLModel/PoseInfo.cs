@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PoseInfo
+namespace PoseInformation
 {
-    public class PoseEnum : MonoBehaviour
+    public class PoseFormat
     {
         // Keypoint format
         public enum Keypoint : int
@@ -14,13 +14,17 @@ namespace PoseInfo
             Belly, Neck, Nose, Head,
             Lshoulder, Lelbow, Lwrist,
             Rshoulder, Relbow, Rwrist
-        };
+        }
+        public enum MoreTargetKeypoint : int
+        {
+            BodyFacing, LhandPoint, RhandPoint
+        }
         // Keypoints pairs for indexing
         public enum Bone : int
         {
             RootToRhip, RhipToRknee, RkneeToRankle,
             RootToLhip, LhipToLknee, LkneeToLankle,
-            BellyToNeck, NeckToNose, NoseToHead,
+            RootToBelly, BellyToNeck, NeckToNose, NoseToHead,
             NeckToLshoulder, LshoulderToLelbow, LelbowToLwrist,
             NeckToRshoulder, RshoulderToRelbow, RelbowToRwrist
         }
@@ -33,6 +37,7 @@ namespace PoseInfo
             { Bone.RootToLhip, (Keypoint.Root, Keypoint.Lhip) },
             { Bone.LhipToLknee, (Keypoint.Lhip, Keypoint.Lknee) },
             { Bone.LkneeToLankle, (Keypoint.Lknee, Keypoint.Lankle) },
+            { Bone.RootToBelly, (Keypoint.Root, Keypoint.Belly) },
             { Bone.BellyToNeck, (Keypoint.Belly, Keypoint.Neck) },
             { Bone.NeckToNose, (Keypoint.Neck, Keypoint.Nose) },
             { Bone.NoseToHead, (Keypoint.Nose, Keypoint.Head) },
@@ -43,5 +48,6 @@ namespace PoseInfo
             { Bone.RshoulderToRelbow, (Keypoint.Rshoulder, Keypoint.Relbow) },
             { Bone.RelbowToRwrist, (Keypoint.Relbow, Keypoint.Rwrist) }
         };
+        public static Dictionary<Bone, float> BoneDistances { get; } = new Dictionary<Bone, float>(BoneToKeypointPair.Count);
     }
 }

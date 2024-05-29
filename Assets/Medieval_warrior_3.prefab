@@ -1005,7 +1005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267924577d65ce24ab89ca6c87f86d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualizeKeypoints: 0
+  visualizeKeypoints: 1
+  nameOfJointsGroup: pose
   characterRoot: {fileID: 8335726273761408243}
   spineRoot: {fileID: 8121268283963125616}
   spineMiddle: {fileID: 6695262477982585346}
@@ -1036,7 +1037,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 71eea7a35210747f4a82ad3c5c9e1de3, type: 3}
   threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 8988e18e7e5504e41907ed5bba8f1e6d, type: 3}
-  numFrames: 27
   iouThreshold: 0.5
   scoreThreshold: 0.5
   webcamTextureCopy: {fileID: 0}
