@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: cf1e15367aba18c4cb556cdf3ca9e811
+timeCreated: 1504911185
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Icon Slot System/Interfaces/IUIItemSlot.cs
+  uploadId: 327429

@@ -25,10 +25,12 @@ public class CharacterControl : MonoBehaviour
     public Transform leftArm;
     public Transform leftForeArm;
     public Transform leftWrist;
+    public Transform leftWristTarget;
     public Transform rightShoulder;
     public Transform rightArm;
     public Transform rightForeArm;
     public Transform rightWrist;
+    public Transform rightWristTarget;
 
     private float[] boneDistances;
 
@@ -124,12 +126,9 @@ public class CharacterControl : MonoBehaviour
 
             GameObject point = targetThreeDPoints[idx];
             point.transform.localPosition = joints[idx];
+            point.SetActive(visualizeKeypoints);
 
         }
-
-        targetThreeDPoints[17].transform.localPosition = leftHandPoint;
-        targetThreeDPoints[18].transform.localPosition = rightHandPoint;
-        targetThreeDPoints[19].transform.localPosition = forward_dir + joints[8];
 
     }
 
@@ -386,9 +385,8 @@ public class CharacterControl : MonoBehaviour
     private Vector3 fromAtoB(Vector3 a, Vector3 b)
     {
 
-        Vector3 ab = b - a;
-
-        return ab;
+        Vector3 a_to_b = b - a;
+        return a_to_b;
 
     }
 

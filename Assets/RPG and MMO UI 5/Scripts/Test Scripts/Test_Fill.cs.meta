@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b6b9b7947b419c24ba627251010565c1
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/Test Scripts/Test_Fill.cs
+  uploadId: 327429

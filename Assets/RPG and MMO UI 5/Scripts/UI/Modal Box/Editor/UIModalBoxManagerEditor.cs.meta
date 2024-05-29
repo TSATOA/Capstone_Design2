@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 17c5eae3db8670b43a8b5c4f52280048
+timeCreated: 1484382962
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Modal Box/Editor/UIModalBoxManagerEditor.cs
+  uploadId: 327429
