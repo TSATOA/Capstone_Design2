@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 09a4f28f06ac06249a15fa7034499f64
+timeCreated: 1485659192
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Miscellaneous/UISliderDisplayValue.cs
+  uploadId: 327429

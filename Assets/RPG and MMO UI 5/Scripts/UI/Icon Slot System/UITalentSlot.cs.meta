@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3ac414e8e7253b5498dcd1691bbaa93a
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Icon Slot System/UITalentSlot.cs
+  uploadId: 327429

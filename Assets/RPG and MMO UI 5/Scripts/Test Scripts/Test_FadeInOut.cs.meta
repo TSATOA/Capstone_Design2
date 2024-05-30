@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 1892106133110754a8f72b8e0e6bfa92
+timeCreated: 1428651191
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/Test Scripts/Test_FadeInOut.cs
+  uploadId: 327429

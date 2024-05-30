@@ -267,7 +267,6 @@ MonoBehaviour:
   - {fileID: 5225002718034680019}
   - {fileID: 7401877263711686405}
   - {fileID: 5119814858608770742}
-  - {fileID: 5336661359371375924}
   SimulationBehaviours: []
 --- !u!114 &5225002718034680019
 MonoBehaviour:
@@ -882,6 +881,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2992516504273671269}
     m_Modifications:
+    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
+      propertyPath: ikActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
+      propertyPath: characterHip
+      value: 
+      objectReference: {fileID: 93137176409755382}
+    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
+      propertyPath: characterHeadEnd
+      value: 
+      objectReference: {fileID: 3616228707839588367}
     - target: {fileID: -8679921383154817045, guid: cfc792479e4aa4f4987ee81245f622ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -926,22 +941,6 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 1c203fcb79adb42bab2108a80c296baa, type: 2}
-    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
-      propertyPath: ikActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
-      propertyPath: characterHip
-      value: 
-      objectReference: {fileID: 93137176409755382}
-    - target: {fileID: 8615216302840163577, guid: 5025f3c696cd72843ae4945237c5e828, type: 3}
-      propertyPath: characterHeadEnd
-      value: 
-      objectReference: {fileID: 3616228707839588367}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -982,19 +981,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267924577d65ce24ab89ca6c87f86d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 677948c55a8d22d4dbd929179fc4bc70, type: 3}
-  threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 6c5b432df1895044e9af292098ea7555, type: 3}
-  characterHeadEnd: {fileID: 3616228707839588367}
-  characterHip: {fileID: 93137176409755382}
-  ikActive: 1
-  lowerBody: 0
-  leftHandObj: {fileID: 0}
-  rightHandObj: {fileID: 0}
-  inputHandler: {fileID: 1365363454340313938}
-  goodEstimate: 0
+  visualizeKeypoints: 0
+  characterRoot: {fileID: 0}
+  spineRoot: {fileID: 0}
+  spineMiddle: {fileID: 0}
+  spineTip: {fileID: 0}
+  neck: {fileID: 0}
+  nose: {fileID: 0}
+  leftShoulder: {fileID: 0}
+  leftArm: {fileID: 0}
+  leftForeArm: {fileID: 0}
+  leftWrist: {fileID: 0}
+  rightShoulder: {fileID: 0}
+  rightArm: {fileID: 0}
+  rightForeArm: {fileID: 0}
+  rightWrist: {fileID: 0}
 --- !u!4 &5555947738241642082 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cfc792479e4aa4f4987ee81245f622ab, type: 3}
+  m_CorrespondingSourceObject: {fileID: 9223372036854775806, guid: cfc792479e4aa4f4987ee81245f622ab, type: 3}
   m_PrefabInstance: {fileID: 5372803656174946697}
   m_PrefabAsset: {fileID: 0}

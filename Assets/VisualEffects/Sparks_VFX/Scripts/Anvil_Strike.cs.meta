@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d7c854c61f4c68b41b964bacdaf3c0d3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252278
+  packageName: Blacksmith Sparks VFX
+  packageVersion: 1.0
+  assetPath: Assets/Blacksmith_Sparks_VFX/Scripts/Anvil_Strike.cs
+  uploadId: 577286
