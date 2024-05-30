@@ -6983,7 +6983,7 @@ MonoBehaviour:
   threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 8988e18e7e5504e41907ed5bba8f1e6d, type: 3}
   iouThreshold: 0.5
   scoreThreshold: 0.5
-  webcamTextureCopy: {fileID: 0}
+  webcamPixels: []
 --- !u!114 &236546612521155768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7006,7 +7006,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7794328056204116063}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d6f72ce8e3625aa4bb4244fa493842b5, type: 3}
   m_Controller: {fileID: 9100000, guid: 52fafd636dd2dd94b92761d0b3c1c68a, type: 2}
   m_CullingMode: 0

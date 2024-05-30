@@ -63,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b404476c22df47618c79a516bb5503a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8615216302840163577}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5b404476c22df47618c79a516bb5503a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4738435896851320975}
   m_SourcePrefab: {fileID: 100100000, guid: 5b404476c22df47618c79a516bb5503a, type: 3}
 --- !u!1 &919545375800654968 stripped
 GameObject:
@@ -81,9 +84,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 267924577d65ce24ab89ca6c87f86d96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 677948c55a8d22d4dbd929179fc4bc70, type: 3}
-  threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 6c5b432df1895044e9af292098ea7555, type: 3}
-  characterHeadEnd: {fileID: 0}
-  characterHip: {fileID: 0}
-  ikActive: 0
-  lowerBody: 0
+  visualizeKeypoints: 0
+  nameOfJointsGroup: pose
+  characterRoot: {fileID: 0}
+  spineRoot: {fileID: 0}
+  spineMiddle: {fileID: 0}
+  spineTip: {fileID: 0}
+  neck: {fileID: 0}
+  nose: {fileID: 0}
+  leftShoulder: {fileID: 0}
+  leftArm: {fileID: 0}
+  leftForeArm: {fileID: 0}
+  leftWrist: {fileID: 0}
+  leftWristTarget: {fileID: 0}
+  rightShoulder: {fileID: 0}
+  rightArm: {fileID: 0}
+  rightForeArm: {fileID: 0}
+  rightWrist: {fileID: 0}
+  rightWristTarget: {fileID: 0}
+--- !u!114 &4738435896851320975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919545375800654968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac5cde7ca40b54a6c9cc55d4b3931f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  twoDPoseModelAsset: {fileID: 5022602860645237092, guid: 71eea7a35210747f4a82ad3c5c9e1de3, type: 3}
+  threeDPoseModelAsset: {fileID: 5022602860645237092, guid: 8988e18e7e5504e41907ed5bba8f1e6d, type: 3}
+  iouThreshold: 0.5
+  scoreThreshold: 0.5
+  webcamTextureCopy: {fileID: 0}

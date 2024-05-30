@@ -353,16 +353,16 @@ public class CharacterControl : MonoBehaviour
         leftArm_twoBone.data.hint = threeDPoints[12].transform;
 
         leftArm_twoBone.data.targetPositionWeight = 1.0f;
-        leftArm_twoBone.data.targetRotationWeight = 0.0f;
+        leftArm_twoBone.data.targetRotationWeight = 1.0f;
         leftArm_twoBone.data.hintWeight = 1.0f;
 
         // Left Hand
         var leftHand_multiAim = leftHandControl.AddComponent<MultiAimConstraint>();
 
         leftHand_multiAim.weight = 1.0f;
-        leftHand_multiAim.data.constrainedObject = leftWrist;
+        leftHand_multiAim.data.constrainedObject = threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform;
         leftHand_multiAim.data.aimAxis = MultiAimConstraintData.Axis.X_NEG;
-        leftHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.X_NEG;
+        leftHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.Z_NEG;
 
         var sources3 = leftHand_multiAim.data.sourceObjects;
         sources3.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.LhandPoint].transform, 1.0f));
@@ -372,7 +372,7 @@ public class CharacterControl : MonoBehaviour
         leftHand_multiAim.data.constrainedXAxis = true;
         leftHand_multiAim.data.constrainedYAxis = true;
         leftHand_multiAim.data.constrainedZAxis = true;
-        leftHand_multiAim.data.limits = new Vector2(-10, 10);
+        leftHand_multiAim.data.limits = new Vector2(-60, 60);
 
         // Right Shoulder
         var rightShoulder_twoBone = rightShoulderControl.AddComponent<TwoBoneIKConstraint>();
@@ -399,23 +399,23 @@ public class CharacterControl : MonoBehaviour
         rightArm_twoBone.data.hint = threeDPoints[15].transform;
 
         rightArm_twoBone.data.targetPositionWeight = 1.0f;
-        rightArm_twoBone.data.targetRotationWeight = 0.0f;
+        rightArm_twoBone.data.targetRotationWeight = 1.0f;
         rightArm_twoBone.data.hintWeight = 1.0f;
 
         // Right Hand
         var rightHand_multiAim = rightHandControl.AddComponent<MultiAimConstraint>();
 
         rightHand_multiAim.weight = 1.0f;
-        rightHand_multiAim.data.constrainedObject = rightWrist;
-        rightHand_multiAim.data.aimAxis = MultiAimConstraintData.Axis.X_NEG;
-        rightHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.X_NEG;
+        rightHand_multiAim.data.constrainedObject = threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform;
+        rightHand_multiAim.data.aimAxis = MultiAimConstraintData.Axis.X;
+        rightHand_multiAim.data.upAxis = MultiAimConstraintData.Axis.Y;
 
         var sources4 = rightHand_multiAim.data.sourceObjects;
-        sources4.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.RhandPoint].transform, 1.0f));
-        rightHand_multiAim.data.sourceObjects = sources3;
+        sources4.Add(new WeightedTransform(threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform, 1.0f));
+        rightHand_multiAim.data.sourceObjects = sources4;
 
         rightHand_multiAim.data.maintainOffset = false;
-        rightHand_multiAim.data.constrainedXAxis = true;
+        rightHand_multiAim.data.constrainedXAxis = false;
         rightHand_multiAim.data.constrainedYAxis = true;
         rightHand_multiAim.data.constrainedZAxis = true;
         rightHand_multiAim.data.limits = new Vector2(-10, 10);

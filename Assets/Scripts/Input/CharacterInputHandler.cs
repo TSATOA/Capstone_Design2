@@ -7,11 +7,11 @@ using UnityEngine.Windows.WebCam;
 
 public class CharacterInputHandler : MonoBehaviour
 {
-    // ÇÃ·¹ÀÌ¾îÀÇ ÀÔ·ÂÀ» Ã³¸®ÇÏ°í ±× ÀÔ·ÂÀ» ³×Æ®¿öÅ©¸¦ ÅëÇØ ´Ù¸¥ ÇÃ·¹ÀÌ¾î¿Í µ¿±âÈ­ÇÏ±â À§ÇÑ µ¥ÀÌÅÍ¸¦ ÁØºñ
-    // CharacterInputHandler´Â ÇÃ·¹ÀÌ¾î·ÎºÎÅÍ ÀÔ·ÂÀ» ¹Þ¾Æ LocalCameraHandler¿Í NetworkInputData·Î Àü´Þ
-    // »ç¿ëÀÚ·ÎºÎÅÍ ÀÌµ¿, Á¡ÇÁ, Ä«¸Þ¶ó È¸Àü µîÀÔ·ÂÁ¤º¸ ¼öÁý
-    // ¼öÁý°ú µ¿½Ã¿¡ LocalCameraHandler¿Í ´Ù¸¥ °ÔÀÓ ±¸¼º ¿ä¼Ò·Î Àü´ÞÇÏ¿© °ÔÀÓ ³» Ä³¸¯ÅÍÀÇ ¿òÁ÷ÀÓ°ú Ä«¸Þ¶ó Á¶ÀÛ
-    // GetNetworkInput() ¸Þ¼­µå¸¦ ÅëÇØ ³×Æ®¿öÅ©¸¦ ÅëÇØ µ¿±âÈ­ÇÒ ÀÔ·Â µ¥ÀÌÅÍ(NetworkInputData)¸¦ »ý¼ºÇÏ°í ÃÊ±âÈ­
+    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Øºï¿½
+    // CharacterInputHandlerï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½Îºï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Þ¾ï¿½ LocalCameraHandlerï¿½ï¿½ NetworkInputDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½Ú·Îºï¿½ï¿½ï¿½ ï¿½Ìµï¿½, ï¿½ï¿½ï¿½ï¿½, Ä«ï¿½Þ¶ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ LocalCameraHandlerï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ò·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // GetNetworkInput() ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(NetworkInputData)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ê±ï¿½È­
 
     Vector2 moveInputVector = Vector2.zero;
     Vector2 viewInputVector = Vector2.zero;
@@ -39,9 +39,9 @@ public class CharacterInputHandler : MonoBehaviour
         // WebCamDevice[] devices = WebCamTexture.devices;
         
         /******************************************************************
-            WebCamTexture´Â µÎ °³ ÀÌ»óÀÇ ½ºÅ©¸³Æ®¿¡¼­ instantiate ÇÒ ¼ö °¡ ¾ø½À´Ï´Ù.
-            PoseEstimator ½ºÅ©¸³Æ®¸¦ MonoBehavior¸¦ »ó¼ÓÇÏµµ·Ï ¼öÁ¤ÇßÀ¸´Ï ½ºÅ©¸³Æ®°¡
-            µ¹¾Æ°¡´Â µ¿¾È poseEstimator.GetNetworkPoseData()·Î ÃÖ½Å Á¤º¸¸¦ ºÒ·¯¿À¸é µË´Ï´Ù.
+            WebCamTextureï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ instantiate ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
+            PoseEstimator ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ MonoBehaviorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½
+            ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ poseEstimator.GetNetworkPoseData()ï¿½ï¿½ ï¿½Ö½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë´Ï´ï¿½.
         ******************************************************************/
 
         // webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
@@ -51,6 +51,8 @@ public class CharacterInputHandler : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         characterControl = GetComponentInChildren<CharacterControl>();
+        // pose estimator 
+        poseEstimator = GetComponentInChildren<PoseEstimator>();
 
     }
 
@@ -61,24 +63,24 @@ public class CharacterInputHandler : MonoBehaviour
         viewInputVector.x = Input.GetAxis("Mouse X");
         viewInputVector.y = Input.GetAxis("Mouse Y")*-1;
 
-        //LocalCameraHandler¸¦ ÅëÇØ UpdateÀÇ rotationÀÌ ¾Æ´Ï¶ó ³×Æ®¿öÅ©ÀÇ aim°ú ¸ÂÃã
+        //LocalCameraHandlerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Updateï¿½ï¿½ rotationï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ aimï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //characterMovementHandler.SetViewInputVector(viewInputVector);
 
         //Move Input
-        //²Ú ´©¸£´Â °ÍÀº sync¿Í »ó°ü¾øÀÌ ¾Æ·¡Ã³·³ ±¸Çö °¡´É
+        //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ syncï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         moveInputVector.x = Input.GetAxis("Horizontal");
         moveInputVector.y = Input.GetAxis("Vertical");
 
-        //Shooting, jumpµîÀº Update¿Í GetNetworkInputÀÇ sync ¾È¸Â¾Æ ¾Æ·¡Ã³·³ ºÒ°¡´É
+        //Shooting, jumpï¿½ï¿½ï¿½ï¿½ Updateï¿½ï¿½ GetNetworkInputï¿½ï¿½ sync ï¿½È¸Â¾ï¿½ ï¿½Æ·ï¿½Ã³ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½
         //isJumpButtonPressed = Input.GetButtonDown("Jump");
-        //ÀÌ·¸°Ô ±¸ÇöÇØ¾ßÇÔ
+        //ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
         if(Input.GetButtonDown("Jump"))
             isJumpButtonPressed = true;
 
         //Set View
         localCameraHandler.SetViewInputVector(viewInputVector);
         if(poseEstimator!=null){
-            poseEstimationData = poseEstimator.GetNetworkPoseData(); // good estimationÀÎÁö È®ÀÎÇÒ ÇÊ¿ä X
+            poseEstimationData = poseEstimator.GetNetworkPoseData(); // good estimationï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ X
         }
         
     }
@@ -95,7 +97,7 @@ public class CharacterInputHandler : MonoBehaviour
 
         networkInputData.isJumpPressed = isJumpButtonPressed;
         networkInputData.poseData = poseEstimationData;
-        // networkInputData.goodEstimate = goodEs; // good estimationÀÎÁö È®ÀÎÇÒ ÇÊ¿ä X
+        // networkInputData.goodEstimate = goodEs; // good estimationï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ X
         isJumpButtonPressed = false;
 
         return networkInputData;

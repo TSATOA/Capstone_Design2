@@ -5,9 +5,9 @@ using Fusion;
 
 public class CharacterMovementHandler : NetworkBehaviour
 {
-    // ³×Æ®¿öÅ©¸¦ ÅëÇØ µ¿±âÈ­µÈ ÀÔ·ÂÀ» ¹Þ¾Æ Ä³¸¯ÅÍÀÇ ½ÇÁ¦ ¿òÁ÷ÀÓÀ» Ã³¸®
-    // FixedUpdateNetwork() ¸Þ¼­µå¿¡¼­ ³×Æ®¿öÅ© ÀÔ·Â µ¥ÀÌÅÍ¸¦ »ç¿ëÇÏ¿© Ä³¸¯ÅÍÀÇ ¹æÇâ ÀüÈ¯, ÀÌµ¿ ¹× Á¡ÇÁ¸¦ ±¸Çö
-    // NetworkCharacterControllerPrototypeCustom¿¡¼­ Á¤ÀÇµÈ ¹°¸®Àû ¿òÁ÷ÀÓ°ú µ¿±âÈ­ ·ÎÁ÷À» »ç¿ëÇÏ¿© ½ÇÁ¦ °ÔÀÓ ¿ùµå¿¡¼­ Ä³¸¯ÅÍÀÇ ¿òÁ÷ÀÓÀ» Á¦¾î
+    // ï¿½ï¿½Æ®ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Þ¾ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+    // FixedUpdateNetwork() ï¿½Þ¼ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯, ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // NetworkCharacterControllerPrototypeCustomï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Çµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     
     //Vector2 viewInput;
     //float cameraRotationX = 0;
@@ -27,7 +27,7 @@ public class CharacterMovementHandler : NetworkBehaviour
     }
 
     /*
-    ÀÌ ºÎºÐÀº localCameraHandler¸¦ Ãß°¡ÇÏ¿© ¼öÁ¤ÇÏ¸é¼­ »èÁ¦
+    ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ localCameraHandlerï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸é¼­ ï¿½ï¿½ï¿½ï¿½
     void Update()
     {
         cameraRotationX += viewInput.y * Time.deltaTime * networkCharacterControllerPrototypeCustom.viewUpDownRotationSpeed;
@@ -37,15 +37,15 @@ public class CharacterMovementHandler : NetworkBehaviour
     */
     public override void FixedUpdateNetwork()
     {
-        //FixedUpdateNetwork¸¦ ÅëÇØ ÀÏ°üµÈ µ¿±âÈ­ º¸Àå
-        //Update´Â ¸Å ÇÇ·¹ÀÓ, FixedUpdate´ÂÀÏÁ¤ ½Ã°£¸¶´Ù
+        //FixedUpdateNetworkï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½
+        //Updateï¿½ï¿½ ï¿½ï¿½ ï¿½Ç·ï¿½ï¿½ï¿½, FixedUpdateï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½
         if(GetInput(out NetworkInputData networkInputData)){
             //Rotation the view
             //networkCharacterControllerPrototypeCustom.Rotate(networkInputData.rotationInput);
 
             //client aim vector rotate
             transform.forward = networkInputData.aimForwardVector;
-            //xÃà tilt °íÁ¤
+            //xï¿½ï¿½ tilt ï¿½ï¿½ï¿½ï¿½
             Quaternion rotation = transform.rotation;
             rotation.eulerAngles = new Vector3(0,rotation.eulerAngles.y,rotation.eulerAngles.z);
             transform.rotation = rotation;
@@ -60,14 +60,12 @@ public class CharacterMovementHandler : NetworkBehaviour
                 networkCharacterControllerPrototypeCustom.Jump();
             }
             
-            if(networkInputData.goodEstimate){
-                threeDJoints = GetJointsList(networkInputData);
-                networkCharacterControllerPrototypeCustom.JointApplication(threeDJoints);
-                //characterControl.Draw3DPoints(threeDJoints);
-                //characterControl.scaleTranslateJoints(threeDJoints);
-            }
+            threeDJoints = GetJointsList(networkInputData);
+            networkCharacterControllerPrototypeCustom.JointApplication(threeDJoints);
+            //characterControl.Draw3DPoints(threeDJoints);
+            //characterControl.scaleTranslateJoints(threeDJoints);
     
-            //ÀÌ°Ç °Á ¸Ê¿¡¼­ ¶³¾îÁ³À»¶§ ´ëºñ
+            //ï¿½Ì°ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             CheckFallRespawn();
         }
     }
