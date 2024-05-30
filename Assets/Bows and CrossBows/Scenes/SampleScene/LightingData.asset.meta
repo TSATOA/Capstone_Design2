@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7f12af530d09c0b49aa112103d28a4d5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 153495
+  packageName: Bows and CrossBows - Medieval Weapons Pack
+  packageVersion: 3.0
+  assetPath: Assets/Bows and CrossBows/Scenes/SampleScene/LightingData.asset
+  uploadId: 343048

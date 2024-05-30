@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 87fbc4e347ff5f14c9b7fd8c93b4fe91
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Layout/FlexibleWidthGridLayout.cs
+  uploadId: 327429

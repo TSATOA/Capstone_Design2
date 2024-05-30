@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8437b9340243e2b4285f3e7f3e16284c
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Tweening/Vector3Tween.cs
+  uploadId: 327429

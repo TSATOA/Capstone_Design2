@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3f412f791627fd94e8384d32ecddb352
+timeCreated: 1484201876
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Tooltips/Editor/UITooltipManagerEditor.cs
+  uploadId: 327429

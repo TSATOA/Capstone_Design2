@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: bfa998a662ddfc34c836f97194d195ac
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95223
+  packageName: RPG & MMO UI 5
+  packageVersion: 1.9
+  assetPath: Assets/RPG and MMO UI 5/Scripts/UI/Icon Slot System/Editor/UISlotBaseEditor.cs
+  uploadId: 327429
