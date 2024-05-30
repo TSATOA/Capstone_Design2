@@ -9,7 +9,10 @@ public class Visualization : MonoBehaviour
     {
         GameObject canvasObject = new GameObject("Canvas") { layer = 5 };
         Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvasObject.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
+
+        canvasObject.transform.SetParent(gameObject.transform);
 
         CanvasScaler canvasScaler = canvasObject.AddComponent<CanvasScaler>();
         canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
@@ -17,18 +20,18 @@ public class Visualization : MonoBehaviour
         canvasObject.AddComponent<GraphicRaycaster>();
 
         var poseImage = new GameObject("Webcam Image") { layer = 5 };
-        poseImage.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
+        poseImage.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
         poseImage.AddComponent<CanvasRenderer>();
         RectTransform rectTransformImage = poseImage.AddComponent<RectTransform>();
         image = poseImage.AddComponent<Image>();
 
         poseImage.transform.SetParent(canvasObject.transform, false);
-        poseImage.transform.localPosition = new Vector3(0,0,0);
+        poseImage.transform.localPosition = new Vector3(-280,200,0);
 
         canvas.transform.position = new Vector3(0, 0, 0);
         rectTransformImage.sizeDelta = new Vector2(640, 360);
 
-        webcamTexture = new Texture2D(640,360,TextureFormat.RGBA32,false);
+        webcamTexture = new Texture2D(640, 360);
 
         Sprite sprite = Sprite.Create(webcamTexture, new Rect(0,0,640, 360), new Vector2(0.5f,0.5f));
         image.sprite = sprite;
@@ -40,12 +43,13 @@ public class Visualization : MonoBehaviour
     {
 
         // Vector2[] twoDJoints = gameObject.GetComponent<PoseEstimator>().twoDJointsVector;
-        // Color[] webcam = gameObject.GetComponent<CharacterControl>().webcamPixels;
+        Color[] webcam = gameObject.GetComponent<PoseEstimator>().webcamPixels;
 
-        // Debug.Log(webcam[0]);
-
-        // webcamTexture.SetPixels(webcam);
-        // webcamTexture.Apply();
+        if(webcam.Length == webcamTexture.width * webcamTexture.height)
+        {
+            webcamTexture.SetPixels(webcam);
+            webcamTexture.Apply();
+        }
 
     }
 

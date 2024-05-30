@@ -33,14 +33,14 @@ public class PoseEstimator : MonoBehaviour
     [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
 
     // Estimated 3D joints as vectors available as public
-    private Vector3[] threeDJointsVector;
-    public Texture2D webcamTextureCopy;
+    private Vector3[] threeDJointsVector = null;
+    public Color[] webcamPixels = null;
 
     void Start()
     {
         // Start webcam
         WebCamDevice[] devices = WebCamTexture.devices;
-        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 60);
+        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 15);
         webcamTexture.Play();
 
         // To convert webcam texture to inputImageDim x inputImageDim
@@ -147,6 +147,8 @@ public class PoseEstimator : MonoBehaviour
     {
         if (webcamTexture.didUpdateThisFrame)
         {
+
+            webcamPixels = webcamTexture.GetPixels();
 
             inputTensor?.Dispose();
 
