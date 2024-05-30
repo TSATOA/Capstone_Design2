@@ -108,7 +108,7 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
     if (direction == default) {
       horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
     } else {
-      horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
+      horizontalVel = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
     }
 
     moveVelocity.x = horizontalVel.x;
@@ -124,9 +124,9 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
     transform.Rotate(0,rotationY*Runner.DeltaTime*rotationSpeed,0);
   }
 
-  public void JointApplication(Vector3[] joints){
-    // characterControl.scaleTranslateJoints(joints);
-    // characterControl.Draw3DPoints(joints);
-    characterControl.Draw3DPoints(joints);
+  public void JointApplication(Vector3[] modelOutput){
+    Vector3[] scaledOutput = characterControl.scaleOutputJoints(modelOutput);
+    Vector3[] moreTarget = characterControl.getMoreTargets(scaledOutput);
+    characterControl.Draw3DJoints(scaledOutput, moreTarget, false);
   }
 }
