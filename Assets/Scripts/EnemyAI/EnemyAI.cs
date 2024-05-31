@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour
     private GameObject enemyArrow;
     private Transform arrowHead;
     private Transform arrowTail;
+    private GameObject player;
     private PlayerStatus playerStatus;
 
     // 플레이어가 조준하고 있는 동안 AI가 회피 동작을 할 확률
@@ -27,11 +28,17 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        playerStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStatus>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerStatus = player.GetComponent<PlayerStatus>();
     }
 
     private void Update()
     {
+        // Idle 상태라면 플레이어를 바라보게 회전
+        if (IsIdle())
+        {
+            LookAtPlayer();
+        }
         // 구르기 가능 상태이고 플레이어가 조준 중이라면
         if (!isEvadeDone && !playerStatus.IsPlayerAiming())
         {
@@ -43,12 +50,16 @@ public class EnemyAI : MonoBehaviour
                 {
                     // 왼쪽으로 구르기
                     leftEvade++;
+                    rightEvade--;
+                    if (rightEvade < 0) rightEvade = 0;
                     animator.SetTrigger("LeftEvade");
                 }
                 else
                 {
                     // 오른쪽으로 구르기
                     rightEvade++;
+                    leftEvade--;
+                    if (leftEvade < 0) leftEvade = 0;
                     animator.SetTrigger("RightEvade");
                 }
             }
@@ -92,6 +103,27 @@ public class EnemyAI : MonoBehaviour
 
         // 화살을 발사
         enemyArrow.GetComponent<Arrow>().ReleaseArrow(10.0f, direction);
+    }
+
+    // AI의 상태가 idle인지 확인
+    private bool IsIdle()
+    {
+        if (animator != null)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.IsName("Idle");
+        }
+        return false;
+    }
+
+    // 플레이어를 바라보도록 회전
+    public void LookAtPlayer()
+    {
+        if (player != null)
+        {
+            //Debug.Log("LookAtPlayer!!");
+            transform.LookAt(player.transform);
+        }
     }
 
     // 데미지를 입는 경우
