@@ -11,8 +11,8 @@ public class HandController : MonoBehaviour
     public GameObject idleCamera;
     public GameObject aimCamera;
 
-    private bool IsArrowEquipped = false;
-    private bool IsArrowReload = false;
+    private bool isArrowEquipped = false;
+    private bool isArrowReload = false;
     private GameObject playerArrow;
     private Transform bowHead;
     private float fireDistance = 2.0f;
@@ -24,9 +24,9 @@ public class HandController : MonoBehaviour
         // 손이 Quiver의 ArrowSelect 부분과 접촉하였을 경우
         if (other.gameObject.name == "QuiverTop")
         {
-            if (!IsArrowEquipped)
+            if (!isArrowEquipped)
             {
-                IsArrowEquipped = true;
+                isArrowEquipped = true;
 
                 // 화살 생성
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
@@ -42,9 +42,9 @@ public class HandController : MonoBehaviour
         // 화살을 손에 든채로 활시위와 접촉하였을 경우
         else if (other.gameObject.name == "BowString")
         {
-            if (IsArrowEquipped && !IsArrowReload)
+            if (isArrowEquipped && !isArrowReload)
             {
-                IsArrowReload = true;
+                isArrowReload = true;
 
                 // 활시위와 화살을 손에 부착
                 other.transform.parent = handTransform;
@@ -70,7 +70,7 @@ public class HandController : MonoBehaviour
 
     private void Update()
     {
-        if (IsArrowReload)
+        if (isArrowReload)
         {
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
@@ -79,8 +79,8 @@ public class HandController : MonoBehaviour
             {
                 // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환
                 playerArrow.transform.parent = null;
-                IsArrowEquipped = false;
-                IsArrowReload = false;
+                isArrowEquipped = false;
+                isArrowReload = false;
 
                 // 손에 부착된 활시위를 제거
                 stringTransform.parent = bowHead.parent;
@@ -88,7 +88,7 @@ public class HandController : MonoBehaviour
                 stringTransform.localRotation = originalStringRotation;
 
                 // 활시위가 일정이상 당겨지면 화살을 발사
-                playerArrow.GetComponent<Arrow>().ReleaseArrow(10.0f);
+                playerArrow.GetComponent<Arrow>().ReleaseArrow(10.0f, playerArrow.transform.forward);
 
                 // idle Camera로 전환
                 idleCamera.SetActive(true);
