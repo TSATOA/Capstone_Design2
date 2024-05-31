@@ -10,7 +10,10 @@ public class HandController : MonoBehaviour
     public Transform stringTransform;   // 활시위의 위치
     public GameObject idleCamera;
     public GameObject aimCamera;
-    public GameObject player;
+
+    private GameObject player;
+
+    public float arrowPower = 10.0f;
 
     private bool isArrowEquipped = false;
     private bool isArrowReload = false;
@@ -19,6 +22,8 @@ public class HandController : MonoBehaviour
     private float fireDistance = 2.0f;
     private Vector3 originalStringPosition;
     private Quaternion originalStringRotation;
+    private Transform arrowHead;
+    private Transform arrowTail;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -31,6 +36,11 @@ public class HandController : MonoBehaviour
 
                 // 화살 생성
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
+                if (playerArrow == null) return;
+
+                // 화살촉과 화살깃 부분의 Transform 저장
+                arrowHead = playerArrow.transform.Find("ArrowHead");
+                arrowTail = playerArrow.transform.Find("ArrowTail");
 
                 // 화살을 손의 ArrowAttach 부분의 child로 설정
                 playerArrow.transform.parent = handTransform;
@@ -67,6 +77,7 @@ public class HandController : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         bowHead = bowObject.transform.Find("Armature/Main/Bone");
         originalStringPosition = stringTransform.localPosition;
         originalStringRotation = stringTransform.localRotation;
@@ -91,8 +102,11 @@ public class HandController : MonoBehaviour
                 stringTransform.localPosition = originalStringPosition;
                 stringTransform.localRotation = originalStringRotation;
 
+                // 화살 방향 계산
+                Vector3 direction = CalculateDirection(arrowTail, arrowHead);
+
                 // 활시위가 일정이상 당겨지면 화살을 발사
-                playerArrow.GetComponent<Arrow>().ReleaseArrow(10.0f, playerArrow.transform.forward);
+                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
 
                 // Player Status 변경
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
@@ -102,5 +116,13 @@ public class HandController : MonoBehaviour
                 aimCamera.SetActive(false);
             }
         }
+    }
+    Vector3 CalculateDirection(Transform from, Transform to)
+    {
+        Vector3 direction = to.position - from.position;
+
+        direction.Normalize();
+
+        return direction;
     }
 }

@@ -25,6 +25,7 @@ public class EnemyAI : MonoBehaviour
     private int maxEvade = 5; // 한쪽 방향으로 최대 구르기 가능 횟수
 
     public float health;
+    public float arrowPower = 10.0f;
 
     private void Start()
     {
@@ -40,7 +41,7 @@ public class EnemyAI : MonoBehaviour
             LookAtPlayer();
         }
         // 구르기 가능 상태이고 플레이어가 조준 중이라면
-        if (!isEvadeDone && !playerStatus.IsPlayerAiming())
+        if (!isEvadeDone && playerStatus.IsPlayerAiming())
         {
             // 구르기 성공 확률에 따라 구르기 실행
             if (Random.value < evadeChance)
@@ -67,10 +68,10 @@ public class EnemyAI : MonoBehaviour
             isEvadeDone = true;
         }
         // 플레이어가 조준을 풀면 다시 구르기 가능 상태로 변경
-        /*else if (isEvadeDone && !playerStatus.IsPlayerAiming())
+        else if (isEvadeDone && !playerStatus.IsPlayerAiming())
         {
             isEvadeDone = false;
-        }*/
+        }
     }
 
     // 화살통에서 화살이 꺼내는 애니메이션이 재생되는 순간 손에 화살 생성하여 부착
@@ -102,7 +103,7 @@ public class EnemyAI : MonoBehaviour
         Vector3 direction = CalculateDirection(arrowTail, arrowHead);
 
         // 화살을 발사
-        enemyArrow.GetComponent<Arrow>().ReleaseArrow(10.0f, direction);
+        enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
     }
 
     // AI의 상태가 idle인지 확인
