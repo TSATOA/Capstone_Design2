@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -11,8 +12,55 @@ public class EnemyAI : MonoBehaviour
     private GameObject enemyArrow;
     private Transform arrowHead;
     private Transform arrowTail;
+    private PlayerStatus playerStatus;
+
+    // 플레이어가 조준하고 있는 동안 AI가 회피 동작을 할 확률
+    public float evadeChance = 1.0f; // 회피 동작 성공 확률 (0 ~ 1)
+    private bool isEvadeDone = false; // 플레이어가 조준하는 동안 구르기를 수행할 것인지 결정하였는가? (구르기는 조준당 한번만 수행)
+
+    // 적 NPC가 구르기를 수행한 횟수
+    private int leftEvade = 0;
+    private int rightEvade = 0;
+    private int maxEvade = 5; // 한쪽 방향으로 최대 구르기 가능 횟수
 
     public float health;
+
+    private void Start()
+    {
+        playerStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStatus>();
+    }
+
+    private void Update()
+    {
+        // 구르기 가능 상태이고 플레이어가 조준 중이라면
+        if (!isEvadeDone && !playerStatus.IsPlayerAiming())
+        {
+            // 구르기 성공 확률에 따라 구르기 실행
+            if (Random.value < evadeChance)
+            {
+                // 구르기 실행
+                if (Random.value < 0.5f && leftEvade < maxEvade)
+                {
+                    // 왼쪽으로 구르기
+                    leftEvade++;
+                    animator.SetTrigger("LeftEvade");
+                }
+                else
+                {
+                    // 오른쪽으로 구르기
+                    rightEvade++;
+                    animator.SetTrigger("RightEvade");
+                }
+            }
+
+            isEvadeDone = true;
+        }
+        // 플레이어가 조준을 풀면 다시 구르기 가능 상태로 변경
+        /*else if (isEvadeDone && !playerStatus.IsPlayerAiming())
+        {
+            isEvadeDone = false;
+        }*/
+    }
 
     // 화살통에서 화살이 꺼내는 애니메이션이 재생되는 순간 손에 화살 생성하여 부착
     void GrabArrow()
@@ -47,7 +95,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     // 데미지를 입는 경우
-    void takeDamge(float damage)
+    public void takeDamge(float damage)
     {
         health -= damage;
         if (health < 0)

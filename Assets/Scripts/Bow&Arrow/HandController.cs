@@ -10,6 +10,7 @@ public class HandController : MonoBehaviour
     public Transform stringTransform;   // 활시위의 위치
     public GameObject idleCamera;
     public GameObject aimCamera;
+    public GameObject player;
 
     private bool isArrowEquipped = false;
     private bool isArrowReload = false;
@@ -45,6 +46,9 @@ public class HandController : MonoBehaviour
             if (isArrowEquipped && !isArrowReload)
             {
                 isArrowReload = true;
+
+                // Player Status 변경
+                player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
                 // 활시위와 화살을 손에 부착
                 other.transform.parent = handTransform;
@@ -89,6 +93,9 @@ public class HandController : MonoBehaviour
 
                 // 활시위가 일정이상 당겨지면 화살을 발사
                 playerArrow.GetComponent<Arrow>().ReleaseArrow(10.0f, playerArrow.transform.forward);
+
+                // Player Status 변경
+                player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
                 // idle Camera로 전환
                 idleCamera.SetActive(true);
