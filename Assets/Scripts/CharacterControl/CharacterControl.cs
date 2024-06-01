@@ -12,13 +12,14 @@ public class CharacterControl : MonoBehaviour
     private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
     public string poseName = "pose";
-
+    private GameObject poseGroup;
     // Final IK
     private FullBodyBipedIK fullBodyIK;
-    private LookAtIK lookAtIk;
+    private FBBIKHeadEffector headEffector;
 
     // For joint control
     public Transform characterRoot;
+    public Transform pelvis;
     public Transform spineRoot;
     public Transform spineMiddle;
     public Transform spineTip;
@@ -51,7 +52,7 @@ public class CharacterControl : MonoBehaviour
         PoseFormat.BoneDistances[PoseFormat.Bone.RelbowToRwrist] = distAtoB(rightForeArm.position, rightWrist.position);
     }
 
-    void LateUpdate()
+    void Update()
     {
         Vector3[] modelOutput;
 
@@ -60,17 +61,15 @@ public class CharacterControl : MonoBehaviour
         Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
 
         Draw3DJoints(scaledOutput, visualizeKeypoints);
-
-
     }
 
     public void init3DKeypoints(string name)
     {
         threeDPoints = new List<GameObject>();
-        GameObject root = new GameObject(name);
-        root.transform.SetParent(characterRoot);
-        root.transform.localPosition = Vector3.zero;
-        root.transform.Rotate(0, 0, 0);
+        poseGroup = new GameObject(name);
+        poseGroup.transform.SetParent(characterRoot);
+        // poseGroup.transform.localPosition = pelvis.localPosition;
+        poseGroup.transform.localPosition = Vector3.zero;
 
         Array keypoints = Enum.GetValues(typeof(PoseFormat.Keypoint));
 
@@ -83,7 +82,7 @@ public class CharacterControl : MonoBehaviour
             sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             sphere.transform.localPosition = new Vector3(0, 0, 0);
 
-            sphere.transform.SetParent(root.transform, false);
+            sphere.transform.SetParent(poseGroup.transform, false);
 
             threeDPoints.Add(sphere);
         }
@@ -128,6 +127,7 @@ public class CharacterControl : MonoBehaviour
 
     public void Draw3DJoints(Vector3[] bodyJoints, bool visualizeKeypoints)
     {
+        // poseGroup.transform.rotation = pelvis.rotation;
         for (int idx = 0; idx < bodyJoints.Length; idx++)
         {
             GameObject bodyJoint = threeDPoints[idx];
@@ -136,7 +136,7 @@ public class CharacterControl : MonoBehaviour
         }
     }
 
-    void AddFullBodyIK(GameObject humanoid, BipedReferences references = null)
+    private void AddFullBodyIK(GameObject humanoid, BipedReferences references = null)
     {
         if(references == null)
         {
@@ -147,12 +147,14 @@ public class CharacterControl : MonoBehaviour
         fullBodyIK.SetReferences(references, null);
         fullBodyIK.solver.SetLimbOrientations(BipedLimbOrientations.UMA);
 
-        fullBodyIK.solver.rootNode = characterRoot;
+        fullBodyIK.solver.rootNode = pelvis;
         fullBodyIK.references.spine[1] = spineTip;
 
         // Body
         fullBodyIK.solver.bodyEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Root].transform;
         fullBodyIK.solver.bodyEffector.positionWeight = 0.15f;
+        fullBodyIK.solver.pullBodyVertical = 0.1f;
+        fullBodyIK.solver.pullBodyHorizontal = 0.08f;
 
         // Left Arm
         fullBodyIK.solver.leftHandEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform;
@@ -176,7 +178,33 @@ public class CharacterControl : MonoBehaviour
 
         // Head
         // 머리 회전까지 반영할 필요는 없음
+        addHeadEffector(threeDPoints[(int)PoseFormat.Keypoint.Head]);
+    }
 
+    private void addHeadEffector(GameObject headTarget)
+    {
+        headEffector = headTarget.AddComponent<FBBIKHeadEffector>();
+
+        headEffector.ik = fullBodyIK;
+        headEffector.positionWeight = 0.5f;
+        headEffector.bodyWeight = 0.4f;
+        headEffector.thighWeight = 0.2f;
+
+        headEffector.rotationWeight = 0.0f;
+        headEffector.bodyClampWeight = 0.5f;
+        headEffector.headClampWeight = 0.5f;
+        headEffector.bendWeight = 0.5f;
+
+        headEffector.bendBones = new FBBIKHeadEffector.BendBone[2];
+
+        headEffector.bendBones[0] = new FBBIKHeadEffector.BendBone(spineTip, 0.647f);
+        headEffector.bendBones[1] = new FBBIKHeadEffector.BendBone(neck, 0.874f);
+
+        headEffector.CCDWeight = 1.0f;
+        headEffector.damper = 500.0f;
+
+        headEffector.postStretchWeight = 1.0f;
+        headEffector.maxStretch = 0.1f;
     }
 
     private float distAtoB(Vector3 a, Vector3 b)
