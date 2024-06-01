@@ -48,6 +48,24 @@ namespace PoseInformation
             { Bone.RshoulderToRelbow, (Keypoint.Rshoulder, Keypoint.Relbow) },
             { Bone.RelbowToRwrist, (Keypoint.Relbow, Keypoint.Rwrist) }
         };
-        public static Dictionary<Bone, float> BoneDistances { get; } = new Dictionary<Bone, float>(BoneToKeypointPair.Count);
+        public static Dictionary<Bone, float> BoneDistances = new Dictionary<Bone, float>(BoneToKeypointPair.Count)
+        {
+            { Bone.RootToRhip, 0.0f },
+            { Bone.RhipToRknee, 0.0f },
+            { Bone.RkneeToRankle, 0.0f },
+            { Bone.RootToLhip, 0.0f },
+            { Bone.LhipToLknee, 0.0f },
+            { Bone.LkneeToLankle, 0.0f },
+            { Bone.RootToBelly, 0.0f },
+            { Bone.BellyToNeck, 0.0f },
+            { Bone.NeckToNose, 0.0f },
+            { Bone.NoseToHead, 0.0f },
+            { Bone.NeckToLshoulder, 0.0f },
+            { Bone.LshoulderToLelbow, 0.0f },
+            { Bone.LelbowToLwrist, 0.0f },
+            { Bone.NeckToRshoulder, 0.0f },
+            { Bone.RshoulderToRelbow, 0.0f },
+            { Bone.RelbowToRwrist, 0.0f }
+        };
     }
 }
