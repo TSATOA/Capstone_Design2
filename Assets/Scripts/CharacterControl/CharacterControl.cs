@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Animations.Rigging;
 using PoseInformation;
+using Unity.VisualScripting;
 
 public class CharacterControl : MonoBehaviour
 {
     // Game Objects
     private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
-    public string nameOfJointsGroup = "pose";
+    public string nameOfJointsGroup = "Player Pose";
 
     // IK Control
+    private Rig twist;
     private Rig core;
     private Rig arms;
     private Rig look;
@@ -180,6 +182,7 @@ public class CharacterControl : MonoBehaviour
 
         Vector3 forwardPoint = bodyJoints[neckIdx] + forwardNormal * distAtoB(bodyJoints[leftShoulderIdx], bodyJoints[rightShoulderIdx]);
 
+        // 결과 저장
         bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.LhandPoint] = leftHandPoint;
         bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.RhandPoint] = rightHandPoint;
         bodyAndHandTargets[(int)PoseFormat.MoreTargetKeypoint.BodyFacing] = forwardPoint;
@@ -206,39 +209,59 @@ public class CharacterControl : MonoBehaviour
     void SetupRig()
     {
         RigBuilder rigBuilder = gameObject.AddComponent<RigBuilder>();
+        GameObject rig_twist = new GameObject("Twist Rig");
         GameObject rig_core = new GameObject("Core Rig");
-        GameObject rig_arms = new GameObject("Arm Rig");
         GameObject rig_look = new GameObject("Look Rig");
+        GameObject rig_arms = new GameObject("Arm Rig");
+        twist = rig_twist.AddComponent<Rig>();
         core = rig_core.AddComponent<Rig>();
         arms = rig_arms.AddComponent<Rig>();
         look = rig_look.AddComponent<Rig>();
+        twist.weight = 1.0f;
         core.weight = 1.0f;
         arms.weight = 1.0f;
         look.weight = 1.0f;
 
+        rig_twist.transform.SetParent(gameObject.transform);
         rig_core.transform.SetParent(gameObject.transform);
         rig_arms.transform.SetParent(gameObject.transform);
         rig_look.transform.SetParent(gameObject.transform);
 
+        rigBuilder.layers.Add(new RigLayer(twist.GetComponent<Rig>(), true));
         rigBuilder.layers.Add(new RigLayer(core.GetComponent<Rig>(), true));
         rigBuilder.layers.Add(new RigLayer(arms.GetComponent<Rig>(), true));
         rigBuilder.layers.Add(new RigLayer(look.GetComponent<Rig>(), true));
-
+        
         int numBodyJoints = Enum.GetValues(typeof(PoseFormat.Keypoint)).Length;
-        int numMoreTargets = Enum.GetValues(typeof(PoseFormat.MoreTargetKeypoint)).Length;
+
+        // Setup Twist Rig
+        GameObject spineTwist = new GameObject("spine_twist");
+        spineTwist.transform.SetParent(rig_twist.transform);
+        var spine_twistChain = spineTwist.AddComponent<TwistChainConstraint>();
+
+        // Twist
+        spine_twistChain.weight = 1.0f;
+        spine_twistChain.data.root = spineRoot;
+        spine_twistChain.data.tip = spineTip;
+
+        spine_twistChain.data.rootTarget = spineRoot;
+        spine_twistChain.data.tipTarget = threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.BodyRotation].transform;
+
+        spine_twistChain.data.curve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
 
         // Setup Core Rig
-        GameObject spineControl = new GameObject("spineControl");
-        GameObject lookAt = new GameObject("lookAt");
-        GameObject neckControl = new GameObject("neckControl");
+        GameObject spineChain = new GameObject("spine_chain");
+        GameObject spineLook = new GameObject("spine_look");
+        GameObject spineTipRotation = new GameObject("spine_tip_rotation");
 
-        spineControl.transform.SetParent(rig_core.transform);
-        neckControl.transform.SetParent(spineControl.transform);
+        spineChain.transform.SetParent(rig_core.transform);
+        spineLook.transform.SetParent(rig_core.transform);
+        spineTipRotation.transform.SetParent(rig_core.transform);
 
         // Main Spine Constraints
-        var spine_chainIK = spineControl.AddComponent<ChainIKConstraint>();
-        var spine_multiAim = spineControl.AddComponent<MultiAimConstraint>();
-        // var spine_multiRotation = spineControl.AddComponent<TwistChainConstraint>();
+        var spine_chainIK = spineChain.AddComponent<ChainIKConstraint>();
+        var spine_multiAim = spineLook.AddComponent<MultiAimConstraint>();
+        var spine_rotationOverride = spineTipRotation.AddComponent<OverrideTransform>();
 
         // Chain IK
         spine_chainIK.data.root = spineRoot;
@@ -250,34 +273,53 @@ public class CharacterControl : MonoBehaviour
         spine_chainIK.data.tipRotationWeight = 0.0f;
 
         // Multi-Aim
-        spine_multiAim.data.constrainedObject = threeDPoints[8].transform;
+        spine_multiAim.data.constrainedObject = threeDPoints[(int)PoseFormat.Keypoint.Neck].transform;
 
         spine_multiAim.weight = 1.0f;
+        spine_multiAim.data.aimAxis = MultiAimConstraintData.Axis.Y_NEG;
+        spine_multiAim.data.upAxis = MultiAimConstraintData.Axis.Y;
+
         var sources1 = spine_multiAim.data.sourceObjects;
         sources1.Add(new WeightedTransform(threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.BodyFacing].transform, 1.0f));
         spine_multiAim.data.sourceObjects = sources1;
 
-        spine_multiAim.data.aimAxis = MultiAimConstraintData.Axis.Y_NEG;
-        spine_multiAim.data.upAxis = MultiAimConstraintData.Axis.Y;
         spine_multiAim.data.maintainOffset = false;
         spine_multiAim.data.constrainedXAxis = true;
         spine_multiAim.data.constrainedYAxis = true;
         spine_multiAim.data.constrainedZAxis = true;
-        spine_multiAim.data.limits = new Vector2(-5, 5);
+        spine_multiAim.data.limits = new Vector2(-130, 130);
 
-        // Multi-Rotation
+        // Rotation Copy
+        spine_rotationOverride.weight = 1.0f;
+        spine_rotationOverride.data.constrainedObject = threeDPoints[numBodyJoints + (int)PoseFormat.MoreTargetKeypoint.BodyRotation].transform;
 
-        // spine_multiRotation.weight = 1.0f;
+        spine_rotationOverride.data.sourceObject = threeDPoints[(int)PoseFormat.Keypoint.Neck].transform;
 
-        // spine_multiRotation.data.root = spineRoot;
-        // spine_multiRotation.data.tip = spineTip;
-
-        // spine_multiRotation.data.rootTarget = targetThreeDPoints[0].transform;
-        // spine_multiRotation.data.tipTarget = targetThreeDPoints[8].transform;
+        spine_rotationOverride.data.space = OverrideTransformData.Space.Local;
+        spine_rotationOverride.data.positionWeight = 1.0f;
+        spine_rotationOverride.data.rotationWeight = 1.0f;
 
         // Look Rig Setup
+
+        GameObject neckControl = new GameObject("neck_control");
+        GameObject lookAt = new GameObject("look_at");
+        neckControl.transform.SetParent(rig_look.transform);
+        lookAt.transform.SetParent(neckControl.transform);
+
+        // Neck Contraints
+        var neck_twoBone = neckControl.AddComponent<TwoBoneIKConstraint>();
+
+        neck_twoBone.data.root = spineTip;
+        neck_twoBone.data.mid = neck;
+        neck_twoBone.data.tip = nose;
+
+        neck_twoBone.data.target = threeDPoints[(int)PoseFormat.Keypoint.Head].transform;
+
+        neck_twoBone.data.targetPositionWeight = 1.0f;
+        neck_twoBone.data.targetRotationWeight = 1.0f;
+        neck_twoBone.data.hintWeight = 0.0f;
+
         // Look At Contraints
-        lookAt.transform.SetParent(rig_look.transform);
 
         var lookAt_multiAim = lookAt.AddComponent<MultiAimConstraint>();
         lookAt_multiAim.weight = 1.0f;
@@ -290,26 +332,10 @@ public class CharacterControl : MonoBehaviour
         lookAt_multiAim.data.sourceObjects = sources2;
 
         lookAt_multiAim.data.maintainOffset = false;
-        lookAt_multiAim.data.constrainedXAxis = true;
+        // lookAt_multiAim.data.constrainedXAxis = true;
         lookAt_multiAim.data.constrainedYAxis = true;
-        lookAt_multiAim.data.constrainedZAxis = true;
-        lookAt_multiAim.data.limits = new Vector2(-50, 50);
-        lookAt_multiAim.data.offset = new Vector3(0.0f, 0.0f, 0.0f);
-
-        // Neck Contraints
-        var neck_twoBone = neckControl.AddComponent<TwoBoneIKConstraint>();
-
-        // neck_twoBone.data.root;
-        neck_twoBone.data.root = spineTip;
-        neck_twoBone.data.mid = neck;
-        neck_twoBone.data.tip = nose;
-
-        neck_twoBone.data.target = threeDPoints[10].transform;
-        neck_twoBone.data.hint = threeDPoints[9].transform;
-
-        neck_twoBone.data.targetPositionWeight = 1.0f;
-        neck_twoBone.data.targetRotationWeight = 0.0f;
-        neck_twoBone.data.hintWeight = 0.0f;
+        // lookAt_multiAim.data.constrainedZAxis = true;
+        lookAt_multiAim.data.limits = new Vector2(-60, 60);
 
         // Setup Arm Rig
         GameObject leftShoulderControl = new GameObject("leftShoulderControl");

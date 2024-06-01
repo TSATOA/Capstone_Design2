@@ -17,7 +17,7 @@ namespace PoseInformation
         }
         public enum MoreTargetKeypoint : int
         {
-            BodyFacing, LhandPoint, RhandPoint
+            BodyFacing, LhandPoint, RhandPoint, BodyRotation
         }
         // Keypoints pairs for indexing
         public enum Bone : int
