@@ -126,7 +126,6 @@ public class NetworkCharacterControllerPrototypeCustom : NetworkTransform {
 
   public void JointApplication(Vector3[] modelOutput){
     Vector3[] scaledOutput = characterControl.scaleOutputJoints(modelOutput);
-    Vector3[] moreTarget = characterControl.getMoreTargets(scaledOutput);
-    characterControl.Draw3DJoints(scaledOutput, moreTarget, false);
+    characterControl.Draw3DJoints(scaledOutput, false);
   }
 }
