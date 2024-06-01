@@ -20,6 +20,8 @@ public class CharacterControl : MonoBehaviour
     // For joint control
     public Transform characterRoot;
     public Transform pelvis;
+    public Transform rightHip;
+    public Transform leftHip;
     public Transform spineRoot;
     public Transform spineMiddle;
     public Transform spineTip;
@@ -39,7 +41,9 @@ public class CharacterControl : MonoBehaviour
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
-        
+        addAimContraint();
+        PoseFormat.BoneDistances[PoseFormat.Bone.RootToRhip] = distAtoB(characterRoot.position, rightHip.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.RootToLhip] = distAtoB(characterRoot.position, leftHip.position);
         PoseFormat.BoneDistances[PoseFormat.Bone.RootToBelly] = distAtoB(characterRoot.position, spineMiddle.position);
         PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = 0.9f * distAtoB(spineMiddle.position, neck.position);
         PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose] = distAtoB(neck.position, nose.position);
@@ -205,6 +209,11 @@ public class CharacterControl : MonoBehaviour
 
         headEffector.postStretchWeight = 1.0f;
         headEffector.maxStretch = 0.1f;
+    }
+
+    private void addAimContraint()
+    {
+        
     }
 
     private float distAtoB(Vector3 a, Vector3 b)
