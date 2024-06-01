@@ -13,6 +13,9 @@ public struct NetworkInputData : INetworkInput
     public NetworkBool isJumpPressed;
     public PoseEstimationData poseData;
 
+    //화살 발사 입력
+    public NetworkBool isShootingStart;
+
 }
 
 public struct PoseEstimationData : INetworkStruct
