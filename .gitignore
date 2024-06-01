@@ -70,3 +70,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Final IK Demos
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/[Ss]hared\ [Dd]emo\ [Aa]ssets/*
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/_[Dd][Ee][Mm][Oo][Ss]
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/_[Dd][Ee][Mm][Oo][Ss].meta
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.png
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.png.meta
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.pdf
+/[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.pdf.meta
