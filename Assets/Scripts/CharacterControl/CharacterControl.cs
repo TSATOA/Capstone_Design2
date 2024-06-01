@@ -38,8 +38,9 @@ public class CharacterControl : MonoBehaviour
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
+        
         PoseFormat.BoneDistances[PoseFormat.Bone.RootToBelly] = distAtoB(characterRoot.position, spineMiddle.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = distAtoB(spineMiddle.position, neck.position);
+        PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = 0.9f * distAtoB(spineMiddle.position, neck.position);
         PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose] = distAtoB(neck.position, nose.position);
         PoseFormat.BoneDistances[PoseFormat.Bone.NoseToHead] = 0.8f * PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose];
         PoseFormat.BoneDistances[PoseFormat.Bone.NeckToLshoulder] = distAtoB(neck.position, leftArm.position);
@@ -147,6 +148,8 @@ public class CharacterControl : MonoBehaviour
         fullBodyIK.solver.SetLimbOrientations(BipedLimbOrientations.UMA);
 
         fullBodyIK.solver.rootNode = characterRoot;
+        fullBodyIK.references.spine[1] = spineTip;
+
         // Body
         fullBodyIK.solver.bodyEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Root].transform;
         fullBodyIK.solver.bodyEffector.positionWeight = 0.15f;
@@ -159,17 +162,20 @@ public class CharacterControl : MonoBehaviour
         fullBodyIK.solver.leftShoulderEffector.positionWeight = 0.7f;
 
         fullBodyIK.solver.chain[1].bendConstraint.bendGoal = threeDPoints[(int)PoseFormat.Keypoint.Lelbow].transform;
-        fullBodyIK.solver.chain[1].bendConstraint.weight = 0.8f;
+        fullBodyIK.solver.chain[1].bendConstraint.weight = 0.5f;
 
         // Right Arm
         fullBodyIK.solver.rightHandEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform;
         fullBodyIK.solver.rightHandEffector.positionWeight = 0.95f;
 
         fullBodyIK.solver.rightShoulderEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rshoulder].transform;
-        fullBodyIK.solver.rightShoulderEffector.positionWeight = 0.7f;
+        fullBodyIK.solver.rightShoulderEffector.positionWeight = 0.5f;
 
         fullBodyIK.solver.chain[2].bendConstraint.bendGoal = threeDPoints[(int)PoseFormat.Keypoint.Relbow].transform;
         fullBodyIK.solver.chain[2].bendConstraint.weight = 0.8f;
+
+        // Head
+        // 머리 회전까지 반영할 필요는 없음
 
     }
 
