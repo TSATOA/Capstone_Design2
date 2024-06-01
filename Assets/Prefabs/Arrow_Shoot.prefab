@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9221365624664027246}
   m_Layer: 0
-  m_Name: ArrowTip
+  m_Name: ArrowTail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3720332244174182537}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.7249, z: 0}
+  m_LocalPosition: {x: 0, y: 0.009, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -125,7 +125,7 @@ Rigidbody:
   m_GameObject: {fileID: 6598281026209842656}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.2
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -155,8 +155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3aae356f5fb4e54a94d95bb22892e6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowSpeed: 2000
-  arrowTip: {fileID: 9221365624664027246}
+  arrowHead: {fileID: 4493684771532229208}
+  destroyDelay: 15
 --- !u!1 &8001466629625198097
 GameObject:
   m_ObjectHideFlags: 0

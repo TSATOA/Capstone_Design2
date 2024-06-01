@@ -11,25 +11,36 @@ public class HandController : MonoBehaviour
     public GameObject idleCamera;
     public GameObject aimCamera;
 
-    private bool IsArrowEquipped = false;
-    private bool IsArrowReload = false;
+    private GameObject player;
+
+    public float arrowPower = 10.0f;
+
+    private bool isArrowEquipped = false;
+    private bool isArrowReload = false;
     private GameObject playerArrow;
     private Transform bowHead;
     private float fireDistance = 2.0f;
     private Vector3 originalStringPosition;
     private Quaternion originalStringRotation;
+    private Transform arrowHead;
+    private Transform arrowTail;
 
     private void OnTriggerEnter(Collider other)
     {
         // 손이 Quiver의 ArrowSelect 부분과 접촉하였을 경우
         if (other.gameObject.name == "QuiverTop")
         {
-            if (!IsArrowEquipped)
+            if (!isArrowEquipped)
             {
-                IsArrowEquipped = true;
+                isArrowEquipped = true;
 
                 // 화살 생성
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
+                if (playerArrow == null) return;
+
+                // 화살촉과 화살깃 부분의 Transform 저장
+                arrowHead = playerArrow.transform.Find("ArrowHead");
+                arrowTail = playerArrow.transform.Find("ArrowTail");
 
                 // 화살을 손의 ArrowAttach 부분의 child로 설정
                 playerArrow.transform.parent = handTransform;
@@ -42,9 +53,12 @@ public class HandController : MonoBehaviour
         // 화살을 손에 든채로 활시위와 접촉하였을 경우
         else if (other.gameObject.name == "BowString")
         {
-            if (IsArrowEquipped && !IsArrowReload)
+            if (isArrowEquipped && !isArrowReload)
             {
-                IsArrowReload = true;
+                isArrowReload = true;
+
+                // Player Status 변경
+                player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
                 // 활시위와 화살을 손에 부착
                 other.transform.parent = handTransform;
@@ -63,6 +77,7 @@ public class HandController : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         bowHead = bowObject.transform.Find("Armature/Main/Bone");
         originalStringPosition = stringTransform.localPosition;
         originalStringRotation = stringTransform.localRotation;
@@ -70,7 +85,7 @@ public class HandController : MonoBehaviour
 
     private void Update()
     {
-        if (IsArrowReload)
+        if (isArrowReload)
         {
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
@@ -79,21 +94,35 @@ public class HandController : MonoBehaviour
             {
                 // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환
                 playerArrow.transform.parent = null;
-                IsArrowEquipped = false;
-                IsArrowReload = false;
+                isArrowEquipped = false;
+                isArrowReload = false;
 
                 // 손에 부착된 활시위를 제거
                 stringTransform.parent = bowHead.parent;
                 stringTransform.localPosition = originalStringPosition;
                 stringTransform.localRotation = originalStringRotation;
 
+                // 화살 방향 계산
+                Vector3 direction = CalculateDirection(arrowTail, arrowHead);
+
                 // 활시위가 일정이상 당겨지면 화살을 발사
-                playerArrow.GetComponent<Arrow>().ReleaseArrow(10.0f);
+                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
+
+                // Player Status 변경
+                player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
                 // idle Camera로 전환
                 idleCamera.SetActive(true);
                 aimCamera.SetActive(false);
             }
         }
+    }
+    Vector3 CalculateDirection(Transform from, Transform to)
+    {
+        Vector3 direction = to.position - from.position;
+
+        direction.Normalize();
+
+        return direction;
     }
 }

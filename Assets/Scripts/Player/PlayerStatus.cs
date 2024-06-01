@@ -7,20 +7,16 @@ public class PlayerStatus : MonoBehaviour
     public Animator animator;
     public float health;
 
+    private bool isAiming;
+
     // Start is called before the first frame update
-    /*void Start()
+    void Start()
     {
-        
+        isAiming = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }*/
-
     // 데미지를 입는 경우
-    void takeDamge(float damage)
+    public void takeDamge(float damage)
     {
         health -= damage;
         if (health < 0)
@@ -28,5 +24,15 @@ public class PlayerStatus : MonoBehaviour
             animator.enabled = true;
             animator.SetTrigger("Death");
         }
+    }
+
+    public bool IsPlayerAiming()
+    {
+        return isAiming;
+    }
+
+    public void ChangePlayerPoseStatus(bool poseStatus)
+    {
+        isAiming = poseStatus;
     }
 }
