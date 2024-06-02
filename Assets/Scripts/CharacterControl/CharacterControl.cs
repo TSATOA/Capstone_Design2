@@ -46,18 +46,6 @@ public class CharacterControl : MonoBehaviour
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
         addAimContraint();
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToRhip] = distAtoB(characterRoot.position, rightHip.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToLhip] = distAtoB(characterRoot.position, leftHip.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToBelly] = distAtoB(characterRoot.position, spineMiddle.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = 0.9f * distAtoB(spineMiddle.position, neck.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose] = distAtoB(neck.position, nose.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NoseToHead] = 0.8f * PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose];
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToLshoulder] = distAtoB(neck.position, leftArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.LshoulderToLelbow] = distAtoB(leftArm.position, leftForeArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.LelbowToLwrist] = distAtoB(leftForeArm.position, leftWrist.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToRshoulder] = distAtoB(neck.position, rightArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RshoulderToRelbow] = distAtoB(rightArm.position, rightForeArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RelbowToRwrist] = distAtoB(rightForeArm.position, rightWrist.position);
     }
 
     void Update()
@@ -91,7 +79,7 @@ public class CharacterControl : MonoBehaviour
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             string jointName = Enum.GetName(typeof(PoseFormat.Keypoint), keypoint);
-            sphere.name = String.Format("{0}_{1}", poseName, jointName.ToLower());
+            sphere.name = string.Format("{0}_{1}", poseName, jointName.ToLower());
 
             sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             sphere.transform.localPosition = new Vector3(0, 0, 0);
