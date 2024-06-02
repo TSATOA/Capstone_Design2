@@ -8985,10 +8985,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizeKeypoints: 1
   poseName: pose
-  characterRoot: {fileID: 3367557675499791053}
-  pelvis: {fileID: 0}
-  rightHip: {fileID: 0}
-  leftHip: {fileID: 0}
+  characterRoot: {fileID: 1921879427047839545}
+  pelvis: {fileID: 3367557675499791053}
+  rightHip: {fileID: 152096728181285146}
+  leftHip: {fileID: 3068333339069171532}
   spineRoot: {fileID: 1505870454889151784}
   spineMiddle: {fileID: 3191595351801425548}
   spineTip: {fileID: 1423000242246324955}
@@ -9070,7 +9070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   head: {fileID: 2289327795756762030}
   enclosure: {fileID: 1876345769189517453}
-  characterControl: {fileID: 0}
+  characterControl: {fileID: 1340435715793518490}
 --- !u!114 &8571804871723246660
 MonoBehaviour:
   m_ObjectHideFlags: 0
