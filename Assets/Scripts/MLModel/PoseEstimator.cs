@@ -156,7 +156,6 @@ public class PoseEstimator : MonoBehaviour
 
             twoDPoseWorker.Execute(inputTensor);
             var twoDJointsTensor = twoDPoseWorker.PeekOutput() as TensorFloat;
-            twoDJointsTensor.CompleteAllPendingOperations();
 
             if (twoDJointsTensor.shape[2] == numJoints && twoDJointsTensor.shape[3] == 3)
             {
