@@ -17,14 +17,14 @@ public class PlayerStatus : MonoBehaviour
     {
         isAiming = false;
         health = 100;
-        barImage.fillAmount = health;
+        barImage.fillAmount = health / 100;
     }
 
-    // �������� �Դ� ���??
+    // �������� �Դ� ���??
     public void takeDamge(float damage)
     {
         health -= damage;
-        barImage.fillAmount = health;
+        barImage.fillAmount = health / 100;
         if (health <= 0)
         {
             animator.enabled = true;
