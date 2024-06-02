@@ -80,6 +80,7 @@ public class EnemyAI : MonoBehaviour
         // 화살 생성
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
         if (enemyArrow == null) return;
+        enemyArrow.tag = "ArrowEnemy";
 
         // 화살촉과 화살깃 부분의 Transform 저장
         arrowHead = enemyArrow.transform.Find("ArrowHead");

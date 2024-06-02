@@ -48,48 +48,44 @@ public class Arrow : MonoBehaviour
             GameObject otherGameObject = other.gameObject;
 
             // 충돌이 발생한 부위를 확인하고 부위별 데미지 배율을 적용한 데미지 값을 이용해 takeDamage 메서드 호출
-            if (otherGameObject.CompareTag("Player_Head") || otherGameObject.CompareTag("Enemy_Head"))
+            // 플레이어 화살의 경우
+            if (gameObject.CompareTag("ArrowPlayer")) 
+            {
+                if (otherGameObject.CompareTag("Enemy_Head"))
+                {
+                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
+                }
+                else if (otherGameObject.CompareTag("Enemy_Body"))
+                {
+                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
+                }
+                else if (otherGameObject.CompareTag("Enemy_Arm"))
+                {
+                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                }
+                else if (otherGameObject.CompareTag("Enemy_Leg"))
+                {
+                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                }
+            }
+            // 적 AI 화살의 경우
+            else if (gameObject.CompareTag("ArrowEnemy"))
             {
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
                     otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head);
                 }
-                else
-                {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
-                }
-            }
-            else if (otherGameObject.CompareTag("Player_Body") || otherGameObject.CompareTag("Enemy_Body"))
-            {
-                if (otherGameObject.CompareTag("Player_Body"))
+                else if (otherGameObject.CompareTag("Player_Body"))
                 {
                     otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body);
                 }
-                else
-                {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
-                }
-            }
-            else if (otherGameObject.CompareTag("Player_Arm") || otherGameObject.CompareTag("Enemy_Arm"))
-            {
-                if (otherGameObject.CompareTag("Player_Arm"))
+                else if (otherGameObject.CompareTag("Player_Arm"))
                 {
                     otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm);
                 }
-                else
-                {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
-                }
-            }
-            else if (otherGameObject.CompareTag("Player_Leg") || otherGameObject.CompareTag("Enemy_Leg"))
-            {
-                if (otherGameObject.CompareTag("Player_Leg"))
+                else if (otherGameObject.CompareTag("Player_Leg"))
                 {
                     otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg);
-                }
-                else
-                {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
                 }
             }
 
