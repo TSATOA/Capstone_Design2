@@ -7,19 +7,23 @@ using UnityEngine.Windows.WebCam;
 
 public class CharacterInputHandler : MonoBehaviour
 {
-    // �÷��̾��� �Է��� ó���ϰ� �� �Է��� ��Ʈ��ũ�� ���� �ٸ� �÷��̾�� ����ȭ�ϱ� ���� �����͸� �غ�
-    // CharacterInputHandler�� �÷��̾�κ��� �Է��� �޾� LocalCameraHandler�� NetworkInputData�� ����
-    // ����ڷκ��� �̵�, ����, ī�޶� ȸ�� ���Է����� ����
-    // ������ ���ÿ� LocalCameraHandler�� �ٸ� ���� ���� ��ҷ� �����Ͽ� ���� �� ĳ������ �����Ӱ� ī�޶� ����
+    // �÷��̾��� �Է��� ó���ϰ� �� �Է��� ��Ʈ��ũ�� ���� �ٸ� �÷��̾��? ����ȭ�ϱ� ���� �����͸� �غ�
+    // CharacterInputHandler�� �÷��̾�κ���? �Է��� �޾� LocalCameraHandler�� NetworkInputData�� ����
+    // ����ڷκ���? �̵�, ����, ī�޶� ȸ�� ���Է����� ����
+    // ������ ���ÿ� LocalCameraHandler�� �ٸ� ���� ���� ��ҷ�? �����Ͽ� ���� �� ĳ������ �����Ӱ� ī�޶� ����
     // GetNetworkInput() �޼��带 ���� ��Ʈ��ũ�� ���� ����ȭ�� �Է� ������(NetworkInputData)�� �����ϰ� �ʱ�ȭ
 
     Vector2 moveInputVector = Vector2.zero;
     Vector2 viewInputVector = Vector2.zero;
     bool isJumpButtonPressed = false;
 
+    bool isShootingStart = false;
+
     //other components
     //CharacterMovementHandler characterMovementHandler;
     LocalCameraHandler localCameraHandler;
+    CharacterMovementHandler characterMovementHandler;
+
 
     CharacterControl characterControl;
     private PoseEstimator poseEstimator;
@@ -31,6 +35,7 @@ public class CharacterInputHandler : MonoBehaviour
     private void Awake(){
         //characterMovementHandler = GetComponent<CharacterMovementHandler>();
         localCameraHandler = GetComponentInChildren<LocalCameraHandler>();
+        characterMovementHandler = GetComponent<CharacterMovementHandler>();    
     }
 
     // Start is called before the first frame update
@@ -40,7 +45,7 @@ public class CharacterInputHandler : MonoBehaviour
         
         /******************************************************************
             WebCamTexture�� �� �� �̻��� ��ũ��Ʈ���� instantiate �� �� �� �����ϴ�.
-            PoseEstimator ��ũ��Ʈ�� MonoBehavior�� ����ϵ��� ���������� ��ũ��Ʈ��
+            PoseEstimator ��ũ��Ʈ�� MonoBehavior�� ����ϵ���? ���������� ��ũ��Ʈ��
             ���ư��� ���� poseEstimator.GetNetworkPoseData()�� �ֽ� ������ �ҷ����� �˴ϴ�.
         ******************************************************************/
 
@@ -59,6 +64,10 @@ public class CharacterInputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!characterMovementHandler.Object.HasInputAuthority)
+            return;
+
+
         //View Input
         viewInputVector.x = Input.GetAxis("Mouse X");
         viewInputVector.y = Input.GetAxis("Mouse Y")*-1;
@@ -67,7 +76,7 @@ public class CharacterInputHandler : MonoBehaviour
         //characterMovementHandler.SetViewInputVector(viewInputVector);
 
         //Move Input
-        //�� ������ ���� sync�� ������� �Ʒ�ó�� ���� ����
+        //�� ������ ���� sync�� �������? �Ʒ�ó�� ���� ����
         moveInputVector.x = Input.GetAxis("Horizontal");
         moveInputVector.y = Input.GetAxis("Vertical");
 
@@ -81,6 +90,11 @@ public class CharacterInputHandler : MonoBehaviour
         localCameraHandler.SetViewInputVector(viewInputVector);
         if(poseEstimator!=null){
             poseEstimationData = poseEstimator.GetNetworkPoseData(); // good estimation���� Ȯ���� �ʿ� X
+        }
+
+        //Shooting ���� �ڵ� if�� ���� ������ �����ؾ���
+        if(Input.GetKeyDown(KeyCode.F)){
+            isShootingStart = true;
         }
         
     }
@@ -98,8 +112,12 @@ public class CharacterInputHandler : MonoBehaviour
         networkInputData.isJumpPressed = isJumpButtonPressed;
         networkInputData.poseData = poseEstimationData;
         // networkInputData.goodEstimate = goodEs; // good estimation���� Ȯ���� �ʿ� X
-        isJumpButtonPressed = false;
+        
 
+        networkInputData.isShootingStart = isShootingStart;
+        
+        isJumpButtonPressed = false;
+        isShootingStart = false;
         return networkInputData;
     }
 
