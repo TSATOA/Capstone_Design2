@@ -50,13 +50,13 @@ namespace PoseInformation
         };
         public static Dictionary<Bone, float> BoneDistances = new Dictionary<Bone, float>(BoneToKeypointPair.Count)
         {
-            { Bone.RootToRhip, 1.010179f },
-            { Bone.RhipToRknee, 1.010177f },
+            { Bone.RootToRhip, 0.09136969f },
+            { Bone.RhipToRknee, 0.0f },
             { Bone.RkneeToRankle, 0.0f },
-            { Bone.RootToLhip, 0.0f },
+            { Bone.RootToLhip, 0.09136999f },
             { Bone.LhipToLknee, 0.0f },
             { Bone.LkneeToLankle, 0.0f },
-            { Bone.RootToBelly, 1.298847f },
+            { Bone.RootToBelly, 0.2783559f },
             { Bone.BellyToNeck, 0.2697886f },
             { Bone.NeckToNose, 0.09290767f },
             { Bone.NoseToHead, 0.07432614f },
