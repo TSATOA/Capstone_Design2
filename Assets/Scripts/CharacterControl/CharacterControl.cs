@@ -19,6 +19,7 @@ public class CharacterControl : MonoBehaviour
     private FBBIKHeadEffector headEffector;
 
     // For joint control
+    public bool localPlayerControl = true;
     public Transform characterRoot;
     public Transform pelvis;
     public Transform rightHip;
@@ -36,6 +37,7 @@ public class CharacterControl : MonoBehaviour
     public Transform rightArm;
     public Transform rightForeArm;
     public Transform rightWrist;
+    private Vector3 poseRootLocation;
 
     // Character Evade Parameters
     public bool isEvading;
@@ -52,11 +54,12 @@ public class CharacterControl : MonoBehaviour
     {
         Vector3[] modelOutput;
 
-        modelOutput = GetComponent<PoseEstimator>().getThreeDJoints();
-
-        Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
-
-        Draw3DJoints(scaledOutput, visualizeKeypoints);
+        if(localPlayerControl)
+        {
+            modelOutput = GetComponent<PoseEstimator>().getThreeDJoints();
+            Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
+            Draw3DJoints(scaledOutput, visualizeKeypoints);
+        }
 
         // if(isEvading)
         // {
@@ -70,8 +73,7 @@ public class CharacterControl : MonoBehaviour
         threeDPoints = new List<GameObject>();
         poseGroup = new GameObject(name);
         poseGroup.transform.SetParent(characterRoot);
-        // poseGroup.transform.localPosition = pelvis.localPosition;
-        poseGroup.transform.localPosition = Vector3.zero;
+        poseGroup.transform.localPosition = new Vector3(0,0,1);
 
         Array keypoints = Enum.GetValues(typeof(PoseFormat.Keypoint));
 
@@ -154,7 +156,7 @@ public class CharacterControl : MonoBehaviour
 
         // Body
         fullBodyIK.solver.bodyEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Root].transform;
-        fullBodyIK.solver.bodyEffector.positionWeight = 0.15f;
+        fullBodyIK.solver.bodyEffector.positionWeight = 0.9f;
         fullBodyIK.solver.pullBodyVertical = 0.1f;
         fullBodyIK.solver.pullBodyHorizontal = 0.08f;
 
