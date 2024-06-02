@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -9,17 +10,22 @@ public class PlayerStatus : MonoBehaviour
 
     private bool isAiming;
 
+    [SerializeField] private Image barImage;
+
     // Start is called before the first frame update
     void Start()
     {
         isAiming = false;
+        health = 100;
+        barImage.fillAmount = health;
     }
 
-    // µ¥¹ÌÁö¸¦ ÀÔ´Â °æ¿ì
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô´ï¿½ ï¿½ï¿½ï¿??
     public void takeDamge(float damage)
     {
         health -= damage;
-        if (health < 0)
+        barImage.fillAmount = health;
+        if (health <= 0)
         {
             animator.enabled = true;
             animator.SetTrigger("Death");

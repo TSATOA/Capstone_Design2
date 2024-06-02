@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HPHandler : NetworkBehaviour
 {
@@ -10,6 +11,8 @@ public class HPHandler : NetworkBehaviour
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead {get; set;} 
+
+    [SerializeField] private Image barImage;
 
     //스크립트 제대로 초기화 했는지
     bool isInitialize = false;
@@ -30,6 +33,8 @@ public class HPHandler : NetworkBehaviour
             damageAmount = HP;
         HP -= damageAmount;
 
+        //ChangeHealthBarAmount(HP);
+
         Debug.Log($"{Time.time} {transform.name} took damage got {HP} left");
 
         if(HP <= 0){
@@ -44,4 +49,9 @@ public class HPHandler : NetworkBehaviour
     static void OnStateChanged(Changed<HPHandler> changed){
         Debug.Log($"{Time.time} OnStateChanged value {changed.Behaviour.isDead}");
     }
+
+    /*private void ChangeHealthBarAmount(float amount) //* HP 게이지 변경 
+    {
+        barImage.fillAmount = amount / 100;
+    }*/
 }
