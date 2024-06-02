@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UiSettings : MonoBehaviour
+public class Settings : MonoBehaviour
 {
     public void BackBtn()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Title");
     }
     
 }
