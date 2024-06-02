@@ -13,6 +13,8 @@ TagManager:
   - Enemy_Arm
   - Enemy_Leg
   - Enemy
+  - Arrow_Enemy
+  - Arrow_Player
   layers:
   - Default
   - TransparentFX
