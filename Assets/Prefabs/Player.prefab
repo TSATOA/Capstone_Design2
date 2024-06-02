@@ -4869,10 +4869,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
-  m_Height: 2.1
+  m_Radius: 0.2
+  m_Height: 0.55
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 1}
+  m_Center: {x: 0, y: 0, z: 1.7}
 --- !u!1 &3995129029347674199
 GameObject:
   m_ObjectHideFlags: 0
@@ -8985,6 +8985,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizeKeypoints: 1
   poseName: pose
+  localPlayerControl: 1
   characterRoot: {fileID: 1921879427047839545}
   pelvis: {fileID: 3367557675499791053}
   rightHip: {fileID: 152096728181285146}
