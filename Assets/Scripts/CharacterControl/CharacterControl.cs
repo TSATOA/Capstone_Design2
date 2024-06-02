@@ -70,10 +70,10 @@ public class CharacterControl : MonoBehaviour
 
         Draw3DJoints(scaledOutput, visualizeKeypoints);
 
-        if(isEvading)
-        {
-            Debug.Log("Is Evading");
-        }
+        // if(isEvading)
+        // {
+        //     Debug.Log("Is Evading");
+        // }
 
     }
 
