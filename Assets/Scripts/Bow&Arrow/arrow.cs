@@ -8,10 +8,10 @@ public class Arrow : MonoBehaviour
     public float destroyDelay = 15.0f;
     public float arrowDamage = 50.0f;
 
-    // È­»ì ¼Óµµ(ÇÊ¿äÇÏ¸é publicÀ¸·Î º¯°æÇØ¼­ ÇÁ¸®ÆÕ¿¡¼­ Á÷Á¢ ¼öÁ¤ °¡´É)
+    // È­ï¿½ï¿½ ï¿½Óµï¿½(ï¿½Ê¿ï¿½ï¿½Ï¸ï¿½ publicï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     private float arrowSpeed = 10.0f;
 
-    // ÇÇ°Ý ºÎÀ§¿¡ µû¸¥ µ¥¹ÌÁö ¹èÀ²
+    // ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private static class damageMultiplier
     {
         public const float Head = 2.0f;
@@ -38,7 +38,7 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    // Lincast¸¦ ÀÌ¿ëÇØ¼­ Ãæµ¹ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ» °æ¿ì ¾Æ·¡ ¸Þ¼­µå¸¦ ÀÌ¿ë, ±× ¿ÜÀÇ °æ¿ì ¾Æ·¡ ¸Þ¼­µå¸¦ ÁÖ¼® Ã³¸®ÇÏ°í CheckForCollisionÀ» ÀÌ¿ë
+    // Lincastï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ ï¿½æµ¹ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½Ì¿ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Þ¼ï¿½ï¿½å¸¦ ï¿½Ö¼ï¿½ Ã³ï¿½ï¿½ï¿½Ï°ï¿½ CheckForCollisionï¿½ï¿½ ï¿½Ì¿ï¿½
     private void OnTriggerEnter(Collider other)
     {
         if (isInAir)
@@ -47,9 +47,9 @@ public class Arrow : MonoBehaviour
 
             GameObject otherGameObject = other.gameObject;
 
-            // Ãæµ¹ÀÌ ¹ß»ýÇÑ ºÎÀ§¸¦ È®ÀÎÇÏ°í ºÎÀ§º° µ¥¹ÌÁö ¹èÀ²À» Àû¿ëÇÑ µ¥¹ÌÁö °ªÀ» ÀÌ¿ëÇØ takeDamage ¸Þ¼­µå È£Ãâ
-            // ÇÃ·¹ÀÌ¾î È­»ìÀÇ °æ¿ì
-            if (gameObject.CompareTag("ArrowPlayer")) 
+            // ï¿½æµ¹ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ takeDamage ï¿½Þ¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½
+            // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            if (gameObject.CompareTag("Arrow_Player")) 
             {
                 if (otherGameObject.CompareTag("Enemy_Head"))
                 {
@@ -68,8 +68,8 @@ public class Arrow : MonoBehaviour
                     otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
                 }
             }
-            // Àû AI È­»ìÀÇ °æ¿ì
-            else if (gameObject.CompareTag("ArrowEnemy"))
+            // ï¿½ï¿½ AI È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            else if (gameObject.CompareTag("Arrow_Enemy"))
             {
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
@@ -141,7 +141,7 @@ public class Arrow : MonoBehaviour
         rigidBody.AddForce(force, ForceMode.Impulse);
     }
 
-    // delay ½Ã°£ÀÌ Áö³ª¸é È­»ìÀ» ÆÄ±«
+    // delay ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½Ä±ï¿½
     private IEnumerator DestroyArrowAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
