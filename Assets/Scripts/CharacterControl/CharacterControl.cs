@@ -12,6 +12,7 @@ public class CharacterControl : MonoBehaviour
     private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
     public string poseName = "pose";
+
     private GameObject poseGroup;
     // Final IK
     private FullBodyBipedIK fullBodyIK;
@@ -35,6 +36,9 @@ public class CharacterControl : MonoBehaviour
     public Transform rightArm;
     public Transform rightForeArm;
     public Transform rightWrist;
+
+    // Character Evade Parameters
+    public bool isEvading;
 
     void Start()
     {
@@ -65,6 +69,12 @@ public class CharacterControl : MonoBehaviour
         Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
 
         Draw3DJoints(scaledOutput, visualizeKeypoints);
+
+        if(isEvading)
+        {
+            Debug.Log("Is Evading");
+        }
+
     }
 
     public void init3DKeypoints(string name)
