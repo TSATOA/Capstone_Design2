@@ -6,8 +6,10 @@ public class PlayerStatus : MonoBehaviour
 {
     public Animator animator;
     public float health;
+    public GameObject bloodPrefab = null;
 
     private bool isAiming;
+    private GameObject bloodInstance;
 
     // Start is called before the first frame update
     void Start()
@@ -16,9 +18,10 @@ public class PlayerStatus : MonoBehaviour
     }
 
     // 데미지를 입는 경우
-    public void takeDamge(float damage)
+    public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
+        bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
         if (health < 0)
         {
             animator.enabled = true;

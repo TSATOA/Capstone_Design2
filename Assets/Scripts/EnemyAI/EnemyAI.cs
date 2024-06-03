@@ -8,6 +8,7 @@ public class EnemyAI : MonoBehaviour
     public GameObject arrowPrefab;
     public Transform handTransform;
     public Animator animator;
+    public GameObject bloodPrefab;
 
     private GameObject enemyArrow;
     private Transform arrowHead;
@@ -148,7 +149,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     // 데미지를 입는 경우
-    public void takeDamge(float damage)
+    public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
         if (health < 0)

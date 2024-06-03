@@ -55,19 +55,19 @@ public class Arrow : MonoBehaviour
             {
                 if (otherGameObject.CompareTag("Enemy_Head"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Body"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Arm"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Leg"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, other.transform.rotation);
                 }
             }
             // 적 AI 화살의 경우
@@ -76,20 +76,20 @@ public class Arrow : MonoBehaviour
                 //Debug.Log("Arrow hit Player!!" + other.name);
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Player_Body"))
                 {
                     //Debug.Log("Arrow hit Player Body!!!!");
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Player_Arm"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, other.transform.rotation);
                 }
                 else if (otherGameObject.CompareTag("Player_Leg"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, other.transform.rotation);
                 }
             }
 
