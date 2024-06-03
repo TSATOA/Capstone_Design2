@@ -38,7 +38,7 @@ public class HandController : MonoBehaviour
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
                 if (playerArrow == null) return;
                 playerArrow.tag = "Arrow_Player";
-                playerArrow.layer = 8; // ArrowCollision layer
+                playerArrow.layer = 9; // CollisionWithEnemy layer
 
                 // 화살촉과 화살깃 부분의 Transform 저장
                 arrowHead = playerArrow.transform.Find("ArrowHead");

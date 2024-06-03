@@ -25,9 +25,9 @@ TagManager:
   - UI
   - LocalPlayerModel
   - NetworkedHitBox
-  - ArrowCollision
-  - 
-  - 
+  - CollisionWithPlayer
+  - CollisionWithEnemy
+  - Environment
   - 
   - 
   - 

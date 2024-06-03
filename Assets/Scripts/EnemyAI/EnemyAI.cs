@@ -95,7 +95,7 @@ public class EnemyAI : MonoBehaviour
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
         if (enemyArrow == null) return;
         enemyArrow.tag = "Arrow_Enemy";
-        enemyArrow.layer = 8; // ArrowCollision Layer
+        enemyArrow.layer = 8; // CollisionWithPlayer Layer
 
         // 화살촉과 화살깃 부분의 Transform 저장
         arrowHead = enemyArrow.transform.Find("ArrowHead");

@@ -949,7 +949,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5379525195272266422}
   - component: {fileID: 5642847623807111947}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_LowerArm_R
   m_TagString: Enemy_Arm
   m_Icon: {fileID: 0}
@@ -1004,7 +1004,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6622977330846515491}
   - component: {fileID: 3798477080053388753}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_Body
   m_TagString: Enemy_Head
   m_Icon: {fileID: 0}
@@ -1326,7 +1326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3026810862308472378}
   - component: {fileID: 6811563069807518793}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_LowerArm_L
   m_TagString: Enemy_Arm
   m_Icon: {fileID: 0}
@@ -1803,7 +1803,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6757508372164844986}
   - component: {fileID: 4816299512009939116}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_Head
   m_TagString: Enemy_Head
   m_Icon: {fileID: 0}
@@ -4499,7 +4499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8300219433997844159}
   - component: {fileID: 8949335462116322875}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_UpperArm_R
   m_TagString: Enemy_Arm
   m_Icon: {fileID: 0}
@@ -7215,7 +7215,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3058343791594096379}
   - component: {fileID: 9138218272672044750}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_Leg_L
   m_TagString: Enemy_Leg
   m_Icon: {fileID: 0}
@@ -7531,7 +7531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8525663760767433126}
   - component: {fileID: 806115543672922475}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_Leg_R
   m_TagString: Enemy_Leg
   m_Icon: {fileID: 0}
@@ -9056,7 +9056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6478337791599321916}
   - component: {fileID: 7384261514887996503}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_UpperArm_L
   m_TagString: Enemy_Arm
   m_Icon: {fileID: 0}
