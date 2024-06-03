@@ -24,6 +24,8 @@ public class PlayerStatus : MonoBehaviour
             animator.enabled = true;
             animator.SetTrigger("Death");
         }
+
+        //Debug.Log("Player get Damaged!!: " + health);
     }
 
     public bool IsPlayerAiming()

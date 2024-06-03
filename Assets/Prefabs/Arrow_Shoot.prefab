@@ -336,7 +336,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4493684771532229208}
-  - component: {fileID: 6643916798048839829}
   m_Layer: 0
   m_Name: ArrowHead
   m_TagString: Untagged
@@ -359,26 +358,3 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5362313225418736930}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &6643916798048839829
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8913613929677348875}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.015
-  m_Height: 0.1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}

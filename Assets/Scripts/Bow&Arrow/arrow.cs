@@ -6,12 +6,13 @@ public class Arrow : MonoBehaviour
 {
     public Transform arrowHead = null;
     public float destroyDelay = 15.0f;
-    public float arrowDamage = 50.0f;
 
-    // ȭ�� �ӵ�(�ʿ��ϸ� public���� �����ؼ� �����տ��� ���� ���� ����)
-    private float arrowSpeed = 10.0f;
+    // 화살 속도(필요하면 public으로 변경해서 프리팹에서 직접 수정 가능)
+    private float arrowSpeed = 100.0f;
 
-    // �ǰ� ������ ���� ������ ����
+    private float arrowDamage = 20.0f;
+
+    // 피격 부위에 따른 데미지 배율
     private static class damageMultiplier
     {
         public const float Head = 2.0f;
@@ -38,7 +39,7 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    // Lincast�� �̿��ؼ� �浹 ó���� ���� ���� ��� �Ʒ� �޼��带 �̿�, �� ���� ��� �Ʒ� �޼��带 �ּ� ó���ϰ� CheckForCollision�� �̿�
+    // Lincast를 이용해서 충돌 처리를 하지 않을 경우 아래 메서드를 이용, 그 외의 경우 아래 메서드를 주석 처리하고 CheckForCollision을 이용
     private void OnTriggerEnter(Collider other)
     {
         if (isInAir)
@@ -46,46 +47,49 @@ public class Arrow : MonoBehaviour
             StopArrow();
 
             GameObject otherGameObject = other.gameObject;
+            GameObject parentObj = GetRootParent(otherGameObject);
 
-            // �浹�� �߻��� ������ Ȯ���ϰ� ������ ������ ������ ������ ������ ���� �̿��� takeDamage �޼��� ȣ��
-            // �÷��̾� ȭ���� ���
-            if (gameObject.CompareTag("Arrow_Player")) 
+            // 충돌이 발생한 부위를 확인하고 부위별 데미지 배율을 적용한 데미지 값을 이용해 takeDamage 메서드 호출
+            // 플레이어 화살의 경우
+            if (gameObject.CompareTag("Arrow_Player"))
             {
                 if (otherGameObject.CompareTag("Enemy_Head"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Body"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Arm"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Leg"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
                 }
             }
-            // �� AI ȭ���� ���
+            // 적 AI 화살의 경우
             else if (gameObject.CompareTag("Arrow_Enemy"))
             {
+                //Debug.Log("Arrow hit Player!!" + other.name);
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head);
                 }
                 else if (otherGameObject.CompareTag("Player_Body"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    //Debug.Log("Arrow hit Player Body!!!!");
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body);
                 }
                 else if (otherGameObject.CompareTag("Player_Arm"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm);
                 }
                 else if (otherGameObject.CompareTag("Player_Leg"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg);
                 }
             }
 
@@ -104,17 +108,20 @@ public class Arrow : MonoBehaviour
     private void StopArrow()
     {
         isInAir = false;
-        SetPhysics(false);
+        //SetPhysics(false);
+        Destroy(transform.GetComponent<Rigidbody>());
 
         StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
     }
 
-    public void ReleaseArrow(float pullValue, Vector3 direction)
+    public void ReleaseArrow(float power, Vector3 direction)
     {
         isInAir = true;
         SetPhysics(true);
 
-        FireArrow(pullValue, direction);
+        arrowDamage = power;
+
+        FireArrow(direction);
         //StartCoroutine(RotateWithVelocity());
 
         lastPosition = arrowHead.position;
@@ -126,9 +133,9 @@ public class Arrow : MonoBehaviour
         rigidBody.useGravity = usePhysics;
     }
 
-    private void FireArrow(float power, Vector3 direction)
+    private void FireArrow(Vector3 direction)
     {
-        Vector3 force = direction * (power * arrowSpeed);
+        Vector3 force = direction * arrowSpeed;
 
         // for Debugging
         /*Debug.Log("Direction: " + direction);
@@ -141,13 +148,26 @@ public class Arrow : MonoBehaviour
         rigidBody.AddForce(force, ForceMode.Impulse);
     }
 
-    // delay �ð��� ������ ȭ���� �ı�
+    // delay 시간이 지나면 화살을 파괴
     private IEnumerator DestroyArrowAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
     }
-    
+
+    GameObject GetRootParent(GameObject obj)
+    {
+        Transform currentParent = obj.transform;
+
+        // 루트 부모를 찾을 때까지 반복
+        while (currentParent.parent != null)
+        {
+            currentParent = currentParent.parent;
+        }
+
+        return currentParent.gameObject;
+    }
+
     /*private IEnumerator RotateWithVelocity()
     {
         yield return new WaitForFixedUpdate();

@@ -15,41 +15,54 @@ public class EnemyAI : MonoBehaviour
     private GameObject player;
     private PlayerStatus playerStatus;
 
-    // �÷��̾ �����ϰ� �ִ� ���� AI�� ȸ�� ������ �� Ȯ��
-    public float evadeChance = 1.0f; // ȸ�� ���� ���� Ȯ�� (0 ~ 1)
-    private bool isEvadeDone = false; // �÷��̾ �����ϴ� ���� �����⸦ ������ ������ �����Ͽ��°�? (������� ���ش� �ѹ��� ����)
+    private Transform target;
 
-    // �� NPC�� �����⸦ ������ Ƚ��
+    // 플레이어가 조준하고 있는 동안 AI가 회피 동작을 할 확률
+    public float evadeChance = 1.0f; // 회피 동작 성공 확률 (0 ~ 1)
+    private bool isEvadeDone = false; // 플레이어가 조준하는 동안 구르기를 수행할 것인지 결정하였는가? (구르기는 조준당 한번만 수행)
+
+    // 적 NPC가 구르기를 수행한 횟수
     private int leftEvade = 0;
     private int rightEvade = 0;
-    private int maxEvade = 5; // ���� �������� �ִ� ������ ���� Ƚ��
+    private int maxEvade = 5; // 한쪽 방향으로 최대 구르기 가능 횟수
 
     public float health;
     public float arrowPower = 10.0f;
+
+    // 각 부위를 향해 화살을 발사할 확률
+    private static class targetProb
+    {
+        public const float Head = 1.0f;
+        public const float Body = 0.0f;
+        public const float Arm = 0.0f;
+        public const float Leg = 0.0f;
+    }
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerStatus = player.GetComponent<PlayerStatus>();
+
+        target = GameObject.FindGameObjectWithTag("Target").transform;
     }
 
     private void Update()
     {
-        // Idle ���¶�� �÷��̾ �ٶ󺸰� ȸ��
+        // Idle 상태라면 플레이어를 바라보게 회전
         if (IsIdle())
         {
             LookAtPlayer();
         }
-        // ������ ���� �����̰� �÷��̾ ���� ���̶��
+        // 구르기 가능 상태이고 플레이어가 조준 중이라면
         if (!isEvadeDone && playerStatus.IsPlayerAiming())
         {
-            // ������ ���� Ȯ���� ���� ������ ����
+            // 구르기 성공 확률에 따라 구르기 실행
             if (Random.value < evadeChance)
             {
-                // ������ ����
+                // 구르기 실행
                 if (Random.value < 0.5f && leftEvade < maxEvade)
                 {
-                    // �������� ������
+                    // 왼쪽으로 구르기
                     leftEvade++;
                     rightEvade--;
                     if (rightEvade < 0) rightEvade = 0;
@@ -57,7 +70,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-                    // ���������� ������
+                    // 오른쪽으로 구르기
                     rightEvade++;
                     leftEvade--;
                     if (leftEvade < 0) leftEvade = 0;
@@ -67,47 +80,53 @@ public class EnemyAI : MonoBehaviour
 
             isEvadeDone = true;
         }
-        // �÷��̾ ������ Ǯ�� �ٽ� ������ ���� ���·� ����
+        // 플레이어가 조준을 풀면 다시 구르기 가능 상태로 변경
         else if (isEvadeDone && !playerStatus.IsPlayerAiming())
         {
             isEvadeDone = false;
         }
     }
 
-    // ȭ���뿡�� ȭ���� ������ �ִϸ��̼��� ����Ǵ� ���� �տ� ȭ�� �����Ͽ� ����
+    // 화살통에서 화살이 꺼내는 애니메이션이 재생되는 순간 손에 화살 생성하여 부착
     void GrabArrow()
     {
-        // ȭ�� ����
+        // 화살 생성
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
         if (enemyArrow == null) return;
         enemyArrow.tag = "Arrow_Enemy";
+        enemyArrow.layer = 8; // ArrowCollision Layer
 
-        // ȭ���˰� ȭ��� �κ��� Transform ����
+        // 화살촉과 화살깃 부분의 Transform 저장
         arrowHead = enemyArrow.transform.Find("ArrowHead");
         arrowTail = enemyArrow.transform.Find("ArrowTail");
 
-        // ȭ���� ���� ArrowAttach �κ��� child�� ����
+        // 화살을 손의 ArrowAttach 부분의 child로 설정
         enemyArrow.transform.parent = handTransform;
 
-        // ȭ���� ��ġ, ȸ�� ���� ����
+        // 플레이어의 어디를 조준할지 결정
+        changeTarget();
+
+        // 화살의 위치, 회전 세부 조정
         //enemyArrow.transform.localPosition = Vector3.zero;
         //enemyArrow.transform.localRotation = Quaternion.identity; 
     }
 
-    // Ȱ�� ��ܼ� �߻��ϴ� ���� ȭ���� �߻��ϴ� �Լ� ����
+    // 활을 당겨서 발사하는 순간 화살을 발사하는 함수 실행
     void FireArrow_Enemy()
     {
-        // ȭ���� �������� �����ϰ� ���� ȭ���� �߻� ������ ���·� ��ȯ
+        // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환
         enemyArrow.transform.parent = null;
 
-        // ȭ�� ���� ���
-        Vector3 direction = CalculateDirection(arrowTail, arrowHead);
+        // 화살 방향 계산
+        Vector3 direction = CalculateDirection(arrowTail, target);
 
-        // ȭ���� �߻�
+        Debug.DrawRay(arrowTail.position, direction, Color.red, 2.0f);
+
+        // 화살을 발사
         enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
     }
 
-    // AI�� ���°� idle���� Ȯ��
+    // AI의 상태가 idle인지 확인
     private bool IsIdle()
     {
         if (animator != null)
@@ -118,7 +137,7 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-    // �÷��̾ �ٶ󺸵��� ȸ��
+    // 플레이어를 바라보도록 회전
     public void LookAtPlayer()
     {
         if (player != null)
@@ -128,7 +147,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // �������� �Դ� ���
+    // 데미지를 입는 경우
     public void takeDamge(float damage)
     {
         health -= damage;
@@ -145,5 +164,32 @@ public class EnemyAI : MonoBehaviour
         direction.Normalize();
 
         return direction;
+    }
+
+    private void changeTarget() { 
+        float prob = Random.value;
+
+        if (prob < targetProb.Head)
+        {
+            target.Find("Target_Head");
+        }
+        prob -= targetProb.Head;
+        
+        if (prob < targetProb.Body)
+        {
+            target.Find("Target_Body");
+        }
+        prob -= targetProb.Body;
+
+        if (prob < targetProb.Arm)
+        {
+            target.Find("Target_Arm");
+        }
+        prob -= targetProb.Arm;
+
+        if (prob < targetProb.Leg)
+        {
+            target.Find("Target_Leg");
+        }
     }
 }
