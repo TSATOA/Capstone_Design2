@@ -9,9 +9,10 @@ using UnityEngine.UI;
     public TextMeshProUGUI Minute;
     public TextMeshProUGUI Second;
     //public Text colon;
-    float limit_time = 10; // 제한 시간 120초
+    float limit_time = 5; // 제한 시간 120초
     int min, sec;
-    
+    public GameObject ResultPage;
+
     void Start()
     {
         //제한 시간 02:00
@@ -32,6 +33,7 @@ using UnityEngine.UI;
             Minute.text = 0.ToString();
             Second.text = 0.ToString();
             Debug.Log("Time over");
+            ResultPage.SetActive(true);
         }
 
         else

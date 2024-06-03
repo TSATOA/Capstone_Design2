@@ -10,6 +10,8 @@ public class PlayerStatus : MonoBehaviour
 
     private bool isAiming;
 
+    public GameObject ResultPage;
+
     [SerializeField] private Image barImage;
 
     // Start is called before the first frame update
@@ -29,6 +31,7 @@ public class PlayerStatus : MonoBehaviour
         {
             animator.enabled = true;
             animator.SetTrigger("Death");
+            ResultPage.SetActive(true);
         }
     }
 

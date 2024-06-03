@@ -15,18 +15,19 @@ public class EnemyAI : MonoBehaviour
     private GameObject player;
     private PlayerStatus playerStatus;
 
-    // ÇÃ·¹ÀÌ¾î°¡ Á¶ÁØÇÏ°í ÀÖ´Â µ¿¾È AI°¡ È¸ÇÇ µ¿ÀÛÀ» ÇÒ È®·ü
-    public float evadeChance = 1.0f; // È¸ÇÇ µ¿ÀÛ ¼º°ø È®·ü (0 ~ 1)
-    private bool isEvadeDone = false; // ÇÃ·¹ÀÌ¾î°¡ Á¶ÁØÇÏ´Â µ¿¾È ±¸¸£±â¸¦ ¼öÇàÇÒ °ÍÀÎÁö °áÁ¤ÇÏ¿´´Â°¡? (±¸¸£±â´Â Á¶ÁØ´ç ÇÑ¹ø¸¸ ¼öÇà)
+    // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ AIï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½
+    public float evadeChance = 1.0f; // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ (0 ~ 1)
+    private bool isEvadeDone = false; // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½Â°ï¿½? (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø´ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
-    // Àû NPC°¡ ±¸¸£±â¸¦ ¼öÇàÇÑ È½¼ö
+    // ï¿½ï¿½ NPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½
     private int leftEvade = 0;
     private int rightEvade = 0;
-    private int maxEvade = 5; // ÇÑÂÊ ¹æÇâÀ¸·Î ÃÖ´ë ±¸¸£±â °¡´É È½¼ö
+    private int maxEvade = 5; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½
 
     public float health;
     public float arrowPower = 10.0f;
 
+    public GameObject ResultPage;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -35,21 +36,21 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        // Idle »óÅÂ¶ó¸é ÇÃ·¹ÀÌ¾î¸¦ ¹Ù¶óº¸°Ô È¸Àü
+        // Idle ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Ù¶óº¸°ï¿½ È¸ï¿½ï¿½
         if (IsIdle())
         {
             LookAtPlayer();
         }
-        // ±¸¸£±â °¡´É »óÅÂÀÌ°í ÇÃ·¹ÀÌ¾î°¡ Á¶ÁØ ÁßÀÌ¶ó¸é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½
         if (!isEvadeDone && playerStatus.IsPlayerAiming())
         {
-            // ±¸¸£±â ¼º°ø È®·ü¿¡ µû¶ó ±¸¸£±â ½ÇÇà
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (Random.value < evadeChance)
             {
-                // ±¸¸£±â ½ÇÇà
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (Random.value < 0.5f && leftEvade < maxEvade)
                 {
-                    // ¿ÞÂÊÀ¸·Î ±¸¸£±â
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     leftEvade++;
                     rightEvade--;
                     if (rightEvade < 0) rightEvade = 0;
@@ -57,7 +58,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-                    // ¿À¸¥ÂÊÀ¸·Î ±¸¸£±â
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     rightEvade++;
                     leftEvade--;
                     if (leftEvade < 0) leftEvade = 0;
@@ -67,47 +68,47 @@ public class EnemyAI : MonoBehaviour
 
             isEvadeDone = true;
         }
-        // ÇÃ·¹ÀÌ¾î°¡ Á¶ÁØÀ» Ç®¸é ´Ù½Ã ±¸¸£±â °¡´É »óÅÂ·Î º¯°æ
+        // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
         else if (isEvadeDone && !playerStatus.IsPlayerAiming())
         {
             isEvadeDone = false;
         }
     }
 
-    // È­»ìÅë¿¡¼­ È­»ìÀÌ ²¨³»´Â ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ Àç»ýµÇ´Â ¼ø°£ ¼Õ¿¡ È­»ì »ý¼ºÇÏ¿© ºÎÂø
+    // È­ï¿½ï¿½ï¿½ë¿¡ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Õ¿ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     void GrabArrow()
     {
-        // È­»ì »ý¼º
+        // È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
         if (enemyArrow == null) return;
         enemyArrow.tag = "ArrowEnemy";
 
-        // È­»ìÃË°ú È­»ì±ê ºÎºÐÀÇ Transform ÀúÀå
+        // È­ï¿½ï¿½ï¿½Ë°ï¿½ È­ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ Transform ï¿½ï¿½ï¿½ï¿½
         arrowHead = enemyArrow.transform.Find("ArrowHead");
         arrowTail = enemyArrow.transform.Find("ArrowTail");
 
-        // È­»ìÀ» ¼ÕÀÇ ArrowAttach ºÎºÐÀÇ child·Î ¼³Á¤
+        // È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ArrowAttach ï¿½Îºï¿½ï¿½ï¿½ childï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         enemyArrow.transform.parent = handTransform;
 
-        // È­»ìÀÇ À§Ä¡, È¸Àü ¼¼ºÎ Á¶Á¤
+        // È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡, È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //enemyArrow.transform.localPosition = Vector3.zero;
         //enemyArrow.transform.localRotation = Quaternion.identity; 
     }
 
-    // È°À» ´ç°Ü¼­ ¹ß»çÇÏ´Â ¼ø°£ È­»ìÀ» ¹ß»çÇÏ´Â ÇÔ¼ö ½ÇÇà
+    // È°ï¿½ï¿½ ï¿½ï¿½Ü¼ï¿½ ï¿½ß»ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     void FireArrow_Enemy()
     {
-        // È­»ìÀ» ½ÃÀ§¿¡¼­ Á¦°ÅÇÏ°í ´ÙÀ½ È­»ìÀ» ¹ß»ç °¡´ÉÇÑ »óÅÂ·Î ÀüÈ¯
+        // È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
         enemyArrow.transform.parent = null;
 
-        // È­»ì ¹æÇâ °è»ê
+        // È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         Vector3 direction = CalculateDirection(arrowTail, arrowHead);
 
-        // È­»ìÀ» ¹ß»ç
+        // È­ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½
         enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
     }
 
-    // AIÀÇ »óÅÂ°¡ idleÀÎÁö È®ÀÎ
+    // AIï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ idleï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
     private bool IsIdle()
     {
         if (animator != null)
@@ -118,7 +119,7 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-    // ÇÃ·¹ÀÌ¾î¸¦ ¹Ù¶óº¸µµ·Ï È¸Àü
+    // ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Ù¶óº¸µï¿½ï¿½ï¿½ È¸ï¿½ï¿½
     public void LookAtPlayer()
     {
         if (player != null)
@@ -128,13 +129,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // µ¥¹ÌÁö¸¦ ÀÔ´Â °æ¿ì
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô´ï¿½ ï¿½ï¿½ï¿½
     public void takeDamge(float damage)
     {
         health -= damage;
         if (health < 0)
         {
             animator.SetTrigger("Death");
+            ResultPage.SetActive(true);
         }
     }
 
