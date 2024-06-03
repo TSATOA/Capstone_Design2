@@ -109,9 +109,10 @@ public class Arrow : MonoBehaviour
     {
         isInAir = false;
         //SetPhysics(false);
-        Destroy(transform.GetComponent<Rigidbody>());
+        //Destroy(transform.GetComponent<Rigidbody>());
+        Destroy(gameObject);
 
-        StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
+        //StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
     }
 
     public void ReleaseArrow(float power, Vector3 direction)

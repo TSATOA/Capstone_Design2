@@ -28,6 +28,7 @@ public class PlayerStatus : MonoBehaviour
             animator.SetTrigger("Death");
         }
 
+        Destroy(bloodInstance, 2.0f);
         //Debug.Log("Player get Damaged!!: " + health);
     }
 

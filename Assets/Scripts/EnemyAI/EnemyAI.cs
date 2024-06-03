@@ -15,6 +15,7 @@ public class EnemyAI : MonoBehaviour
     private Transform arrowTail;
     private GameObject player;
     private PlayerStatus playerStatus;
+    private GameObject bloodInstance;
 
     private Transform target;
 
@@ -33,8 +34,8 @@ public class EnemyAI : MonoBehaviour
     // 각 부위를 향해 화살을 발사할 확률
     private static class targetProb
     {
-        public const float Head = 1.0f;
-        public const float Body = 0.0f;
+        public const float Head = 0.0f;
+        public const float Body = 1.0f;
         public const float Arm = 0.0f;
         public const float Leg = 0.0f;
     }
@@ -152,10 +153,13 @@ public class EnemyAI : MonoBehaviour
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
+        bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
         if (health < 0)
         {
             animator.SetTrigger("Death");
         }
+
+        Destroy(bloodInstance, 2.0f);
     }
 
     Vector3 CalculateDirection(Transform from, Transform to)
@@ -170,27 +174,34 @@ public class EnemyAI : MonoBehaviour
     private void changeTarget() { 
         float prob = Random.value;
 
+        if (!target.CompareTag("Target"))
+            target = target.parent;
+
         if (prob < targetProb.Head)
         {
-            target.Find("Target_Head");
+            target = target.Find("Target_Head");
+            return;
         }
         prob -= targetProb.Head;
         
         if (prob < targetProb.Body)
         {
-            target.Find("Target_Body");
+            target = target.Find("Target_Body");
+            return;
         }
         prob -= targetProb.Body;
 
         if (prob < targetProb.Arm)
         {
-            target.Find("Target_Arm");
+            target = target.Find("Target_Arm");
+            return;
         }
         prob -= targetProb.Arm;
 
         if (prob < targetProb.Leg)
         {
-            target.Find("Target_Leg");
+            target = target.Find("Target_Leg");
+            return;
         }
     }
 }
