@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System;
 using PoseInformation;
 using RootMotion.FinalIK;
-using UnityEngine.Animations.Rigging;
 using RootMotion;
+using TMPro;
 
 public class CharacterControl : MonoBehaviour
 {
@@ -42,6 +42,9 @@ public class CharacterControl : MonoBehaviour
     // Character Evade Parameters
     public bool isEvading;
 
+    // Arrow Aim
+    AimIK arrowAim;
+
     void Start()
     {
         // IK setup
@@ -61,10 +64,10 @@ public class CharacterControl : MonoBehaviour
             Draw3DJoints(scaledOutput, visualizeKeypoints);
         }
 
-        // if(isEvading)
-        // {
-        //     Debug.Log("Is Evading");
-        // }
+        if(isEvading)
+        {
+            Debug.Log("Is Evading");
+        }
 
     }
 
@@ -180,6 +183,7 @@ public class CharacterControl : MonoBehaviour
         fullBodyIK.solver.chain[2].bendConstraint.bendGoal = threeDPoints[(int)PoseFormat.Keypoint.Relbow].transform;
         fullBodyIK.solver.chain[2].bendConstraint.weight = 0.8f;
 
+        fullBodyIK.solver.limbMappings[1].maintainRotationWeight = 1.0f;
         // Head
         // 머리 회전까지 반영할 필요는 없음
         addHeadEffector(threeDPoints[(int)PoseFormat.Keypoint.Head]);
@@ -213,7 +217,27 @@ public class CharacterControl : MonoBehaviour
 
     private void addAimContraint()
     {
-        
+        arrowAim = gameObject.AddComponent<AimIK>();
+        var arrowAttach = rightWrist.transform.Find("ArrowAttach");
+
+        arrowAim.fixTransforms = true;
+        arrowAim.solver.target = threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform;
+        arrowAim.solver.transform = arrowAttach;
+        arrowAim.solver.axis = new Vector3(1, 0, 0);
+        arrowAim.solver.poleAxis = new Vector3(0, 1, 0);
+
+        arrowAim.solver.IKPositionWeight = 1.0f;
+        arrowAim.solver.poleWeight = 0.0f;
+        arrowAim.solver.tolerance = 0;
+        arrowAim.solver.maxIterations = 4;
+        arrowAim.solver.clampWeight = 0.1f;
+        arrowAim.solver.clampSmoothing = 2;
+        arrowAim.solver.useRotationLimits = true;
+        arrowAim.solver.XY = false;
+
+        arrowAim.solver.bones = new IKSolver.Bone[1];
+
+        arrowAim.solver.bones[0] = new IKSolver.Bone(arrowAttach, 1.0f);
     }
 
     private float distAtoB(Vector3 a, Vector3 b)
