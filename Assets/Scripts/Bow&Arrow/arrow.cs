@@ -8,7 +8,7 @@ public class Arrow : MonoBehaviour
     public float destroyDelay = 15.0f;
 
     // 화살 속도(필요하면 public으로 변경해서 프리팹에서 직접 수정 가능)
-    private float arrowSpeed = 100.0f;
+    private float arrowSpeed = 50.0f;
 
     private float arrowDamage = 20.0f;
 
