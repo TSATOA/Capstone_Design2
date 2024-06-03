@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
-    public GameObject arrowPrefab;      // ������ ȭ�� ������
-    public GameObject bowObject;        // �÷��̾��� Ȱ ������Ʈ
-    public Transform handTransform;     // ȭ���� ������ ��ġ
-    public Transform stringTransform;   // Ȱ������ ��ġ
+    public GameObject arrowPrefab;      // 생성할 화살 프리팹
+    public GameObject bowObject;        // 플레이어의 활 오브젝트
+    public Transform handTransform;     // 화살을 부착할 위치
+    public Transform stringTransform;   // 활시위의 위치
     public GameObject idleCamera;
     public GameObject aimCamera;
 
@@ -27,49 +27,50 @@ public class HandController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // ���� Quiver�� ArrowSelect �κа� �����Ͽ��� ���
+        // 손이 Quiver의 ArrowSelect 부분과 접촉하였을 경우
         if (other.gameObject.name == "QuiverTop")
         {
             if (!isArrowEquipped)
             {
                 isArrowEquipped = true;
 
-                // ȭ�� ����
+                // 화살 생성
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
                 if (playerArrow == null) return;
                 playerArrow.tag = "Arrow_Player";
+                playerArrow.layer = 9; // CollisionWithEnemy layer
 
-                // ȭ���˰� ȭ��� �κ��� Transform ����
+                // 화살촉과 화살깃 부분의 Transform 저장
                 arrowHead = playerArrow.transform.Find("ArrowHead");
                 arrowTail = playerArrow.transform.Find("ArrowTail");
 
-                // ȭ���� ���� ArrowAttach �κ��� child�� ����
+                // 화살을 손의 ArrowAttach 부분의 child로 설정
                 playerArrow.transform.parent = handTransform;
 
-                // ȭ���� ��ġ, ȸ�� ���� ����
+                // 화살의 위치, 회전 세부 조정
                 //newArrow.transform.localPosition = Vector3.zero;
                 //newArrow.transform.localRotation = Quaternion.identity; 
             }
         }
-        // ȭ���� �տ� ��ä�� Ȱ������ �����Ͽ��� ���
+        // 화살을 손에 든채로 활시위와 접촉하였을 경우
         else if (other.gameObject.name == "BowString")
         {
             if (isArrowEquipped && !isArrowReload)
             {
                 isArrowReload = true;
 
-                // Player Status ����
+                // Player Status 변경
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
-                // Ȱ������ ȭ���� �տ� ����
+                // 활시위와 화살을 손에 부착
                 other.transform.parent = handTransform;
                 playerArrow.transform.parent = stringTransform;
 
-                // ȭ���� ��ġ, ȸ�� ���� ����
+                // 화살의 위치, 회전 세부 조정
                 playerArrow.transform.localPosition = new Vector3(-0.004f, 0.001f, 0.001f);
                 playerArrow.transform.localRotation = Quaternion.Euler(49.527f, 73.301f, -33.277f);
 
-                // Aim Camera�� ��ȯ
+                // Aim Camera로 전환
                 idleCamera.SetActive(false);
                 aimCamera.SetActive(true);
             }
@@ -88,31 +89,31 @@ public class HandController : MonoBehaviour
     {
         if (isArrowReload)
         {
-            // ȭ���� ��� �Ÿ� (�ʿ��ϴٸ� public ���� ������ ���� ����)
+            // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
 
             if (distance > fireDistance)
             {
-                // ȭ���� �������� �����ϰ� ���� ȭ���� �߻� ������ ���·� ��ȯ
+                // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환
                 playerArrow.transform.parent = null;
                 isArrowEquipped = false;
                 isArrowReload = false;
 
-                // �տ� ������ Ȱ������ ����
+                // 손에 부착된 활시위를 제거
                 stringTransform.parent = bowHead.parent;
                 stringTransform.localPosition = originalStringPosition;
                 stringTransform.localRotation = originalStringRotation;
 
-                // ȭ�� ���� ���
+                // 화살 방향 계산
                 Vector3 direction = CalculateDirection(arrowTail, arrowHead);
 
-                // Ȱ������ �����̻� ������� ȭ���� �߻�
+                // 활시위가 일정이상 당겨지면 화살을 발사
                 playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
 
-                // Player Status ����
+                // Player Status 변경
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
-                // idle Camera�� ��ȯ
+                // idle Camera로 전환
                 idleCamera.SetActive(true);
                 aimCamera.SetActive(false);
             }
