@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System;
 using PoseInformation;
 using RootMotion.FinalIK;
-using UnityEngine.Animations.Rigging;
 using RootMotion;
+using TMPro;
 
 public class CharacterControl : MonoBehaviour
 {
@@ -37,7 +37,6 @@ public class CharacterControl : MonoBehaviour
     public Transform rightArm;
     public Transform rightForeArm;
     public Transform rightWrist;
-    private Vector3 poseRootLocation;
 
     // Character Evade Parameters
     public bool isEvading;
@@ -47,7 +46,6 @@ public class CharacterControl : MonoBehaviour
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
-        addAimContraint();
     }
 
     void Update()
@@ -138,6 +136,10 @@ public class CharacterControl : MonoBehaviour
             bodyJoint.transform.localPosition = bodyJoints[idx];
             bodyJoint.SetActive(visualizeKeypoints);
         }
+        threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform.LookAt(
+            threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform
+        );
+        threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform.Rotate(-90,-90,0);
     }
 
     private void AddFullBodyIK(GameObject humanoid, BipedReferences references = null)
@@ -173,12 +175,21 @@ public class CharacterControl : MonoBehaviour
         // Right Arm
         fullBodyIK.solver.rightHandEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform;
         fullBodyIK.solver.rightHandEffector.positionWeight = 0.95f;
+        fullBodyIK.solver.rightHandEffector.rotationWeight = 1.0f;
 
         fullBodyIK.solver.rightShoulderEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rshoulder].transform;
         fullBodyIK.solver.rightShoulderEffector.positionWeight = 0.5f;
 
         fullBodyIK.solver.chain[2].bendConstraint.bendGoal = threeDPoints[(int)PoseFormat.Keypoint.Relbow].transform;
         fullBodyIK.solver.chain[2].bendConstraint.weight = 0.8f;
+
+        // Left Hip
+        fullBodyIK.solver.leftThighEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Lhip].transform;
+        fullBodyIK.solver.leftThighEffector.positionWeight = 0.6f;
+
+        // Right Hip
+        fullBodyIK.solver.rightThighEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rhip].transform;
+        fullBodyIK.solver.rightThighEffector.positionWeight = 0.6f;
 
         // Head
         // 머리 회전까지 반영할 필요는 없음
@@ -209,11 +220,6 @@ public class CharacterControl : MonoBehaviour
 
         headEffector.postStretchWeight = 1.0f;
         headEffector.maxStretch = 0.1f;
-    }
-
-    private void addAimContraint()
-    {
-        
     }
 
     private float distAtoB(Vector3 a, Vector3 b)
