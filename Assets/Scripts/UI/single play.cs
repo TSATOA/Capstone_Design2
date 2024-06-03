@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class SinglePlay : MonoBehaviour
 {
+    public GameObject Loading;
+    public void SingleStart()
+    {
+        Loading.SetActive(true);
+        SceneManager.LoadScene("SingleMap");
+    }
     public void BackBtn()
     {
         SceneManager.LoadScene("Title");

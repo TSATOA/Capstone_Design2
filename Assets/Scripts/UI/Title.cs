@@ -11,7 +11,7 @@ public class Title : MonoBehaviour
     }
     public void MultiBtn()
     {
-        SceneManager.LoadScene("MultiPlay");
+        SceneManager.LoadScene("MainMenu");
     }
     public void SettingBtn()
     {

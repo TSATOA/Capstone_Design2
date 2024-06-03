@@ -9,14 +9,14 @@ using UnityEngine.UI;
     public TextMeshProUGUI Minute;
     public TextMeshProUGUI Second;
     //public Text colon;
-    float limit_time = 120; // 제한 시간 120초
+    float limit_time = 10; // 제한 시간 120초
     int min, sec;
     
     void Start()
     {
         //제한 시간 02:00
-        Minute.text = "02";
-        Second.text = "00";
+        //Minute.text = "02";
+        //Second.text = "00";
 
     }
     
@@ -31,6 +31,7 @@ using UnityEngine.UI;
         {
             Minute.text = 0.ToString();
             Second.text = 0.ToString();
+            Debug.Log("Time over");
         }
 
         else
