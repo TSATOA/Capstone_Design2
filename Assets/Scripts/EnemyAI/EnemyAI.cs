@@ -154,9 +154,10 @@ public class EnemyAI : MonoBehaviour
     {
         health -= damage;
         bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
-        if (health < 0)
+        if (health <= 0)
         {
             animator.SetTrigger("Death");
+            DisableColliders(gameObject);
         }
 
         Destroy(bloodInstance, 2.0f);
@@ -202,6 +203,19 @@ public class EnemyAI : MonoBehaviour
         {
             target = target.Find("Target_Leg");
             return;
+        }
+    }
+
+    // 해당 캐릭터가 죽을 경우 자식 게임 오브젝트의 Collider를 모두 비활성화하여 더이상 데미지를 입지 못하게 한다.
+    private void DisableColliders(GameObject parentObject)
+    {
+        // parentObject의 모든 자식 Collider들을 가져옵니다.
+        Collider[] childColliders = parentObject.GetComponentsInChildren<Collider>();
+
+        // 각 Collider를 비활성화합니다.
+        foreach (Collider collider in childColliders)
+        {
+            collider.enabled = false;
         }
     }
 }
