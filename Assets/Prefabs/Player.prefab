@@ -2974,7 +2974,7 @@ GameObject:
   - component: {fileID: 4086486876605442521}
   m_Layer: 0
   m_Name: Armor_3
-  m_TagString: Player_Body
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9293,6 +9293,7 @@ GameObject:
   - component: {fileID: 236546612521155768}
   - component: {fileID: 8021408048370354297}
   - component: {fileID: 6811816618528303069}
+  - component: {fileID: 5160705624020120218}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -9421,6 +9422,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterControl: {fileID: 1340435715793518490}
+--- !u!114 &5160705624020120218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7794328056204116063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e3c222fbbb32641b93295a5457dcca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableMesh:
+  - {fileID: 2433925245801712023}
+  - {fileID: 1941383036513029837}
+  - {fileID: 4030649141848038017}
+  - {fileID: 1012475121372814996}
+  - {fileID: 6304569455951186251}
+  - {fileID: 5374685584341279891}
+  - {fileID: 2367353661821701860}
+  - {fileID: 3882592168866300429}
+  - {fileID: 3080636746216477467}
+  - {fileID: 325516618217477156}
+  - {fileID: 4123041683641973394}
+  - {fileID: 5705943229578606957}
+  - {fileID: 3999443599662677475}
+  - {fileID: 1475845172761347977}
+  - {fileID: 1390825527599462057}
+  - {fileID: 6409701015091968349}
+  disableDelay: 2
 --- !u!1 &7814475650279985086
 GameObject:
   m_ObjectHideFlags: 0

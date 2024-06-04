@@ -10,12 +10,14 @@ public class PlayerStatus : MonoBehaviour
     public GameObject bloodPrefab = null;
 
     private bool isAiming;
-    private GameObject bloodInstance;
+    private GameObject bloodInstance = null;
+    private GameObject playerMesh = null;
 
     // Start is called before the first frame update
     void Start()
     {
         isAiming = false;
+        playerMesh = gameObject.transform.Find("Medieval_warriors").gameObject;
     }
 
     // 데미지를 입는 경우
@@ -46,6 +48,9 @@ public class PlayerStatus : MonoBehaviour
     public void ChangePlayerPoseStatus(bool poseStatus)
     {
         isAiming = poseStatus;
+
+        // 플레이어 시야에 따라서 mesh 활성화 / 비활성화
+        gameObject.GetComponent<PlayerMeshControl>().ControlMesh(isAiming);
     }
 
     private void DisableColliders(GameObject parentObject)
