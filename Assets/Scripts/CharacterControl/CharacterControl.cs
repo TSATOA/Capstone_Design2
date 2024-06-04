@@ -57,12 +57,7 @@ public class CharacterControl : MonoBehaviour
     void Update()
     {
 
-        var animatorInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if(animatorInfo.IsName("Jump Away") && animator.IsInTransition(0))
-        {
-            LookAtAI();
-        }
+        LookAtAI();
 
         Vector3[] modelOutput;
 
@@ -245,11 +240,16 @@ public class CharacterControl : MonoBehaviour
 
     public void LookAtAI()
     {
-        if (enemy != null)
+        var animatorInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if((animatorInfo.IsName("Jump Away") && animator.IsInTransition(0)) || (animatorInfo.IsName("Idle") && (!animator.IsInTransition(0))))
         {
-            //Debug.Log("LookAtPlayer!!");
-            transform.LookAt(enemy.transform);
-            transform.Rotate(0, 70, 0);
+            if (enemy != null)
+            {
+                //Debug.Log("LookAtPlayer!!");
+                transform.LookAt(enemy.transform);
+                transform.Rotate(0, 70, 0);
+            }
         }
     }
 
