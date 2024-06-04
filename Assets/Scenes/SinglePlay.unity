@@ -378,8 +378,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 268415643}
-        m_TargetAssemblyTypeName: SinglePlay, Assembly-CSharp
-        m_MethodName: SingleStart
+        m_TargetAssemblyTypeName: UiSinglePlay, Assembly-CSharp
+        m_MethodName: PlaySingle
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9740679cef4b034b8bacf98fdc94515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Loading: {fileID: 73669940}
+  statusPanel: {fileID: 0}
 --- !u!1 &380103813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,7 +1555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9740679cef4b034b8bacf98fdc94515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Loading: {fileID: 0}
+  statusPanel: {fileID: 0}
 --- !u!1 &1490510845
 GameObject:
   m_ObjectHideFlags: 0

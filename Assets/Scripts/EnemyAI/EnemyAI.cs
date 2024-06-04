@@ -31,6 +31,8 @@ public class EnemyAI : MonoBehaviour
     public float health;
     public float arrowPower = 10.0f;
 
+    public GameObject ResultPage;
+
     // 각 부위를 향해 화살을 발사할 확률
     private static class targetProb
     {
@@ -160,6 +162,7 @@ public class EnemyAI : MonoBehaviour
         {
             animator.SetTrigger("Death");
             DisableColliders(gameObject);
+            ResultPage.SetActive(true);
         }
         else
         {

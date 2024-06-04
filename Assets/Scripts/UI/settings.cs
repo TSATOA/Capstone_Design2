@@ -7,7 +7,7 @@ public class UiSettings : MonoBehaviour
 {
     public void BackBtn()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Title");
     }
     
 }

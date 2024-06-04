@@ -7,7 +7,7 @@ public class UiMultiPlay : MonoBehaviour
 {
     public void BackBtn()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Title");
     }
     
 }

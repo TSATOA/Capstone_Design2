@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+//using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -13,18 +15,21 @@ public class PlayerStatus : MonoBehaviour
     private GameObject bloodInstance = null;
     private GameObject playerMesh = null;
 
+    [SerializeField] private Image barImage;
+    public GameObject ResultPage;
     // Start is called before the first frame update
     void Start()
     {
         isAiming = false;
         playerMesh = gameObject.transform.Find("Medieval_warriors").gameObject;
+        barImage.fillAmount = 1;
     }
 
     // 데미지를 입는 경우
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
-
+        barImage.fillAmount = health / 100;
         bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
 
         //Debug.DrawRay(hitPos.position, hitDir * Vector3.forward * 2, Color.red, 2.0f);
@@ -34,6 +39,7 @@ public class PlayerStatus : MonoBehaviour
             animator.enabled = true;
             animator.SetTrigger("Death");
             DisableColliders(gameObject);
+            ResultPage.SetActive(true);
         }
 
         Destroy(bloodInstance, 2.0f);

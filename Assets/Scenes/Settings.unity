@@ -1330,7 +1330,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1387512873}
-        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+        m_TargetAssemblyTypeName: UiSettings, Assembly-CSharp
         m_MethodName: BackBtn
         m_Mode: 1
         m_Arguments:
