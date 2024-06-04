@@ -40,6 +40,7 @@ public class CharacterControl : MonoBehaviour
     public Transform rightForeArm;
     public Transform rightWrist;
 
+    public Transform bow;
     private Animator animator;
 
     // Character Evade Parameters

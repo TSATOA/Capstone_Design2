@@ -11,11 +11,12 @@ public class HandController : MonoBehaviour
     public Transform stringTransform;   // 활시위의 위치
     public GameObject idleCamera;
     public GameObject aimCamera;
+    public Transform aimCameraTransform;
 
     private GameObject player;
 
     public float arrowPower = 10.0f;
-
+    public Transform arrowHeadTarget;
     private bool isArrowEquipped = false;
     private bool isArrowReload = false;
     private GameObject playerArrow;
@@ -53,7 +54,7 @@ public class HandController : MonoBehaviour
 
                 // 화살의 위치, 회전 세부 조정
                 playerArrow.transform.localPosition = Vector3.zero;
-                playerArrow.transform.localRotation = Quaternion.Euler(-41.131f, 0 , 180);
+                // playerArrow.transform.localRotation = Quaternion.Euler(-41.131f, 0 , 180);
             }
         }
         // 화살을 손에 든채로 활시위와 접촉하였을 경우
@@ -71,8 +72,8 @@ public class HandController : MonoBehaviour
                 playerArrow.transform.parent = stringTransform;
 
                 // 화살의 위치, 회전 세부 조정
-                playerArrow.transform.localPosition = Vector3.zero;
-                // playerArrow.transform.localRotation = Quaternion.Euler(95,-50,41);
+                playerArrow.transform.localPosition = new Vector3(-0.004f, 0.001f, 0.001f);
+                // playerArrow.transform.localRotation = Quaternion.Euler(49.527f, 73.301f, -33.277f);
 
                 // Aim Camera로 전환
                 idleCamera.SetActive(false);
@@ -91,8 +92,11 @@ public class HandController : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(isArrowReload);
         if (isArrowReload)
         {
+            Vector3 cameraDir = CalculateDirection(aimCameraTransform, arrowHead);
+            aimCamera.transform.rotation = Quaternion.LookRotation(cameraDir);
             Crosshair.SetActive(true);
             // 장전된 화살이 활을 바라보도록 조정
             playerArrow.transform.LookAt(bowObject.transform);
@@ -100,7 +104,6 @@ public class HandController : MonoBehaviour
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
             barImage.fillAmount = distance;
-
             if (distance > fireDistance)
             {
                 // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환

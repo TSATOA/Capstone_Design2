@@ -237,7 +237,8 @@ MonoBehaviour:
   bloodPrefab: {fileID: 100000, guid: dee0fb32388ba8249894f6297a2d35f7, type: 3}
   evadeChance: 1
   health: 100
-  arrowPower: 50
+  arrowPower: 2
+  ResultPage: {fileID: 0}
 --- !u!1 &407715033793766926
 GameObject:
   m_ObjectHideFlags: 0

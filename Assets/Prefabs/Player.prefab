@@ -750,7 +750,11 @@ MonoBehaviour:
   stringTransform: {fileID: 3825615378772281930}
   idleCamera: {fileID: 0}
   aimCamera: {fileID: 0}
+  aimCameraTransform: {fileID: 0}
   arrowPower: 10
+  arrowHeadTarget: {fileID: 0}
+  barImage: {fileID: 0}
+  Crosshair: {fileID: 0}
 --- !u!54 &3360368908277876711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9354,7 +9358,8 @@ MonoBehaviour:
   rightArm: {fileID: 1356786440750720650}
   rightForeArm: {fileID: 8195042534831664207}
   rightWrist: {fileID: 1752975040045956883}
-  isEvading: 1
+  bow: {fileID: 1668220994419904541}
+  isEvading: 0
 --- !u!114 &5468793043172251032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9387,6 +9392,8 @@ MonoBehaviour:
   animator: {fileID: 8021408048370354297}
   health: 100
   bloodPrefab: {fileID: 100000, guid: dee0fb32388ba8249894f6297a2d35f7, type: 3}
+  barImage: {fileID: 0}
+  ResultPage: {fileID: 0}
 --- !u!95 &8021408048370354297
 Animator:
   serializedVersion: 7
@@ -9450,8 +9457,10 @@ MonoBehaviour:
   - {fileID: 3999443599662677475}
   - {fileID: 1475845172761347977}
   - {fileID: 1390825527599462057}
-  - {fileID: 6409701015091968349}
-  disableDelay: 2
+  - {fileID: 1188735679681059515}
+  - {fileID: 5400983027259049392}
+  - {fileID: 6350415715396635301}
+  disableDelay: 0
 --- !u!1 &7814475650279985086
 GameObject:
   m_ObjectHideFlags: 0
