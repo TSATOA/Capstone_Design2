@@ -90,7 +90,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     // 화살통에서 화살이 꺼내는 애니메이션이 재생되는 순간 손에 화살 생성하여 부착
-    void GrabArrow()
+    public void GrabArrow()
     {
         // 화살 생성
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
@@ -114,7 +114,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     // 활을 당겨서 발사하는 순간 화살을 발사하는 함수 실행
-    void FireArrow_Enemy()
+    public void FireArrow_Enemy()
     {
         // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환
         enemyArrow.transform.parent = null;
@@ -125,7 +125,7 @@ public class EnemyAI : MonoBehaviour
         Debug.DrawRay(arrowTail.position, direction, Color.red, 2.0f);
 
         // 화살을 발사
-        enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
+        enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction, gameObject);
     }
 
     // AI의 상태가 idle인지 확인
@@ -153,11 +153,17 @@ public class EnemyAI : MonoBehaviour
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
+
         bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
+
         if (health <= 0)
         {
             animator.SetTrigger("Death");
             DisableColliders(gameObject);
+        }
+        else
+        {
+            animator.SetTrigger("Hit_Small");
         }
 
         Destroy(bloodInstance, 2.0f);

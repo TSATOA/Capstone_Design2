@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class Arrow : MonoBehaviour
 
     private float arrowDamage = 20.0f;
 
+    private Vector3 bloodDirection = Vector3.zero;
+
     // 피격 부위에 따른 데미지 배율
     private static class damageMultiplier
     {
@@ -24,6 +27,7 @@ public class Arrow : MonoBehaviour
     private Rigidbody rigidBody = null;
     private bool isInAir = false;
     private Vector3 lastPosition = Vector3.zero;
+    private GameObject arrowOwner = null;
 
     protected void Awake()
     {
@@ -48,6 +52,14 @@ public class Arrow : MonoBehaviour
 
             GameObject otherGameObject = other.gameObject;
             GameObject parentObj = GetRootParent(otherGameObject);
+            bloodDirection = CalculateDirection(otherGameObject.transform, arrowOwner.transform);
+            Quaternion hitDir = Quaternion.LookRotation(bloodDirection);
+            Quaternion additionalRotation = Quaternion.Euler(0, -90, 0);
+            hitDir = hitDir * additionalRotation;
+
+            //Debug.Log(arrowDirection);
+            //Debug.Log(otherGameObject.name);
+            //Debug.DrawRay(otherGameObject.transform.position, arrowDirection, Color.green, 2.0f);
 
             // 충돌이 발생한 부위를 확인하고 부위별 데미지 배율을 적용한 데미지 값을 이용해 takeDamage 메서드 호출
             // 플레이어 화살의 경우
@@ -55,19 +67,19 @@ public class Arrow : MonoBehaviour
             {
                 if (otherGameObject.CompareTag("Enemy_Head"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Body"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Arm"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Leg"))
                 {
-                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, hitDir);
                 }
             }
             // 적 AI 화살의 경우
@@ -76,20 +88,20 @@ public class Arrow : MonoBehaviour
                 //Debug.Log("Arrow hit Player!!" + other.name);
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Body"))
                 {
                     //Debug.Log("Arrow hit Player Body!!!!");
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Arm"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Leg"))
                 {
-                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, other.transform.rotation);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, hitDir);
                 }
             }
 
@@ -115,11 +127,12 @@ public class Arrow : MonoBehaviour
         //StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
     }
 
-    public void ReleaseArrow(float power, Vector3 direction)
+    public void ReleaseArrow(float power, Vector3 direction, GameObject Owner)
     {
         isInAir = true;
         SetPhysics(true);
 
+        arrowOwner = Owner;
         arrowDamage = power;
 
         FireArrow(direction);
@@ -147,6 +160,9 @@ public class Arrow : MonoBehaviour
         */
 
         rigidBody.AddForce(force, ForceMode.Impulse);
+
+        // 일정 시간이 지나면 파괴(무한히 날아갈 경우)
+        Destroy(gameObject, 10.0f);
     }
 
     // delay 시간이 지나면 화살을 파괴
@@ -169,16 +185,12 @@ public class Arrow : MonoBehaviour
         return currentParent.gameObject;
     }
 
-    /*private IEnumerator RotateWithVelocity()
+    Vector3 CalculateDirection(Transform from, Transform to)
     {
-        yield return new WaitForFixedUpdate();
+        Vector3 direction = to.position - from.position;
 
-        while (isInAir)
-        {
-            Quaternion newRotation = Quaternion.LookRotation(rigidBody.velocity, transform.up);
-            transform.rotation = newRotation;
-            yield return null;
-        }
+        direction.Normalize();
+
+        return direction;
     }
-    */
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,11 @@ public class PlayerStatus : MonoBehaviour
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
+
         bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
+
+        //Debug.DrawRay(hitPos.position, hitDir * Vector3.forward * 2, Color.red, 2.0f);
+
         if (health <= 0)
         {
             animator.enabled = true;
