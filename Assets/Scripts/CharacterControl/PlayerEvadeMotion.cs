@@ -7,17 +7,14 @@ public class PlayerEvadeMotion : MonoBehaviour
 {
     public CharacterControl characterControl = null;
     private FullBodyBipedIK fullBodyBipedIK = null;
-    private FBBIKHeadEffector headEffector = null;
     private bool newdirectionChecked = false;
     private float startTime = 0.0f;
     private float runningTime = 0.5f;
     private Animator animator;
-    private Transform characterRoot;
     private Transform head;
 
     void Start()
     {
-        characterRoot = characterControl.characterRoot;
         head = characterControl.nose;
         animator = gameObject.GetComponent<Animator>();
         newdirectionChecked = false;
@@ -59,8 +56,6 @@ public class PlayerEvadeMotion : MonoBehaviour
     {
         if(fullBodyBipedIK.enabled && !animator.IsInTransition(0) && fullBodyBipedIK != null)
         {
-            // headEffector = head.gameObject.GetComponent<FBBIKHeadEffector>();
-
             fullBodyBipedIK.enabled = false;
             
             if(newdirectionChecked == false){
