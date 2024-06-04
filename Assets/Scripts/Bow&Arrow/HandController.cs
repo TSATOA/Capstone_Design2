@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class HandController : MonoBehaviour
 {
-    public GameObject arrowPrefab;      // »ı¼ºÇÒ È­»ì ÇÁ¸®ÆÕ
-    public GameObject bowObject;        // ÇÃ·¹ÀÌ¾îÀÇ È° ¿ÀºêÁ§Æ®
-    public Transform handTransform;     // È­»ìÀ» ºÎÂøÇÒ À§Ä¡
-    public Transform stringTransform;   // È°½ÃÀ§ÀÇ À§Ä¡
+    public GameObject arrowPrefab;      // ìƒì„±í•  í™”ì‚´ í”„ë¦¬íŒ¹
+    public GameObject bowObject;        // í”Œë ˆì´ì–´ì˜ í™œ ì˜¤ë¸Œì íŠ¸
+    public Transform handTransform;     // í™”ì‚´ì„ ë¶€ì°©í•  ìœ„ì¹˜
+    public Transform stringTransform;   // í™œì‹œìœ„ì˜ ìœ„ì¹˜
     public GameObject idleCamera;
     public GameObject aimCamera;
 
@@ -21,7 +21,7 @@ public class HandController : MonoBehaviour
     private bool isArrowReload = false;
     private GameObject playerArrow;
     private Transform bowHead;
-    private float fireDistance = 2.0f;
+    private float fireDistance = 1.0f;
     private Vector3 originalStringPosition;
     private Quaternion originalStringRotation;
     private Transform arrowHead;
@@ -32,49 +32,50 @@ public class HandController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // ¼ÕÀÌ QuiverÀÇ ArrowSelect ºÎºĞ°ú Á¢ÃËÇÏ¿´À» °æ¿ì
+        // ì†ì´ Quiverì˜ ArrowSelect ë¶€ë¶„ê³¼ ì ‘ì´‰í•˜ì˜€ì„ ê²½ìš°
         if (other.gameObject.name == "QuiverTop")
         {
             if (!isArrowEquipped)
             {
                 isArrowEquipped = true;
 
-                // È­»ì »ı¼º
+                // í™”ì‚´ ìƒì„±
                 playerArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
                 if (playerArrow == null) return;
-                playerArrow.tag = "ArrowPlayer";
+                playerArrow.tag = "Arrow_Player";
+                playerArrow.layer = 9; // CollisionWithEnemy layer
 
-                // È­»ìÃË°ú È­»ì±ê ºÎºĞÀÇ Transform ÀúÀå
+                // í™”ì‚´ì´‰ê³¼ í™”ì‚´ê¹ƒ ë¶€ë¶„ì˜ Transform ì €ì¥
                 arrowHead = playerArrow.transform.Find("ArrowHead");
                 arrowTail = playerArrow.transform.Find("ArrowTail");
 
-                // È­»ìÀ» ¼ÕÀÇ ArrowAttach ºÎºĞÀÇ child·Î ¼³Á¤
+                // í™”ì‚´ì„ ì†ì˜ ArrowAttach ë¶€ë¶„ì˜ childë¡œ ì„¤ì •
                 playerArrow.transform.parent = handTransform;
 
-                // È­»ìÀÇ À§Ä¡, È¸Àü ¼¼ºÎ Á¶Á¤
-                //newArrow.transform.localPosition = Vector3.zero;
-                //newArrow.transform.localRotation = Quaternion.identity; 
+                // í™”ì‚´ì˜ ìœ„ì¹˜, íšŒì „ ì„¸ë¶€ ì¡°ì •
+                playerArrow.transform.localPosition = Vector3.zero;
+                playerArrow.transform.localRotation = Quaternion.Euler(-41.131f, 0 , 180);
             }
         }
-        // È­»ìÀ» ¼Õ¿¡ µçÃ¤·Î È°½ÃÀ§¿Í Á¢ÃËÇÏ¿´À» °æ¿ì
+        // í™”ì‚´ì„ ì†ì— ë“ ì±„ë¡œ í™œì‹œìœ„ì™€ ì ‘ì´‰í•˜ì˜€ì„ ê²½ìš°
         else if (other.gameObject.name == "BowString")
         {
             if (isArrowEquipped && !isArrowReload)
             {
                 isArrowReload = true;
 
-                // Player Status º¯°æ
+                // Player Status ë³€ê²½
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
-                // È°½ÃÀ§¿Í È­»ìÀ» ¼Õ¿¡ ºÎÂø
+                // í™œì‹œìœ„ì™€ í™”ì‚´ì„ ì†ì— ë¶€ì°©
                 other.transform.parent = handTransform;
                 playerArrow.transform.parent = stringTransform;
 
-                // È­»ìÀÇ À§Ä¡, È¸Àü ¼¼ºÎ Á¶Á¤
-                playerArrow.transform.localPosition = new Vector3(-0.004f, 0.001f, 0.001f);
-                playerArrow.transform.localRotation = Quaternion.Euler(49.527f, 73.301f, -33.277f);
+                // í™”ì‚´ì˜ ìœ„ì¹˜, íšŒì „ ì„¸ë¶€ ì¡°ì •
+                playerArrow.transform.localPosition = Vector3.zero;
+                // playerArrow.transform.localRotation = Quaternion.Euler(95,-50,41);
 
-                // Aim Camera·Î ÀüÈ¯
+                // Aim Cameraë¡œ ì „í™˜
                 idleCamera.SetActive(false);
                 aimCamera.SetActive(true);
             }
@@ -93,33 +94,36 @@ public class HandController : MonoBehaviour
     {
         if (isArrowReload)
         {
-            // È­»ìÀ» ´ç±ä °Å¸® (ÇÊ¿äÇÏ´Ù¸é public Àü¿ª º¯¼ö·Î ¼±¾ğ °¡´É)
+            // ì¥ì „ëœ í™”ì‚´ì´ í™œì„ ë°”ë¼ë³´ë„ë¡ ì¡°ì •
+            playerArrow.transform.LookAt(bowObject.transform);
+            playerArrow.transform.Rotate(90, 0, 0);
+            // í™”ì‚´ì„ ë‹¹ê¸´ ê±°ë¦¬ (í•„ìš”í•˜ë‹¤ë©´ public ì „ì—­ ë³€ìˆ˜ë¡œ ì„ ì–¸ ê°€ëŠ¥)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
             Aiming.fillAmount = distance / 2;
             AimUI.SetActive(true);
 
             if (distance > fireDistance)
             {
-                // È­»ìÀ» ½ÃÀ§¿¡¼­ Á¦°ÅÇÏ°í ´ÙÀ½ È­»ìÀ» ¹ß»ç °¡´ÉÇÑ »óÅÂ·Î ÀüÈ¯
+                // í™”ì‚´ì„ ì‹œìœ„ì—ì„œ ì œê±°í•˜ê³  ë‹¤ìŒ í™”ì‚´ì„ ë°œì‚¬ ê°€ëŠ¥í•œ ìƒíƒœë¡œ ì „í™˜
                 playerArrow.transform.parent = null;
                 isArrowEquipped = false;
                 isArrowReload = false;
 
-                // ¼Õ¿¡ ºÎÂøµÈ È°½ÃÀ§¸¦ Á¦°Å
+                // ì†ì— ë¶€ì°©ëœ í™œì‹œìœ„ë¥¼ ì œê±°
                 stringTransform.parent = bowHead.parent;
                 stringTransform.localPosition = originalStringPosition;
                 stringTransform.localRotation = originalStringRotation;
 
-                // È­»ì ¹æÇâ °è»ê
+                // í™”ì‚´ ë°©í–¥ ê³„ì‚°
                 Vector3 direction = CalculateDirection(arrowTail, arrowHead);
 
-                // È°½ÃÀ§°¡ ÀÏÁ¤ÀÌ»ó ´ç°ÜÁö¸é È­»ìÀ» ¹ß»ç
-                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
+                // í™œì‹œìœ„ê°€ ì¼ì •ì´ìƒ ë‹¹ê²¨ì§€ë©´ í™”ì‚´ì„ ë°œì‚¬
+                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction, gameObject);
 
-                // Player Status º¯°æ
+                // Player Status ë³€ê²½
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
 
-                // idle Camera·Î ÀüÈ¯
+                // idle Cameraë¡œ ì „í™˜
                 idleCamera.SetActive(true);
                 aimCamera.SetActive(false);
                 AimUI.SetActive(false);

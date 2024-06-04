@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,15 @@ public class Arrow : MonoBehaviour
 {
     public Transform arrowHead = null;
     public float destroyDelay = 15.0f;
-    public float arrowDamage = 50.0f;
 
-    // È­»ì ¼Óµµ(ÇÊ¿äÇÏ¸é publicÀ¸·Î º¯°æÇØ¼­ ÇÁ¸®ÆÕ¿¡¼­ Á÷Á¢ ¼öÁ¤ °¡´É)
-    private float arrowSpeed = 10.0f;
+    // í™”ì‚´ ì†ë„(í•„ìš”í•˜ë©´ publicìœ¼ë¡œ ë³€ê²½í•´ì„œ í”„ë¦¬íŒ¹ì—ì„œ ì§ì ‘ ìˆ˜ì • ê°€ëŠ¥)
+    private float arrowSpeed = 50.0f;
 
-    // ÇÇ°İ ºÎÀ§¿¡ µû¸¥ µ¥¹ÌÁö ¹èÀ²
+    private float arrowDamage = 20.0f;
+
+    private Vector3 bloodDirection = Vector3.zero;
+
+    // í”¼ê²© ë¶€ìœ„ì— ë”°ë¥¸ ë°ë¯¸ì§€ ë°°ìœ¨
     private static class damageMultiplier
     {
         public const float Head = 2.0f;
@@ -23,6 +27,7 @@ public class Arrow : MonoBehaviour
     private Rigidbody rigidBody = null;
     private bool isInAir = false;
     private Vector3 lastPosition = Vector3.zero;
+    private GameObject arrowOwner = null;
 
     protected void Awake()
     {
@@ -38,7 +43,7 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    // Lincast¸¦ ÀÌ¿ëÇØ¼­ Ãæµ¹ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ» °æ¿ì ¾Æ·¡ ¸Ş¼­µå¸¦ ÀÌ¿ë, ±× ¿ÜÀÇ °æ¿ì ¾Æ·¡ ¸Ş¼­µå¸¦ ÁÖ¼® Ã³¸®ÇÏ°í CheckForCollisionÀ» ÀÌ¿ë
+    // Lincastë¥¼ ì´ìš©í•´ì„œ ì¶©ëŒ ì²˜ë¦¬ë¥¼ í•˜ì§€ ì•Šì„ ê²½ìš° ì•„ë˜ ë©”ì„œë“œë¥¼ ì´ìš©, ê·¸ ì™¸ì˜ ê²½ìš° ì•„ë˜ ë©”ì„œë“œë¥¼ ì£¼ì„ ì²˜ë¦¬í•˜ê³  CheckForCollisionì„ ì´ìš©
     private void OnTriggerEnter(Collider other)
     {
         if (isInAir)
@@ -46,46 +51,57 @@ public class Arrow : MonoBehaviour
             StopArrow();
 
             GameObject otherGameObject = other.gameObject;
+            GameObject parentObj = GetRootParent(otherGameObject);
+            bloodDirection = CalculateDirection(otherGameObject.transform, arrowOwner.transform);
+            Quaternion hitDir = Quaternion.LookRotation(bloodDirection);
+            Quaternion additionalRotation = Quaternion.Euler(0, -90, 0);
+            hitDir = hitDir * additionalRotation;
 
-            // Ãæµ¹ÀÌ ¹ß»ıÇÑ ºÎÀ§¸¦ È®ÀÎÇÏ°í ºÎÀ§º° µ¥¹ÌÁö ¹èÀ²À» Àû¿ëÇÑ µ¥¹ÌÁö °ªÀ» ÀÌ¿ëÇØ takeDamage ¸Ş¼­µå È£Ãâ
-            // ÇÃ·¹ÀÌ¾î È­»ìÀÇ °æ¿ì
-            if (gameObject.CompareTag("ArrowPlayer")) 
+            //Debug.Log(arrowDirection);
+            //Debug.Log(otherGameObject.name);
+            //Debug.DrawRay(otherGameObject.transform.position, arrowDirection, Color.green, 2.0f);
+
+            // ì¶©ëŒì´ ë°œìƒí•œ ë¶€ìœ„ë¥¼ í™•ì¸í•˜ê³  ë¶€ìœ„ë³„ ë°ë¯¸ì§€ ë°°ìœ¨ì„ ì ìš©í•œ ë°ë¯¸ì§€ ê°’ì„ ì´ìš©í•´ takeDamage ë©”ì„œë“œ í˜¸ì¶œ
+            // í”Œë ˆì´ì–´ í™”ì‚´ì˜ ê²½ìš°
+            if (gameObject.CompareTag("Arrow_Player"))
             {
                 if (otherGameObject.CompareTag("Enemy_Head"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Body"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Arm"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Enemy_Leg"))
                 {
-                    otherGameObject.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<EnemyAI>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, hitDir);
                 }
             }
-            // Àû AI È­»ìÀÇ °æ¿ì
-            else if (gameObject.CompareTag("ArrowEnemy"))
+            // ì  AI í™”ì‚´ì˜ ê²½ìš°
+            else if (gameObject.CompareTag("Arrow_Enemy"))
             {
+                //Debug.Log("Arrow hit Player!!" + other.name);
                 if (otherGameObject.CompareTag("Player_Head"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Head, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Body"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body);
+                    //Debug.Log("Arrow hit Player Body!!!!");
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Body, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Arm"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Arm, other.transform, hitDir);
                 }
                 else if (otherGameObject.CompareTag("Player_Leg"))
                 {
-                    otherGameObject.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg);
+                    parentObj.GetComponent<PlayerStatus>().takeDamge(arrowDamage * damageMultiplier.Leg, other.transform, hitDir);
                 }
             }
 
@@ -104,17 +120,22 @@ public class Arrow : MonoBehaviour
     private void StopArrow()
     {
         isInAir = false;
-        SetPhysics(false);
+        //SetPhysics(false);
+        //Destroy(transform.GetComponent<Rigidbody>());
+        Destroy(gameObject);
 
-        StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
+        //StartCoroutine(DestroyArrowAfterDelay(destroyDelay));
     }
 
-    public void ReleaseArrow(float pullValue, Vector3 direction)
+    public void ReleaseArrow(float power, Vector3 direction, GameObject Owner)
     {
         isInAir = true;
         SetPhysics(true);
 
-        FireArrow(pullValue, direction);
+        arrowOwner = Owner;
+        arrowDamage = power;
+
+        FireArrow(direction);
         //StartCoroutine(RotateWithVelocity());
 
         lastPosition = arrowHead.position;
@@ -126,9 +147,9 @@ public class Arrow : MonoBehaviour
         rigidBody.useGravity = usePhysics;
     }
 
-    private void FireArrow(float power, Vector3 direction)
+    private void FireArrow(Vector3 direction)
     {
-        Vector3 force = direction * (power * arrowSpeed);
+        Vector3 force = direction * arrowSpeed;
 
         // for Debugging
         /*Debug.Log("Direction: " + direction);
@@ -139,25 +160,37 @@ public class Arrow : MonoBehaviour
         */
 
         rigidBody.AddForce(force, ForceMode.Impulse);
+
+        // ì¼ì • ì‹œê°„ì´ ì§€ë‚˜ë©´ íŒŒê´´(ë¬´í•œíˆ ë‚ ì•„ê°ˆ ê²½ìš°)
+        Destroy(gameObject, 10.0f);
     }
 
-    // delay ½Ã°£ÀÌ Áö³ª¸é È­»ìÀ» ÆÄ±«
+    // delay ì‹œê°„ì´ ì§€ë‚˜ë©´ í™”ì‚´ì„ íŒŒê´´
     private IEnumerator DestroyArrowAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
     }
-    
-    /*private IEnumerator RotateWithVelocity()
-    {
-        yield return new WaitForFixedUpdate();
 
-        while (isInAir)
+    GameObject GetRootParent(GameObject obj)
+    {
+        Transform currentParent = obj.transform;
+
+        // ë£¨íŠ¸ ë¶€ëª¨ë¥¼ ì°¾ì„ ë•Œê¹Œì§€ ë°˜ë³µ
+        while (currentParent.parent != null)
         {
-            Quaternion newRotation = Quaternion.LookRotation(rigidBody.velocity, transform.up);
-            transform.rotation = newRotation;
-            yield return null;
+            currentParent = currentParent.parent;
         }
+
+        return currentParent.gameObject;
     }
-    */
+
+    Vector3 CalculateDirection(Transform from, Transform to)
+    {
+        Vector3 direction = to.position - from.position;
+
+        direction.Normalize();
+
+        return direction;
+    }
 }

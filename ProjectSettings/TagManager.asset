@@ -15,6 +15,7 @@ TagManager:
   - Enemy
   - Arrow_Enemy
   - Arrow_Player
+  - Target
   layers:
   - Default
   - TransparentFX
@@ -24,9 +25,9 @@ TagManager:
   - UI
   - LocalPlayerModel
   - NetworkedHitBox
-  - 
-  - 
-  - 
+  - CollisionWithPlayer
+  - CollisionWithEnemy
+  - Environment
   - 
   - 
   - 

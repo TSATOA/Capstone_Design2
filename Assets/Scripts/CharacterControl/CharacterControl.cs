@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System;
 using PoseInformation;
 using RootMotion.FinalIK;
-using UnityEngine.Animations.Rigging;
 using RootMotion;
+using TMPro;
+using Unity.VisualScripting;
 
 public class CharacterControl : MonoBehaviour
 {
@@ -12,12 +13,15 @@ public class CharacterControl : MonoBehaviour
     private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
     public string poseName = "pose";
+    public GameObject enemy;
+
     private GameObject poseGroup;
     // Final IK
     private FullBodyBipedIK fullBodyIK;
     private FBBIKHeadEffector headEffector;
 
     // For joint control
+    public bool localPlayerControl = true;
     public Transform characterRoot;
     public Transform pelvis;
     public Transform rightHip;
@@ -36,35 +40,39 @@ public class CharacterControl : MonoBehaviour
     public Transform rightForeArm;
     public Transform rightWrist;
 
+    private Animator animator;
+
+    // Character Evade Parameters
+    public bool isEvading;
+
     void Start()
     {
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
-        addAimContraint();
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToRhip] = distAtoB(characterRoot.position, rightHip.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToLhip] = distAtoB(characterRoot.position, leftHip.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RootToBelly] = distAtoB(characterRoot.position, spineMiddle.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.BellyToNeck] = 0.9f * distAtoB(spineMiddle.position, neck.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose] = distAtoB(neck.position, nose.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NoseToHead] = 0.8f * PoseFormat.BoneDistances[PoseFormat.Bone.NeckToNose];
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToLshoulder] = distAtoB(neck.position, leftArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.LshoulderToLelbow] = distAtoB(leftArm.position, leftForeArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.LelbowToLwrist] = distAtoB(leftForeArm.position, leftWrist.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.NeckToRshoulder] = distAtoB(neck.position, rightArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RshoulderToRelbow] = distAtoB(rightArm.position, rightForeArm.position);
-        PoseFormat.BoneDistances[PoseFormat.Bone.RelbowToRwrist] = distAtoB(rightForeArm.position, rightWrist.position);
+        animator = gameObject.GetComponent<Animator>();
+        // addHeadEffector(nose.gameObject);
     }
 
     void Update()
     {
+
+        var animatorInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if(animatorInfo.IsName("Jump Away") && animator.IsInTransition(0))
+        {
+            LookAtAI();
+        }
+
         Vector3[] modelOutput;
 
-        modelOutput = GetComponent<PoseEstimator>().getThreeDJoints();
+        if(localPlayerControl)
+        {
+            modelOutput = GetComponent<PoseEstimator>().getThreeDJoints();
+            Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
+            Draw3DJoints(scaledOutput, visualizeKeypoints);
+        }
 
-        Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
-
-        Draw3DJoints(scaledOutput, visualizeKeypoints);
     }
 
     public void init3DKeypoints(string name)
@@ -72,8 +80,7 @@ public class CharacterControl : MonoBehaviour
         threeDPoints = new List<GameObject>();
         poseGroup = new GameObject(name);
         poseGroup.transform.SetParent(characterRoot);
-        // poseGroup.transform.localPosition = pelvis.localPosition;
-        poseGroup.transform.localPosition = Vector3.zero;
+        poseGroup.transform.localPosition = new Vector3(0,0,1);
 
         Array keypoints = Enum.GetValues(typeof(PoseFormat.Keypoint));
 
@@ -81,7 +88,7 @@ public class CharacterControl : MonoBehaviour
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             string jointName = Enum.GetName(typeof(PoseFormat.Keypoint), keypoint);
-            sphere.name = String.Format("{0}_{1}", poseName, jointName.ToLower());
+            sphere.name = string.Format("{0}_{1}", poseName, jointName.ToLower());
 
             sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             sphere.transform.localPosition = new Vector3(0, 0, 0);
@@ -138,6 +145,10 @@ public class CharacterControl : MonoBehaviour
             bodyJoint.transform.localPosition = bodyJoints[idx];
             bodyJoint.SetActive(visualizeKeypoints);
         }
+        threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform.LookAt(
+            threeDPoints[(int)PoseFormat.Keypoint.Lwrist].transform
+        );
+        threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform.Rotate(-90,-90,0);
     }
 
     private void AddFullBodyIK(GameObject humanoid, BipedReferences references = null)
@@ -156,7 +167,7 @@ public class CharacterControl : MonoBehaviour
 
         // Body
         fullBodyIK.solver.bodyEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Root].transform;
-        fullBodyIK.solver.bodyEffector.positionWeight = 0.15f;
+        fullBodyIK.solver.bodyEffector.positionWeight = 0.9f;
         fullBodyIK.solver.pullBodyVertical = 0.1f;
         fullBodyIK.solver.pullBodyHorizontal = 0.08f;
 
@@ -173,12 +184,21 @@ public class CharacterControl : MonoBehaviour
         // Right Arm
         fullBodyIK.solver.rightHandEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rwrist].transform;
         fullBodyIK.solver.rightHandEffector.positionWeight = 0.95f;
+        fullBodyIK.solver.rightHandEffector.rotationWeight = 1.0f;
 
         fullBodyIK.solver.rightShoulderEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rshoulder].transform;
         fullBodyIK.solver.rightShoulderEffector.positionWeight = 0.5f;
 
         fullBodyIK.solver.chain[2].bendConstraint.bendGoal = threeDPoints[(int)PoseFormat.Keypoint.Relbow].transform;
         fullBodyIK.solver.chain[2].bendConstraint.weight = 0.8f;
+
+        // Left Hip
+        fullBodyIK.solver.leftThighEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Lhip].transform;
+        fullBodyIK.solver.leftThighEffector.positionWeight = 0.6f;
+
+        // Right Hip
+        fullBodyIK.solver.rightThighEffector.target = threeDPoints[(int)PoseFormat.Keypoint.Rhip].transform;
+        fullBodyIK.solver.rightThighEffector.positionWeight = 0.6f;
 
         // Head
         // 머리 회전까지 반영할 필요는 없음
@@ -211,11 +231,6 @@ public class CharacterControl : MonoBehaviour
         headEffector.maxStretch = 0.1f;
     }
 
-    private void addAimContraint()
-    {
-        
-    }
-
     private float distAtoB(Vector3 a, Vector3 b)
     {
         float dist = Vector3.Distance(a, b);
@@ -226,6 +241,16 @@ public class CharacterControl : MonoBehaviour
     {
         Vector3 a_to_b = b - a;
         return a_to_b;
+    }
+
+    public void LookAtAI()
+    {
+        if (enemy != null)
+        {
+            //Debug.Log("LookAtPlayer!!");
+            transform.LookAt(enemy.transform);
+            transform.Rotate(0, 70, 0);
+        }
     }
 
     void OnDestroy()
