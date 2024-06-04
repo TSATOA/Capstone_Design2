@@ -108,7 +108,7 @@ public class HandController : MonoBehaviour
                 Vector3 direction = CalculateDirection(arrowTail, arrowHead);
 
                 // 활시위가 일정이상 당겨지면 화살을 발사
-                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
+                playerArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction, gameObject);
 
                 // Player Status 변경
                 player.GetComponent<PlayerStatus>().ChangePlayerPoseStatus(isArrowReload);
