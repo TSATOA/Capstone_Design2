@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class UiMultiPlay : MonoBehaviour
+public class MultiPlay : MonoBehaviour
 {
-    public void BackBtn()
+    public void PlayAgainBtn()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+    public void BackBtn()
+    {
+        SceneManager.LoadScene("Title");
     }
     
 }

@@ -61,7 +61,7 @@ public class CharacterMovementHandler : NetworkBehaviour
             }
             
             threeDJoints = GetJointsList(networkInputData);
-            networkCharacterControllerPrototypeCustom.JointApplication(threeDJoints);
+            //임시networkCharacterControllerPrototypeCustom.JointApplication(threeDJoints);
             //characterControl.Draw3DPoints(threeDJoints);
             //characterControl.scaleTranslateJoints(threeDJoints);
     

@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Capstone.sln"
+    "dotnet.defaultSolution": "capd.sln"
 }
