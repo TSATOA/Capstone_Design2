@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -44,6 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +67,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 0
@@ -231,6 +235,7 @@ GameObject:
   - component: {fileID: 268415634}
   - component: {fileID: 268415642}
   - component: {fileID: 268415636}
+  - component: {fileID: 268415639}
   m_Layer: 5
   m_Name: Button (matching start)
   m_TagString: Untagged
@@ -394,6 +399,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &268415639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268415632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ffe216b5b498140bfe83b5681b7fb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Scene: 1
+  m_UseLoadingOverlay: 0
+  m_InputKey: 1
+  m_HookToButton: {fileID: 268415638}
 --- !u!114 &268415640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,7 +478,7 @@ MonoBehaviour:
   m_TargetGameObject: {fileID: 268415632}
 --- !u!95 &268415642
 Animator:
-  serializedVersion: 7
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -471,7 +492,6 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -1181,6 +1201,7 @@ GameObject:
   - component: {fileID: 1387512870}
   - component: {fileID: 1387512869}
   - component: {fileID: 1387512873}
+  - component: {fileID: 1387512874}
   m_Layer: 5
   m_Name: Button (Back)
   m_TagString: Untagged
@@ -1329,7 +1350,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1387512873}
+      - m_Target: {fileID: 1387512874}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
         m_MethodName: BackBtn
         m_Mode: 1
@@ -1350,7 +1371,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1387512867}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b0f20d039afac9478850be0404b3638, type: 3}
+  m_Script: {fileID: 11500000, guid: 7006a68e897074d4aabd74f74d90826f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1387512874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387512867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1d534904735664f801f127e9188fef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1490510845

@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HPHandler : NetworkBehaviour
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
-    public byte HP {get; set;} 
+    byte HP {get; set;} 
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead {get; set;} 
-
-    [SerializeField] private Image barImage;
 
     //스크립트 제대로 초기화 했는지
     bool isInitialize = false;
