@@ -19,7 +19,7 @@ public class HandController : MonoBehaviour
     private bool isArrowReload = false;
     private GameObject playerArrow;
     private Transform bowHead;
-    private float fireDistance = 2.0f;
+    private float fireDistance = 1.0f;
     private Vector3 originalStringPosition;
     private Quaternion originalStringRotation;
     private Transform arrowHead;
@@ -48,8 +48,8 @@ public class HandController : MonoBehaviour
                 playerArrow.transform.parent = handTransform;
 
                 // 화살의 위치, 회전 세부 조정
-                //newArrow.transform.localPosition = Vector3.zero;
-                //newArrow.transform.localRotation = Quaternion.identity; 
+                playerArrow.transform.localPosition = Vector3.zero;
+                playerArrow.transform.localRotation = Quaternion.Euler(-41.131f, 0 , 180);
             }
         }
         // 화살을 손에 든채로 활시위와 접촉하였을 경우
@@ -67,8 +67,8 @@ public class HandController : MonoBehaviour
                 playerArrow.transform.parent = stringTransform;
 
                 // 화살의 위치, 회전 세부 조정
-                playerArrow.transform.localPosition = new Vector3(-0.004f, 0.001f, 0.001f);
-                playerArrow.transform.localRotation = Quaternion.Euler(49.527f, 73.301f, -33.277f);
+                playerArrow.transform.localPosition = Vector3.zero;
+                // playerArrow.transform.localRotation = Quaternion.Euler(95,-50,41);
 
                 // Aim Camera로 전환
                 idleCamera.SetActive(false);
@@ -89,6 +89,9 @@ public class HandController : MonoBehaviour
     {
         if (isArrowReload)
         {
+            // 장전된 화살이 활을 바라보도록 조정
+            playerArrow.transform.LookAt(bowObject.transform);
+            playerArrow.transform.Rotate(90, 0, 0);
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
 
