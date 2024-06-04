@@ -9293,7 +9293,6 @@ GameObject:
   - component: {fileID: 236546612521155768}
   - component: {fileID: 8021408048370354297}
   - component: {fileID: 6811816618528303069}
-  - component: {fileID: 8571804871723246660}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -9335,6 +9334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizeKeypoints: 1
   poseName: pose
+  enemy: {fileID: 0}
   localPlayerControl: 1
   characterRoot: {fileID: 1921879427047839545}
   pelvis: {fileID: 3367557675499791053}
@@ -9421,18 +9421,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterControl: {fileID: 1340435715793518490}
---- !u!114 &8571804871723246660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7794328056204116063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5afa87697e22a4998937f14e7aa6119c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7814475650279985086
 GameObject:
   m_ObjectHideFlags: 0
