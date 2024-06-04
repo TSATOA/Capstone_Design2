@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SinglePlay : MonoBehaviour
+public class UiSinglePlay : MonoBehaviour
 {
-    public GameObject Loading;
-    public void SingleStart()
-    {
-        Loading.SetActive(true);
-        SceneManager.LoadScene("SingleMap");
-    }
     public void BackBtn()
     {
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene("MainMenu");
     }
     
 }

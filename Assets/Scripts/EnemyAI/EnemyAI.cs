@@ -17,16 +17,6 @@ public class EnemyAI : MonoBehaviour
     private PlayerStatus playerStatus;
     private GameObject bloodInstance;
 
-<<<<<<< HEAD
-    // �÷��̾ �����ϰ� �ִ� ���� AI�� ȸ�� ������ �� Ȯ��
-    public float evadeChance = 1.0f; // ȸ�� ���� ���� Ȯ�� (0 ~ 1)
-    private bool isEvadeDone = false; // �÷��̾ �����ϴ� ���� �����⸦ ������ ������ �����Ͽ��°�? (������� ���ش� �ѹ��� ����)
-
-    // �� NPC�� �����⸦ ������ Ƚ��
-    private int leftEvade = 0;
-    private int rightEvade = 0;
-    private int maxEvade = 5; // ���� �������� �ִ� ������ ���� Ƚ��
-=======
     private Transform target;
 
     // 플레이어가 조준하고 있는 동안 AI가 회피 동작을 할 확률
@@ -37,14 +27,10 @@ public class EnemyAI : MonoBehaviour
     private int leftEvade = 0;
     private int rightEvade = 0;
     private int maxEvade = 5; // 한쪽 방향으로 최대 구르기 가능 횟수
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
 
     public float health;
     public float arrowPower = 10.0f;
 
-<<<<<<< HEAD
-    public GameObject ResultPage;
-=======
     // 각 부위를 향해 화살을 발사할 확률
     private static class targetProb
     {
@@ -54,7 +40,6 @@ public class EnemyAI : MonoBehaviour
         public const float Leg = 0.0f;
     }
 
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -65,27 +50,11 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-<<<<<<< HEAD
-        // Idle ���¶�� �÷��̾ �ٶ󺸰� ȸ��
-=======
         // Idle 상태라면 플레이어를 바라보게 회전
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
         if (IsIdle())
         {
             LookAtPlayer();
         }
-<<<<<<< HEAD
-        // ������ ���� �����̰� �÷��̾ ���� ���̶��
-        if (!isEvadeDone && playerStatus.IsPlayerAiming())
-        {
-            // ������ ���� Ȯ���� ���� ������ ����
-            if (Random.value < evadeChance)
-            {
-                // ������ ����
-                if (Random.value < 0.5f && leftEvade < maxEvade)
-                {
-                    // �������� ������
-=======
         // 구르기 가능 상태이고 플레이어가 조준 중이라면
         if (!isEvadeDone && playerStatus.IsPlayerAiming())
         {
@@ -96,7 +65,6 @@ public class EnemyAI : MonoBehaviour
                 if (Random.value < 0.5f && leftEvade < maxEvade)
                 {
                     // 왼쪽으로 구르기
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
                     leftEvade++;
                     rightEvade--;
                     if (rightEvade < 0) rightEvade = 0;
@@ -104,11 +72,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-<<<<<<< HEAD
-                    // ���������� ������
-=======
                     // 오른쪽으로 구르기
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
                     rightEvade++;
                     leftEvade--;
                     if (leftEvade < 0) leftEvade = 0;
@@ -118,43 +82,22 @@ public class EnemyAI : MonoBehaviour
 
             isEvadeDone = true;
         }
-<<<<<<< HEAD
-        // �÷��̾ ������ Ǯ�� �ٽ� ������ ���� ���·� ����
-=======
         // 플레이어가 조준을 풀면 다시 구르기 가능 상태로 변경
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
         else if (isEvadeDone && !playerStatus.IsPlayerAiming())
         {
             isEvadeDone = false;
         }
     }
 
-<<<<<<< HEAD
-    // ȭ���뿡�� ȭ���� ������ �ִϸ��̼��� ����Ǵ� ���� �տ� ȭ�� �����Ͽ� ����
-    void GrabArrow()
-    {
-        // ȭ�� ����
-=======
     // 화살통에서 화살이 꺼내는 애니메이션이 재생되는 순간 손에 화살 생성하여 부착
     public void GrabArrow()
     {
         // 화살 생성
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
         enemyArrow = Instantiate(arrowPrefab, handTransform.position, handTransform.rotation);
         if (enemyArrow == null) return;
         enemyArrow.tag = "Arrow_Enemy";
         enemyArrow.layer = 8; // CollisionWithPlayer Layer
 
-<<<<<<< HEAD
-        // ȭ���˰� ȭ��� �κ��� Transform ����
-        arrowHead = enemyArrow.transform.Find("ArrowHead");
-        arrowTail = enemyArrow.transform.Find("ArrowTail");
-
-        // ȭ���� ���� ArrowAttach �κ��� child�� ����
-        enemyArrow.transform.parent = handTransform;
-
-        // ȭ���� ��ġ, ȸ�� ���� ����
-=======
         // 화살촉과 화살깃 부분의 Transform 저장
         arrowHead = enemyArrow.transform.Find("ArrowHead");
         arrowTail = enemyArrow.transform.Find("ArrowTail");
@@ -166,27 +109,10 @@ public class EnemyAI : MonoBehaviour
         changeTarget();
 
         // 화살의 위치, 회전 세부 조정
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
         //enemyArrow.transform.localPosition = Vector3.zero;
         //enemyArrow.transform.localRotation = Quaternion.identity; 
     }
 
-<<<<<<< HEAD
-    // Ȱ�� ��ܼ� �߻��ϴ� ���� ȭ���� �߻��ϴ� �Լ� ����
-    void FireArrow_Enemy()
-    {
-        // ȭ���� �������� �����ϰ� ���� ȭ���� �߻� ������ ���·� ��ȯ
-        enemyArrow.transform.parent = null;
-
-        // ȭ�� ���� ���
-        Vector3 direction = CalculateDirection(arrowTail, arrowHead);
-
-        // ȭ���� �߻�
-        enemyArrow.GetComponent<Arrow>().ReleaseArrow(arrowPower, direction);
-    }
-
-    // AI�� ���°� idle���� Ȯ��
-=======
     // 활을 당겨서 발사하는 순간 화살을 발사하는 함수 실행
     public void FireArrow_Enemy()
     {
@@ -203,7 +129,6 @@ public class EnemyAI : MonoBehaviour
     }
 
     // AI의 상태가 idle인지 확인
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
     private bool IsIdle()
     {
         if (animator != null)
@@ -214,11 +139,7 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-<<<<<<< HEAD
-    // �÷��̾ �ٶ󺸵��� ȸ��
-=======
     // 플레이어를 바라보도록 회전
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
     public void LookAtPlayer()
     {
         if (player != null)
@@ -228,13 +149,8 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
-    // �������� �Դ� ���
-    public void takeDamge(float damage)
-=======
     // 데미지를 입는 경우
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
     {
         health -= damage;
 
@@ -243,11 +159,7 @@ public class EnemyAI : MonoBehaviour
         if (health <= 0)
         {
             animator.SetTrigger("Death");
-<<<<<<< HEAD
-            ResultPage.SetActive(true);
-=======
             DisableColliders(gameObject);
->>>>>>> 74c7bbd7b5f9507d25eef3cbc2832866bebc2c25
         }
         else
         {
