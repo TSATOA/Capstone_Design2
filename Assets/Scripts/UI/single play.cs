@@ -5,9 +5,18 @@ using UnityEngine.SceneManagement;
 
 public class UiSinglePlay : MonoBehaviour
 {
+    public GameObject statusPanel;
+    public void PlaySingle()
+    {
+        statusPanel.SetActive(true);
+        SceneManager.LoadScene("SingleMap");
+    }
     public void BackBtn()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Title");
     }
-    
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("SinglePlay");
+    }
 }

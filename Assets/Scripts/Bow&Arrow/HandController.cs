@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HandController : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class HandController : MonoBehaviour
     private Quaternion originalStringRotation;
     private Transform arrowHead;
     private Transform arrowTail;
+
+    [SerializeField] private Image barImage;
+    public GameObject Crosshair;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -89,11 +93,13 @@ public class HandController : MonoBehaviour
     {
         if (isArrowReload)
         {
+            Crosshair.SetActive(true);
             // 장전된 화살이 활을 바라보도록 조정
             playerArrow.transform.LookAt(bowObject.transform);
             playerArrow.transform.Rotate(90, 0, 0);
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
+            barImage.fillAmount = distance;
 
             if (distance > fireDistance)
             {
@@ -119,6 +125,7 @@ public class HandController : MonoBehaviour
                 // idle Camera로 전환
                 idleCamera.SetActive(true);
                 aimCamera.SetActive(false);
+                Crosshair.SetActive(false);
             }
         }
     }
