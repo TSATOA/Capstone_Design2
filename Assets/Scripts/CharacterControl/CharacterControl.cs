@@ -46,6 +46,7 @@ public class CharacterControl : MonoBehaviour
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
+        // addHeadEffector(nose.gameObject);
     }
 
     void Update()
@@ -58,11 +59,6 @@ public class CharacterControl : MonoBehaviour
             Vector3[] scaledOutput = scaleOutputJoints(modelOutput);
             Draw3DJoints(scaledOutput, visualizeKeypoints);
         }
-
-        // if(isEvading)
-        // {
-        //     Debug.Log("Is Evading");
-        // }
 
     }
 
