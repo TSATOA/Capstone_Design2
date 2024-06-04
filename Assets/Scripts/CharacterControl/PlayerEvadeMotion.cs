@@ -8,9 +8,9 @@ public class PlayerEvadeMotion : MonoBehaviour
     public CharacterControl characterControl = null;
     private FullBodyBipedIK fullBodyBipedIK = null;
     private FBBIKHeadEffector headEffector = null;
-    private bool directionChecked = false;
+    private bool newdirectionChecked = false;
     private float startTime = 0.0f;
-    private float runningTime = 3.0f;
+    private float runningTime = 2.0f;
     private Animator animator;
     private Transform characterRoot;
     private Transform head;
@@ -20,7 +20,7 @@ public class PlayerEvadeMotion : MonoBehaviour
         characterRoot = characterControl.characterRoot;
         head = characterControl.nose;
         animator = gameObject.GetComponent<Animator>();
-        directionChecked = false;
+        newdirectionChecked = false;
     }
 
     void Update()
@@ -28,6 +28,8 @@ public class PlayerEvadeMotion : MonoBehaviour
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if(characterControl.isEvading && stateInfo.IsName("Idle") && !animator.IsInTransition(0))
         {
+            fullBodyBipedIK = gameObject.GetComponent<FullBodyBipedIK>();
+            if(fullBodyBipedIK != null) fullBodyBipedIK.enabled = true;
             if(startTime == 0.0f)
             {
                 startTime = Time.time;
@@ -46,8 +48,7 @@ public class PlayerEvadeMotion : MonoBehaviour
                 if(stateInfo.normalizedTime >= 1.0f)
                 {
                     animator.SetBool("Evade", false);
-                    fullBodyBipedIK.enabled = true;
-                    directionChecked = false;
+                    newdirectionChecked = false;
                 }
             }
         }
@@ -56,21 +57,20 @@ public class PlayerEvadeMotion : MonoBehaviour
 
     void characterEvade()
     {
-        fullBodyBipedIK = gameObject.GetComponent<FullBodyBipedIK>();
         if(fullBodyBipedIK.enabled && !animator.IsInTransition(0) && fullBodyBipedIK != null)
         {
             // headEffector = head.gameObject.GetComponent<FBBIKHeadEffector>();
 
             fullBodyBipedIK.enabled = false;
             
-            if(directionChecked == false){
+            if(newdirectionChecked == false){
                 var headGlobal = head.transform.position;
                 headGlobal.y = gameObject.transform.position.y;
 
                 gameObject.transform.LookAt(headGlobal);
                 gameObject.transform.Rotate(0, -90, 0);
 
-                directionChecked = true;
+                newdirectionChecked = true;
             }
 
             animator.SetBool("Evade", true);

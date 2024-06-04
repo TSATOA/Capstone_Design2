@@ -12,6 +12,7 @@ public class CharacterControl : MonoBehaviour
     private List<GameObject> threeDPoints;
     public bool visualizeKeypoints = false;
     public string poseName = "pose";
+    public GameObject enemy;
 
     private GameObject poseGroup;
     // Final IK
@@ -38,6 +39,8 @@ public class CharacterControl : MonoBehaviour
     public Transform rightForeArm;
     public Transform rightWrist;
 
+    private Animator animator;
+
     // Character Evade Parameters
     public bool isEvading;
 
@@ -46,6 +49,7 @@ public class CharacterControl : MonoBehaviour
         // IK setup
         init3DKeypoints(poseName);
         AddFullBodyIK(gameObject);
+        animator = gameObject.GetComponent<Animator>();
         // addHeadEffector(nose.gameObject);
     }
 
@@ -60,6 +64,13 @@ public class CharacterControl : MonoBehaviour
             Draw3DJoints(scaledOutput, visualizeKeypoints);
         }
 
+        var animatorInfo = animator.GetNextAnimatorStateInfo(0);
+
+        if(!isEvading && !animator.IsInTransition(0) && animatorInfo.IsName("Idle"))
+        {
+            gameObject.transform.LookAt(enemy.transform);
+            gameObject.transform.Rotate(0, 90, 0);
+        }
     }
 
     public void init3DKeypoints(string name)
