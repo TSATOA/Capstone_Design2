@@ -18,6 +18,9 @@ public class EnemyAI : MonoBehaviour
     private GameObject bloodInstance;
 
     private Transform target;
+    
+    // 정면 벡터
+    private Vector3 forwardVector = new Vector3(1, 0, 0);
 
     // 플레이어가 조준하고 있는 동안 AI가 회피 동작을 할 확률
     public float evadeChance = 1.0f; // 회피 동작 성공 확률 (0 ~ 1)
@@ -58,9 +61,14 @@ public class EnemyAI : MonoBehaviour
         // 구르기 가능 상태이고 플레이어가 조준 중이라면
         if (!isEvadeDone && playerStatus.IsPlayerAiming())
         {
+            isEvadeDone = true;
+
             // 구르기 성공 확률에 따라 구르기 실행
             if (Random.value < evadeChance)
             {
+                // 구르기 전에 정면 바라보기(좌우로만 구르기 위해)
+                transform.rotation = Quaternion.LookRotation(forwardVector);
+
                 // 구르기 실행
                 if (Random.value < 0.5f && leftEvade < maxEvade)
                 {
@@ -79,11 +87,9 @@ public class EnemyAI : MonoBehaviour
                     animator.SetTrigger("RightEvade");
                 }
             }
-
-            isEvadeDone = true;
         }
         // 플레이어가 조준을 풀면 다시 구르기 가능 상태로 변경
-        else if (isEvadeDone && !playerStatus.IsPlayerAiming())
+       else if (isEvadeDone && !playerStatus.IsPlayerAiming())
         {
             isEvadeDone = false;
         }

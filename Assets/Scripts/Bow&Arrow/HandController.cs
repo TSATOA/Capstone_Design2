@@ -10,6 +10,7 @@ public class HandController : MonoBehaviour
     public Transform stringTransform;   // 활시위의 위치
     public GameObject idleCamera;
     public GameObject aimCamera;
+    public Transform aimCameraTransform;    // 조준 카메라 부착 위치
 
     private GameObject player;
 
@@ -89,6 +90,10 @@ public class HandController : MonoBehaviour
     {
         if (isArrowReload)
         {
+            // 카메라 각도 조정
+            Vector3 cameraDir = CalculateDirection(aimCameraTransform, arrowHead);
+            aimCamera.transform.rotation = Quaternion.LookRotation(cameraDir);
+
             // 장전된 화살이 활을 바라보도록 조정
             playerArrow.transform.LookAt(bowObject.transform);
             playerArrow.transform.Rotate(90, 0, 0);
