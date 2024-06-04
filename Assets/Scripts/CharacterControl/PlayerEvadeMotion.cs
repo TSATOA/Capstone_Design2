@@ -10,7 +10,7 @@ public class PlayerEvadeMotion : MonoBehaviour
     private FBBIKHeadEffector headEffector = null;
     private bool newdirectionChecked = false;
     private float startTime = 0.0f;
-    private float runningTime = 2.0f;
+    private float runningTime = 0.5f;
     private Animator animator;
     private Transform characterRoot;
     private Transform head;
@@ -68,7 +68,6 @@ public class PlayerEvadeMotion : MonoBehaviour
                 headGlobal.y = gameObject.transform.position.y;
 
                 gameObject.transform.LookAt(headGlobal);
-                gameObject.transform.Rotate(0, -90, 0);
 
                 newdirectionChecked = true;
             }

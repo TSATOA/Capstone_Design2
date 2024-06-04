@@ -5,6 +5,7 @@ using PoseInformation;
 using RootMotion.FinalIK;
 using RootMotion;
 using TMPro;
+using Unity.VisualScripting;
 
 public class CharacterControl : MonoBehaviour
 {
@@ -55,6 +56,14 @@ public class CharacterControl : MonoBehaviour
 
     void Update()
     {
+
+        var animatorInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if(animatorInfo.IsName("Jump Away") && animator.IsInTransition(0))
+        {
+            LookAtAI();
+        }
+
         Vector3[] modelOutput;
 
         if(localPlayerControl)
@@ -64,13 +73,6 @@ public class CharacterControl : MonoBehaviour
             Draw3DJoints(scaledOutput, visualizeKeypoints);
         }
 
-        var animatorInfo = animator.GetNextAnimatorStateInfo(0);
-
-        if(!isEvading && !animator.IsInTransition(0) && animatorInfo.IsName("Idle"))
-        {
-            gameObject.transform.LookAt(enemy.transform);
-            gameObject.transform.Rotate(0, 90, 0);
-        }
     }
 
     public void init3DKeypoints(string name)
@@ -239,6 +241,16 @@ public class CharacterControl : MonoBehaviour
     {
         Vector3 a_to_b = b - a;
         return a_to_b;
+    }
+
+    public void LookAtAI()
+    {
+        if (enemy != null)
+        {
+            //Debug.Log("LookAtPlayer!!");
+            transform.LookAt(enemy.transform);
+            transform.Rotate(0, 70, 0);
+        }
     }
 
     void OnDestroy()
