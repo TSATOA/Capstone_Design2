@@ -152,12 +152,11 @@ public class Arrow : MonoBehaviour
         Vector3 force = direction * arrowSpeed;
 
         // for Debugging
-        /*Debug.Log("Direction: " + direction);
-        Debug.Log("power: " + power);
+        Debug.Log("Direction: " + direction);
+        // Debug.Log("power: " + power);
         Debug.Log("arrowSpeed: " + arrowSpeed);
         Debug.Log("Force" + force);
         Debug.DrawRay(transform.position, force, Color.red, 2.0f);
-        */
 
         rigidBody.AddForce(force, ForceMode.Impulse);
 

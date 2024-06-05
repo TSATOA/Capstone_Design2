@@ -21,13 +21,12 @@ public class HandController : MonoBehaviour
     private bool isArrowReload = false;
     private GameObject playerArrow;
     private Transform bowHead;
-    private float fireDistance = 1.0f;
+    private float fireDistance = 0.95f;
     private Vector3 originalStringPosition;
     private Quaternion originalStringRotation;
     private Transform arrowHead;
     private Transform arrowTail;
-
-    [SerializeField] private Image barImage;
+    public Image barImage;
     public GameObject Crosshair;
 
     private void OnTriggerEnter(Collider other)
@@ -103,7 +102,7 @@ public class HandController : MonoBehaviour
             playerArrow.transform.Rotate(90, 0, 0);
             // 화살을 당긴 거리 (필요하다면 public 전역 변수로 선언 가능)
             float distance = Vector3.Distance(bowHead.position, stringTransform.position);
-            barImage.fillAmount = distance;
+            barImage.fillAmount = distance / fireDistance;
             if (distance > fireDistance)
             {
                 // 화살을 시위에서 제거하고 다음 화살을 발사 가능한 상태로 전환

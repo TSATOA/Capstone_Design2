@@ -20,13 +20,13 @@ public class Visualization : MonoBehaviour
         canvasObject.AddComponent<GraphicRaycaster>();
 
         var poseImage = new GameObject("Webcam Image") { layer = 5 };
-        poseImage.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
+        poseImage.transform.localScale = new Vector3(1.5f,1.5f,1.5f);
         poseImage.AddComponent<CanvasRenderer>();
         RectTransform rectTransformImage = poseImage.AddComponent<RectTransform>();
         image = poseImage.AddComponent<Image>();
 
         poseImage.transform.SetParent(canvasObject.transform, false);
-        poseImage.transform.localPosition = new Vector3(-280,200,0);
+        poseImage.transform.localPosition = new Vector3(-1000,500,0);
 
         canvas.transform.position = new Vector3(0, 0, 0);
         rectTransformImage.sizeDelta = new Vector2(640, 360);

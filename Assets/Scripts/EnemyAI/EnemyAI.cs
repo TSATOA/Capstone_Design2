@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.UI;
+using TMPro;
+using System.Threading.Tasks;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -16,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     private GameObject player;
     private PlayerStatus playerStatus;
     private GameObject bloodInstance;
+    [SerializeField] private TextMeshProUGUI damageText;
 
     private Transform target;
 
@@ -155,7 +159,7 @@ public class EnemyAI : MonoBehaviour
     public void takeDamge(float damage, Transform hitPos, Quaternion hitDir)
     {
         health -= damage;
-
+        StartCoroutine(PrintDamage(damage));
         bloodInstance = Instantiate(bloodPrefab, hitPos.position, hitDir);
 
         if (health <= 0)
@@ -226,5 +230,13 @@ public class EnemyAI : MonoBehaviour
         {
             collider.enabled = false;
         }
+    }
+
+    IEnumerator PrintDamage(float damage)
+    {
+        damageText.gameObject.SetActive(true);
+        damageText.text = "Hit" + damage.ToString();
+        yield return new WaitForSeconds( 3.0f );
+        damageText.gameObject.SetActive(false);
     }
 }
