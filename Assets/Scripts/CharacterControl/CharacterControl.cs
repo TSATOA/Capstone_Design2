@@ -249,7 +249,7 @@ public class CharacterControl : MonoBehaviour
             {
                 //Debug.Log("LookAtPlayer!!");
                 transform.LookAt(enemy.transform);
-                transform.Rotate(0, 70, 0);
+                transform.Rotate(0, 50, 0);
             }
         }
     }
