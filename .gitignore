@@ -79,5 +79,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.png*
 /[Aa]ssets/[Pp]lugins/[Rr]oot[Mm]otion/**/*.pdf*
 
+# Samples
+/[Aa]ssets/Samples/*
+
 # MacOS
 .DS_Store
