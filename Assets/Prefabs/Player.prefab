@@ -751,7 +751,7 @@ MonoBehaviour:
   idleCamera: {fileID: 0}
   aimCamera: {fileID: 0}
   aimCameraTransform: {fileID: 0}
-  arrowPower: 10
+  arrowPower: 200
   arrowHeadTarget: {fileID: 0}
   barImage: {fileID: 0}
   Crosshair: {fileID: 0}

@@ -26,7 +26,7 @@ public class Visualization : MonoBehaviour
         image = poseImage.AddComponent<Image>();
 
         poseImage.transform.SetParent(canvasObject.transform, false);
-        poseImage.transform.localPosition = new Vector3(-1000,500,0);
+        poseImage.transform.localPosition = new Vector3(-900,450,0);
 
         canvas.transform.position = new Vector3(0, 0, 0);
         rectTransformImage.sizeDelta = new Vector2(640, 360);
