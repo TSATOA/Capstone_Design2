@@ -91,7 +91,6 @@ public class HandController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(isArrowReload);
         if (isArrowReload)
         {
             Vector3 cameraDir = CalculateDirection(aimCameraTransform, arrowHead);
