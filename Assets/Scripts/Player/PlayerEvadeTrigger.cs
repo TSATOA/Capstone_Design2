@@ -11,7 +11,7 @@ public class PlayerEvadeTrigger : MonoBehaviour
     {
         if(other == enclosure)
         {
-            characterControl.isEvading = false;
+            characterControl.isEvading = true;
         }
     }
     void OnTriggerEnter(Collider other)

@@ -242,14 +242,13 @@ public class CharacterControl : MonoBehaviour
     public void LookAtAI()
     {
         var animatorInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-        if((animatorInfo.IsName("Jump Away") && animator.IsInTransition(0)) || (animatorInfo.IsName("Idle") && (!animator.IsInTransition(0))))
+        if(animatorInfo.IsName("Idle") && !animator.IsInTransition(0) && !isEvading)
         {
             if (enemy != null)
             {
-                //Debug.Log("LookAtPlayer!!");
+                Debug.Log("LookAtPlayer!!");
                 transform.LookAt(enemy.transform);
-                transform.Rotate(0, 50, 0);
+                transform.Rotate(0, 100, 0);
             }
         }
     }

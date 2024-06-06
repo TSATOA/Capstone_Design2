@@ -40,7 +40,7 @@ public class PlayerEvadeMotion : MonoBehaviour
         else 
         {
             startTime = 0.0f;
-            if(stateInfo.IsName("Jump Away") && fullBodyBipedIK != null)
+            if(stateInfo.IsName("Jump Away") && !animator.IsInTransition(0) && fullBodyBipedIK != null)
             {
                 if(stateInfo.normalizedTime >= 1.0f)
                 {
@@ -54,7 +54,7 @@ public class PlayerEvadeMotion : MonoBehaviour
 
     void characterEvade()
     {
-        if(fullBodyBipedIK.enabled && !animator.IsInTransition(0) && fullBodyBipedIK != null)
+        if(fullBodyBipedIK.enabled && fullBodyBipedIK != null)
         {
             fullBodyBipedIK.enabled = false;
             
