@@ -28,7 +28,7 @@ public class PoseEstimator : MonoBehaviour
 
     // Pose estimation hyperparameters
     private const int numJoints = 17;
-    public const int numFrames = 27;
+    public const int numFrames = 40;
     [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
     [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
 
@@ -85,13 +85,13 @@ public class PoseEstimator : MonoBehaviour
         );
 
         /*
-            COCO:
+            COCO output format of 2D pose:
             0: nose 1: Leye 2: Reye 3: Lear 4: Rear
             5: Lsho 6: Rsho 7: Lelb 8: Relb 9: Lwri
             10: Rwri 11: Lhip 12: Rhip 13: Lkne 14: Rkne
             15: Lank 16: Rank
             
-            H36M:
+            H36M input format of 3D pose:
             0: root, 1: rhip, 2: rkne, 3: rank, 4: lhip,
             5: lkne, 6: lank, 7: belly, 8: neck, 9: nose,
             10: head, 11: lsho, 12: lelb, 13: lwri, 14: rsho,
