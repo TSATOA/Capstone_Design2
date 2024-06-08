@@ -28,7 +28,7 @@ public class PoseEstimator : MonoBehaviour
 
     // Pose estimation hyperparameters
     private const int numJoints = 17;
-    public const int numFrames = 40;
+    public const int numFrames = 27;
     [SerializeField, Range(0.0f, 1.0f)] public float iouThreshold = 0.5f;
     [SerializeField, Range(0.0f, 1.0f)] public float scoreThreshold = 0.5f;
 
@@ -40,7 +40,7 @@ public class PoseEstimator : MonoBehaviour
     {
         // Start webcam
         WebCamDevice[] devices = WebCamTexture.devices;
-        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 15);
+        webcamTexture = new WebCamTexture(devices[0].name, 640, 360, 30);
         webcamTexture.Play();
 
         // To convert webcam texture to inputImageDim x inputImageDim
