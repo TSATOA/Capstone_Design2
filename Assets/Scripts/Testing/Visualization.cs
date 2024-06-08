@@ -20,7 +20,7 @@ public class Visualization : MonoBehaviour
         canvasObject.AddComponent<GraphicRaycaster>();
 
         var poseImage = new GameObject("Webcam Image") { layer = 5 };
-        poseImage.transform.localScale = new Vector3(1.5f,1.5f,1.5f);
+        poseImage.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
         poseImage.AddComponent<CanvasRenderer>();
         RectTransform rectTransformImage = poseImage.AddComponent<RectTransform>();
         image = poseImage.AddComponent<Image>();
