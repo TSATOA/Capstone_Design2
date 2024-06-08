@@ -79,8 +79,12 @@ public class CharacterControl : MonoBehaviour
         poseGroup.transform.localPosition = new Vector3(0,0,1);
 
         Array keypoints = Enum.GetValues(typeof(PoseFormat.Keypoint));
+        Material sphereMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"))
+        {
+            color = Color.white // Change to the desired color
+        };
 
-        foreach(var keypoint in keypoints)
+        foreach (var keypoint in keypoints)
         {
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             string jointName = Enum.GetName(typeof(PoseFormat.Keypoint), keypoint);
@@ -88,6 +92,8 @@ public class CharacterControl : MonoBehaviour
 
             sphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             sphere.transform.localPosition = new Vector3(0, 0, 0);
+
+            sphere.GetComponent<Renderer>().material = sphereMaterial;
 
             sphere.transform.SetParent(poseGroup.transform, false);
 
@@ -246,9 +252,9 @@ public class CharacterControl : MonoBehaviour
         {
             if (enemy != null)
             {
-                Debug.Log("LookAtPlayer!!");
+                // Debug.Log("LookAtPlayer!!");
                 transform.LookAt(enemy.transform);
-                transform.Rotate(0, 100, 0);
+                transform.Rotate(0, 110, 0);
             }
         }
     }
